@@ -1,4 +1,4 @@
-package main.java.com.web2.equipmentmaintenancecontrol.model;
+package com.web2.equipmentmaintenancecontrol.model;
 
 public class Address {
 
