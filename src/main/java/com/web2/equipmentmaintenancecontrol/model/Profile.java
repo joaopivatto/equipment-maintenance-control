@@ -1,17 +1,21 @@
-package main.java.com.web2.equipmentmaintenancecontrol.model;
+package com.web2.equipmentmaintenancecontrol.model;
 
-public class Profile {
+import com.web2.equipmentmaintenancecontrol.enums.ProfileType;
+
+public abstract class Profile {
+
     private Integer id;
-    private String description;
 
-    public Profile() {
+    private String name;
 
-    }
+    private String email;
 
-    public Profile(Integer id, String description){
-        this.id = id;
-        this.description = description;
-    }
+    private String passwordHash;
+
+    private String passwordSalt;
+
+    private ProfileType type;
+
 
     public Integer getId() {
         return id;
@@ -21,11 +25,43 @@ public class Profile {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public String getPasswordSalt() {
+        return passwordSalt;
+    }
+
+    public void setPasswordSalt(String passwordSalt) {
+        this.passwordSalt = passwordSalt;
+    }
+
+    public ProfileType getType() {
+        return type;
+    }
+
+    public void setType(ProfileType type) {
+        this.type = type;
     }
 }
