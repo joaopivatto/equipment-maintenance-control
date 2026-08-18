@@ -1,4 +1,4 @@
-package com.web2.equipmentmaintenancecontrol.enums;
+package main.java.com.web2.equipmentmaintenancecontrol.enums;
 
 public enum ServiceRequestStatus {
     ABERTA("Cinza", "#808080"),
