@@ -7,7 +7,6 @@ public class Maintenance {
     private String description;
     private String customerInstructions;
     private Integer employeeId;
-    private Integer maintenanceRequestId;
 
     public Integer getId() {
         return id;
@@ -39,14 +38,6 @@ public class Maintenance {
 
     public void setEmployeeId(Integer employeeId) {
         this.employeeId = employeeId;
-    }
-
-    public Integer getMaintenanceRequestId() {
-        return maintenanceRequestId;
-    }
-
-    public void setMaintenanceRequestId(Integer maintenanceRequestId) {
-        this.maintenanceRequestId = maintenanceRequestId;
     }
 
     public LocalDate getCreatedAt() {

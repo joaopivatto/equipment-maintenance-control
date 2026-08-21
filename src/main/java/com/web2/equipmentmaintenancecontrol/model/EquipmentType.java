@@ -1,9 +1,22 @@
 package com.web2.equipmentmaintenancecontrol.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class EquipmentType {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String description;
 
+    public EquipmentType() {
+
+    }
 
     public EquipmentType(Integer id, String description) {
         this.id = id;

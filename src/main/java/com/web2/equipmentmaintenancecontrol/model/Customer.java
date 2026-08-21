@@ -1,22 +1,15 @@
 package com.web2.equipmentmaintenancecontrol.model;
 
-public class Customer extends Profile{
+import jakarta.persistence.Entity;
 
-    private Integer profileId;
+@Entity
+public class Customer extends Profile{
 
     private String cpf;
 
     private String addressId;
 
     private Integer phoneId;
-
-    public Integer getProfileId() {
-        return profileId;
-    }
-
-    public void setProfileId(Integer profileId) {
-        this.profileId = profileId;
-    }
 
     public String getCpf() {
         return cpf;
