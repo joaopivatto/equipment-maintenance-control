@@ -7,18 +7,7 @@ import java.time.LocalDate;
 @Entity
 public class Employee extends Profile{
 
-    private String profileId;
-
     private LocalDate birthDate;
-
-
-    public String getProfileId() {
-        return profileId;
-    }
-
-    public void setProfileId(String profileId) {
-        this.profileId = profileId;
-    }
 
     public LocalDate getBirthDate() {
         return birthDate;

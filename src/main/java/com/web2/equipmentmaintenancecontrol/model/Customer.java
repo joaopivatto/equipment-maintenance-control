@@ -5,21 +5,11 @@ import jakarta.persistence.Entity;
 @Entity
 public class Customer extends Profile{
 
-    private Integer profileId;
-
     private String cpf;
 
     private String addressId;
 
     private Integer phoneId;
-
-    public Integer getProfileId() {
-        return profileId;
-    }
-
-    public void setProfileId(Integer profileId) {
-        this.profileId = profileId;
-    }
 
     public String getCpf() {
         return cpf;

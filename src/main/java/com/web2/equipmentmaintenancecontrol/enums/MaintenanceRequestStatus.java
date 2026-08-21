@@ -1,6 +1,6 @@
 package com.web2.equipmentmaintenancecontrol.enums;
 
-public enum ServiceRequestStatus {
+public enum MaintenanceRequestStatus {
     ABERTA("Cinza", "#808080"),
     ORCADA("Marrom", "#8B4513"),
     REJEITADA("Vermelho", "#DC3545"),
@@ -13,7 +13,7 @@ public enum ServiceRequestStatus {
     private final String colorName;
     private final String colorHex;
 
-    ServiceRequestStatus(String colorName, String colorHex){
+    MaintenanceRequestStatus(String colorName, String colorHex){
         this.colorName = colorName;
         this.colorHex = colorHex;
     }
