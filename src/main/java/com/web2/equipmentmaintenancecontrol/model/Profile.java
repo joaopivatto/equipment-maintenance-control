@@ -1,9 +1,14 @@
 package com.web2.equipmentmaintenancecontrol.model;
 
 import com.web2.equipmentmaintenancecontrol.enums.ProfileType;
+import jakarta.persistence.*;
 
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Profile {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;

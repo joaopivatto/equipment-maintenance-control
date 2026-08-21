@@ -1,5 +1,8 @@
 package com.web2.equipmentmaintenancecontrol.model;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class Customer extends Profile{
 
     private Integer profileId;

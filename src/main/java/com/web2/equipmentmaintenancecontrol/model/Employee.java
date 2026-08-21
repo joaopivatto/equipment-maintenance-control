@@ -1,7 +1,10 @@
 package com.web2.equipmentmaintenancecontrol.model;
 
+import jakarta.persistence.Entity;
+
 import java.time.LocalDate;
 
+@Entity
 public class Employee extends Profile{
 
     private String profileId;
