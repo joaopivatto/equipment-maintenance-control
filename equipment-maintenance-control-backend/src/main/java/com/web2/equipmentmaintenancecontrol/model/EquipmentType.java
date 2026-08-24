@@ -8,35 +8,32 @@ import jakarta.persistence.Id;
 @Entity
 public class EquipmentType {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    private String description;
+  private String description;
 
-    public EquipmentType() {
+  public EquipmentType() {}
 
-    }
+  public EquipmentType(Integer id, String description) {
+    this.id = id;
+    this.description = description;
+  }
 
-    public EquipmentType(Integer id, String description) {
-        this.id = id;
-        this.description = description;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
+  public void setDescription(String description) {
+    this.description = description;
+  }
 }
