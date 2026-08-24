@@ -14,7 +14,7 @@ public class MaintenanceRequestHistory {
 
     @ManyToOne
     @JoinColumn(name = "maintenance_request_id", nullable = false)
-    private Integer maintenanceRequestId;
+    private MaintenanceRequest maintenanceRequest;
 
     private LocalDateTime updatedAt;
 
@@ -23,7 +23,7 @@ public class MaintenanceRequestHistory {
 
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)
-    private Integer employeeId;
+    private Employee employee;
 
     public MaintenanceRequestHistory() {
 
@@ -37,12 +37,12 @@ public class MaintenanceRequestHistory {
         this.id = id;
     }
 
-    public Integer getMaintenanceRequestId() {
-        return maintenanceRequestId;
+    public MaintenanceRequest getMaintenanceRequest() {
+        return maintenanceRequest;
     }
 
-    public void setMaintenanceRequestId(Integer maintenanceRequestId) {
-        this.maintenanceRequestId = maintenanceRequestId;
+    public void setMaintenanceRequest(MaintenanceRequest maintenanceRequest) {
+        this.maintenanceRequest = maintenanceRequest;
     }
 
     public LocalDateTime getUpdatedAt() {
@@ -61,11 +61,11 @@ public class MaintenanceRequestHistory {
         this.status = status;
     }
 
-    public Integer getEmployeeId() {
-        return employeeId;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setEmployeeId(Integer employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }

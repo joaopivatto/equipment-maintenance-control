@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class MaintenanceRequest {
@@ -35,6 +37,12 @@ public class MaintenanceRequest {
     @OneToOne
     @JoinColumn(name = "maintenance_id")
     private Maintenance maintenance;
+
+    @OneToMany(mappedBy = "maintenanceRequest",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    @OrderBy("updatedAt DESC")
+    private List<MaintenanceRequestHistory> history = new ArrayList<>();
 
     public MaintenanceRequest() {
 
@@ -102,5 +110,19 @@ public class MaintenanceRequest {
 
     public void setMaintenance(Maintenance maintenance) {
         this.maintenance = maintenance;
+    }
+
+    public List<MaintenanceRequestHistory> getHistory() {
+        return history;
+    }
+
+    public void addHistory(MaintenanceRequestHistory historyEntry) {
+        history.add(historyEntry);
+        historyEntry.setMaintenanceRequest(this);
+    }
+
+    public void removeHistory(MaintenanceRequestHistory historyEntry) {
+        history.remove(historyEntry);
+        historyEntry.setMaintenanceRequest(null);
     }
 }
