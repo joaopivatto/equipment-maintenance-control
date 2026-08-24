@@ -12,12 +12,12 @@ public class Redirect {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "souce_employee_id", nullable = false)
-    private Integer sourceEmployeeId;
+    @JoinColumn(name = "source_employee_id", nullable = false)
+    private Employee sourceEmployee;
 
     @ManyToOne
     @JoinColumn(name = "destination_employee_id", nullable = false)
-    private Integer destinationEmployeeId;
+    private Employee destinationEmployee;
 
     private LocalDateTime createdAt;
 
@@ -33,20 +33,20 @@ public class Redirect {
         this.id = id;
     }
 
-    public Integer getSourceEmployeeId() {
-        return sourceEmployeeId;
+    public Employee getSourceEmployee() {
+        return sourceEmployee;
     }
 
-    public void setSourceEmployeeId(Integer sourceEmployeeId) {
-        this.sourceEmployeeId = sourceEmployeeId;
+    public void setSourceEmployee(Employee sourceEmployee) {
+        this.sourceEmployee = sourceEmployee;
     }
 
-    public Integer getDestinationEmployeeId() {
-        return destinationEmployeeId;
+    public Employee getDestinationEmployee() {
+        return destinationEmployee;
     }
 
-    public void setDestinationEmployeeId(Integer destinationEmployeeId) {
-        this.destinationEmployeeId = destinationEmployeeId;
+    public void setDestinationEmployee(Employee destinationEmployee) {
+        this.destinationEmployee = destinationEmployee;
     }
 
     public LocalDateTime getCreatedAt() {
