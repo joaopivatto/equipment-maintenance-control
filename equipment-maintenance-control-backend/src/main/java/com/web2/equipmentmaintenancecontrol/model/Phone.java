@@ -1,9 +1,19 @@
 package com.web2.equipmentmaintenancecontrol.model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Phone {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String number;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
     public Phone() {
 

@@ -1,15 +1,18 @@
 package com.web2.equipmentmaintenancecontrol.model;
+import jakarta.persistence.*;
 
-import jakarta.persistence.Entity;
 
 @Entity
-public class Customer extends Profile{
+public class Customer extends Profile {
 
+    @Column(unique = true, nullable = false, length = 11)
     private String cpf;
 
-    private String addressId;
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Address address;
 
-    private Integer phoneId;
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Phone phone;
 
     public String getCpf() {
         return cpf;
@@ -19,19 +22,19 @@ public class Customer extends Profile{
         this.cpf = cpf;
     }
 
-    public String getAddressId() {
-        return addressId;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setAddressId(String addressId) {
-        this.addressId = addressId;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
-    public Integer getPhoneId() {
-        return phoneId;
+    public Phone getPhone() {
+        return phone;
     }
 
-    public void setPhoneId(Integer phoneId) {
-        this.phoneId = phoneId;
+    public void setPhone(Phone phone) {
+        this.phone = phone;
     }
 }
