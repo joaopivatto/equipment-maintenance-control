@@ -8,10 +8,12 @@ public class Customer extends Profile {
     @Column(unique = true, nullable = false, length = 11)
     private String cpf;
 
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
+    @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
+    @JoinColumn(name = "phone_id")
     private Phone phone;
 
     public String getCpf() {

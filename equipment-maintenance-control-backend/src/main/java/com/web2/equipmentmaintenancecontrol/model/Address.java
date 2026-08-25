@@ -23,10 +23,6 @@ public class Address {
 
     private String state;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
-
     public Address() {
 
     }

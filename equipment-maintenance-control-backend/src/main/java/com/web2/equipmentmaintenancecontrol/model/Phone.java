@@ -11,10 +11,6 @@ public class Phone {
 
     private String number;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
-
     public Phone() {
 
     }
