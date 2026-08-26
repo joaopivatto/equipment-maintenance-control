@@ -11,16 +11,20 @@ public class Budget {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private BigDecimal value;
-    private Integer employeeId;
+
+    @ManyToOne
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
+
     private LocalDateTime createdAt;
 
     public Budget() {
     }
 
-    public Budget(Integer id, BigDecimal value, Integer employeeId, LocalDateTime createdAt) {
+    public Budget(Integer id, BigDecimal value, Employee employee, LocalDateTime createdAt) {
         this.id = id;
         this.value = value;
-        this.employeeId = employeeId;
+        this.employee = employee;
         this.createdAt = createdAt;
     }
 
@@ -40,12 +44,12 @@ public class Budget {
         this.value = value;
     }
 
-    public Integer getEmployeeId() {
-        return employeeId;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setEmployeeId(Integer employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
     public LocalDateTime getCreatedAt() {
