@@ -1,14 +1,26 @@
 package com.web2.equipmentmaintenancecontrol.model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Address {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String zipCode;
+
     private String street;
+
     private Integer number;
+
     private String complement;
+
     private String neighborhood;
+
     private String city;
+
     private String state;
 
     public Address() {
