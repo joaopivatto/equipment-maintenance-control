@@ -1,4 +1,4 @@
-import { Solicitacao } from './solicitacaomodel';
+import { Solicitacao } from './solicitacao.model';
 
 describe('Solicitacao', () => {
   it('should create an instance', () => {
