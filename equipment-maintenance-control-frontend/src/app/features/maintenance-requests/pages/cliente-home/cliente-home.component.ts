@@ -7,7 +7,7 @@ import { Solicitacao } from '../../models/solicitacao.model';
   selector: 'app-cliente-home',
   standalone: true,
   imports: [CommonModule],
-  template: '',
+  templateUrl: './cliente-home.component.html',
   styleUrl: './cliente-home.component.css'
 })
 export class ClienteHomeComponent implements OnInit {
