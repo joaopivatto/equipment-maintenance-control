@@ -1,1 +1,66 @@
-<p>new-request works!</p>
+<div class="container mt-5" style="max-width: 640px;">
+  <h2 class="mb-4">Nova Solicitação de Manutenção</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <div class="mb-3">
+      <label for="descricaoEquipamento" class="form-label">Descrição do Equipamento</label>
+      <input
+        id="descricaoEquipamento"
+        type="text"
+        class="form-control"
+        formControlName="descricaoEquipamento"
+        [class.is-invalid]="form.get('descricaoEquipamento')?.invalid && form.get('descricaoEquipamento')?.touched"
+        placeholder="Ex: Notebook Dell Inspiron 15"
+      />
+      @if (form.get('descricaoEquipamento')?.invalid && form.get('descricaoEquipamento')?.touched) {
+      <div class="invalid-feedback">
+        Informe a descrição do equipamento (máx. 100 caracteres).
+      </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="categoria" class="form-label">Categoria do Equipamento</label>
+      <select
+        id="categoria"
+        class="form-select"
+        formControlName="categoria"
+        [class.is-invalid]="form.get('categoria')?.invalid && form.get('categoria')?.touched"
+      >
+        <option value="" disabled selected>Selecione uma categoria</option>
+        @for (cat of categorias; track cat) {
+        <option [value]="cat">{{ cat }}</option>
+        }
+      </select>
+      @if (form.get('categoria')?.invalid && form.get('categoria')?.touched) {
+      <div class="invalid-feedback">
+        Selecione a categoria do equipamento.
+      </div>
+      }
+    </div>
+
+    <div class="mb-4">
+      <label for="descricaoDefeito" class="form-label">Descrição do Defeito</label>
+      <textarea
+        id="descricaoDefeito"
+        class="form-control"
+        rows="4"
+        formControlName="descricaoDefeito"
+        [class.is-invalid]="form.get('descricaoDefeito')?.invalid && form.get('descricaoDefeito')?.touched"
+        placeholder="Descreva o problema apresentado pelo equipamento"
+      ></textarea>
+      @if (form.get('descricaoDefeito')?.invalid && form.get('descricaoDefeito')?.touched) {
+      <div class="invalid-feedback">
+        Informe a descrição do defeito (máx. 500 caracteres).
+      </div>
+      }
+    </div>
+
+    <div class="d-flex justify-content-end gap-2">
+      <button type="button" class="btn btn-outline-secondary" (click)="cancel()">Cancelar</button>
+      <button type="submit" class="btn btn-primary">Registrar Solicitação</button>
+    </div>
+
+  </form>
+</div>

@@ -1,0 +1,60 @@
+<div class="container mt-5" style="max-width: 640px;">
+  <h2 class="mb-4">Categorias de Equipamento</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="row g-2 mb-4 align-items-start">
+    <div class="col">
+      <input
+        type="text"
+        class="form-control"
+        formControlName="name"
+        [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
+        placeholder="Nome da categoria"
+      />
+      @if (form.get('name')?.invalid && form.get('name')?.touched) {
+      <div class="invalid-feedback">
+        Informe o nome da categoria (máx. 50 caracteres).
+      </div>
+      }
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">
+        {{ editingId !== null ? 'Salvar' : 'Adicionar' }}
+      </button>
+    </div>
+    @if (editingId !== null) {
+    <div class="col-auto">
+      <button type="button" class="btn btn-outline-secondary" (click)="cancelEdit()">
+        Cancelar
+      </button>
+    </div>
+    }
+  </form>
+
+  <table class="table table-striped align-middle">
+    <thead class="table-dark">
+    <tr>
+      <th>Nome</th>
+      <th class="text-end">Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for (category of categories; track category.id) {
+    <tr>
+      <td>{{ category.name }}</td>
+      <td class="text-end">
+        <button class="btn btn-sm btn-outline-secondary me-2" (click)="startEdit(category)">
+          Editar
+        </button>
+        <button class="btn btn-sm btn-outline-danger" (click)="remove(category)">
+          Remover
+        </button>
+      </td>
+    </tr>
+    } @empty {
+    <tr>
+      <td colspan="2" class="text-center text-muted">Nenhuma categoria cadastrada.</td>
+    </tr>
+    }
+    </tbody>
+  </table>
+</div>
