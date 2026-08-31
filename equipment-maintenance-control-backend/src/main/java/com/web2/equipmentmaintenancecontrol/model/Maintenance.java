@@ -1,52 +1,61 @@
 package com.web2.equipmentmaintenancecontrol.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
+@Entity
 public class Maintenance {
-    private Integer id;
-    private String description;
-    private String customerInstructions;
-    private Integer employeeId;
 
-    public Integer getId() {
-        return id;
-    }
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  private String description;
+  private String customerInstructions;
 
-    public String getDescription() {
-        return description;
-    }
+  @ManyToOne
+  @JoinColumn(name = "employee_id")
+  private Employee employee;
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getCustomerInstructions() {
-        return customerInstructions;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public void setCustomerInstructions(String customerInstructions) {
-        this.customerInstructions = customerInstructions;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public Integer getEmployeeId() {
-        return employeeId;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setEmployeeId(Integer employeeId) {
-        this.employeeId = employeeId;
-    }
+  public String getCustomerInstructions() {
+    return customerInstructions;
+  }
 
-    public LocalDate getCreatedAt() {
-        return createdAt;
-    }
+  public void setCustomerInstructions(String customerInstructions) {
+    this.customerInstructions = customerInstructions;
+  }
 
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
-    }
+  public Employee getEmployee() {
+    return employee;
+  }
 
-    private LocalDate createdAt;
+  public void setEmployee(Employee employee) {
+    this.employee = employee;
+  }
+
+  public LocalDate getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDate createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  private LocalDate createdAt;
 }

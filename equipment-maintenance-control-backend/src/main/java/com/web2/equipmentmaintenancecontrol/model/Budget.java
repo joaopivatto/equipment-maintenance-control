@@ -1,62 +1,62 @@
 package com.web2.equipmentmaintenancecontrol.model;
 
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import jakarta.persistence.*;
 
 @Entity
 public class Budget {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private BigDecimal value;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
+  private BigDecimal value;
 
-    private LocalDateTime createdAt;
+  @ManyToOne
+  @JoinColumn(name = "employee_id", nullable = false)
+  private Employee employee;
 
-    public Budget() {
-    }
+  private LocalDateTime createdAt;
 
-    public Budget(Integer id, BigDecimal value, Employee employee, LocalDateTime createdAt) {
-        this.id = id;
-        this.value = value;
-        this.employee = employee;
-        this.createdAt = createdAt;
-    }
+  public Budget() {}
 
-    public Integer getId() {
-        return id;
-    }
+  public Budget(Integer id, BigDecimal value, Employee employee, LocalDateTime createdAt) {
+    this.id = id;
+    this.value = value;
+    this.employee = employee;
+    this.createdAt = createdAt;
+  }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public BigDecimal getValue() {
-        return value;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public void setValue(BigDecimal value) {
-        this.value = value;
-    }
+  public BigDecimal getValue() {
+    return value;
+  }
 
-    public Employee getEmployee() {
-        return employee;
-    }
+  public void setValue(BigDecimal value) {
+    this.value = value;
+  }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
+  public Employee getEmployee() {
+    return employee;
+  }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+  public void setEmployee(Employee employee) {
+    this.employee = employee;
+  }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 }
