@@ -1,0 +1,26 @@
+.page {
+  max-width: 1120px;
+}
+
+.page__title {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.page__subtitle {
+  color: #6b7280;
+  font-size: 0.9375rem;
+}
+
+.page__back {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-decoration: none;
+
+  &:hover {
+    color: #374151;
+  }
+}
