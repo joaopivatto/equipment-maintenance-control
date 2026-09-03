@@ -16,6 +16,10 @@ export class EmployeeService {
     return this.employees.filter((e) => e.active);
   }
 
+  findById(id: number): Employee | undefined {
+    return this.employees.find((e) => e.id === id && e.active);
+  }
+
   insert(name: string, email: string, birthDate: string, password: string): void {
     // "password" tem que fazer o hash no backend (SHA-256 + SALT); aqui é só mock
     this.employees.push(new Employee(this.nextId++, name, email, birthDate));

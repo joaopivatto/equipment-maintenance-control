@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { EmployeeListComponent } from './employee-list.component';
+import { EmployeeFormComponent } from './employee-form.component';
 
-describe('EmployeeListComponent', () => {
-  let component: EmployeeListComponent;
-  let fixture: ComponentFixture<EmployeeListComponent>;
+describe('EmployeeFormComponent', () => {
+  let component: EmployeeFormComponent;
+  let fixture: ComponentFixture<EmployeeFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EmployeeListComponent],
+      imports: [EmployeeFormComponent],
       providers: [provideRouter([])],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(EmployeeListComponent);
+    fixture = TestBed.createComponent(EmployeeFormComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
