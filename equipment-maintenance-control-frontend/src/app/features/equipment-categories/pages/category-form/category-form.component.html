@@ -1,0 +1,59 @@
+<!-- src/app/features/equipment-categories/pages/category-form/category-form.component.html -->
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">
+      <h3 class="mb-0">
+        <i class="fa" [ngClass]="isNew ? 'fa-plus-circle' : 'fa-edit'"></i>
+        {{ isNew ? 'Nova Categoria' : 'Editar Categoria #' + category.id }}
+      </h3>
+    </div>
+    <div class="card-body p-4">
+
+      <!-- Formulário Angular Standalone com Two-Way Binding [(ngModel)] -->
+      <form #formCategory="ngForm" (ngSubmit)="save()">
+
+        <div class="form-group mb-4">
+          <label for="name" class="form-label fw-bold">Nome da Categoria:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="form-control"
+            [(ngModel)]="category.name"
+            #nameModel="ngModel"
+            placeholder="Ex: Impressora, Notebook, Desktop..."
+            required
+            minlength="3"
+          />
+
+          <!-- Mensagens de validação em tempo real com Bootstrap -->
+          @if (nameModel.errors && (nameModel.dirty || nameModel.touched)) {
+            <div class="alert alert-danger mt-2">
+              @if (nameModel.errors['required']) {
+                <span>O nome da categoria é obrigatório.</span>
+              }
+              @if (nameModel.errors['minlength']) {
+                <span>O nome deve possuir no mínimo 3 caracteres.</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="d-flex justify-content-between">
+          <a class="btn btn-outline-secondary" routerLink="/categories">
+            <i class="fa fa-arrow-left"></i> Voltar para Lista
+          </a>
+          <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="!formCategory.form.valid"
+          >
+            <i class="fa fa-save"></i> Salvar Categoria
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
