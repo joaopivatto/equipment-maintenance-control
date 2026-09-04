@@ -1,7 +1,8 @@
 export interface Address {
   street: string;
   complement: string;
-  number: number;
+  neighborhood: string;
+  number: string;
   city: string;
   state: string;
   zipCode: string;
