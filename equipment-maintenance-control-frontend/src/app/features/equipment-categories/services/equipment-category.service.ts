@@ -5,7 +5,7 @@ import { EquipmentCategory } from '../models/equipment-category.model';
   providedIn: 'root',
 })
 export class EquipmentCategoryService {
-  // Massa de teste (RF017) - depois substituído pela API REST
+  // Massa de teste - depois substituído pela API REST
   private categories: EquipmentCategory[] = [
     new EquipmentCategory(1, 'Notebook'),
     new EquipmentCategory(2, 'Desktop'),

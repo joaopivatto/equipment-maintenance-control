@@ -1,66 +1,78 @@
-<div class="container mt-5" style="max-width: 640px;">
-  <h2 class="mb-4">Nova Solicitação de Manutenção</h2>
+<div class="app-page">
+  <div class="page__head">
+    <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Voltar
+    </button>
+    <h2 class="page__title">Nova Solicitação de Manutenção</h2>
+  </div>
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
-
-    <div class="mb-3">
-      <label for="descricaoEquipamento" class="form-label">Descrição do Equipamento</label>
-      <input
-        id="descricaoEquipamento"
-        type="text"
-        class="form-control"
-        formControlName="descricaoEquipamento"
-        [class.is-invalid]="form.get('descricaoEquipamento')?.invalid && form.get('descricaoEquipamento')?.touched"
-        placeholder="Ex: Notebook Dell Inspiron 15"
-      />
-      @if (form.get('descricaoEquipamento')?.invalid && form.get('descricaoEquipamento')?.touched) {
-      <div class="invalid-feedback">
-        Informe a descrição do equipamento (máx. 100 caracteres).
-      </div>
-      }
-    </div>
-
-    <div class="mb-3">
-      <label for="categoria" class="form-label">Categoria do Equipamento</label>
-      <select
-        id="categoria"
-        class="form-select"
-        formControlName="categoria"
-        [class.is-invalid]="form.get('categoria')?.invalid && form.get('categoria')?.touched"
-      >
-        <option value="" disabled selected>Selecione uma categoria</option>
-        @for (cat of categorias; track cat) {
-        <option [value]="cat">{{ cat }}</option>
+  <p-card>
+    <form [formGroup]="form" (ngSubmit)="submit()" class="request-form">
+      <div class="field">
+        <label for="descricaoEquipamento">Descrição do Equipamento</label>
+        <input
+          pInputText
+          id="descricaoEquipamento"
+          type="text"
+          formControlName="descricaoEquipamento"
+          placeholder="Ex: Notebook Dell Inspiron 15"
+          [invalid]="
+            !!(
+              form.get('descricaoEquipamento')?.invalid &&
+              form.get('descricaoEquipamento')?.touched
+            )
+          "
+        />
+        @if (form.get('descricaoEquipamento')?.invalid && form.get('descricaoEquipamento')?.touched) {
+          <p-message severity="error" variant="simple" size="small">
+            Informe a descrição do equipamento (máx. 100 caracteres).
+          </p-message>
         }
-      </select>
-      @if (form.get('categoria')?.invalid && form.get('categoria')?.touched) {
-      <div class="invalid-feedback">
-        Selecione a categoria do equipamento.
       </div>
-      }
-    </div>
 
-    <div class="mb-4">
-      <label for="descricaoDefeito" class="form-label">Descrição do Defeito</label>
-      <textarea
-        id="descricaoDefeito"
-        class="form-control"
-        rows="4"
-        formControlName="descricaoDefeito"
-        [class.is-invalid]="form.get('descricaoDefeito')?.invalid && form.get('descricaoDefeito')?.touched"
-        placeholder="Descreva o problema apresentado pelo equipamento"
-      ></textarea>
-      @if (form.get('descricaoDefeito')?.invalid && form.get('descricaoDefeito')?.touched) {
-      <div class="invalid-feedback">
-        Informe a descrição do defeito (máx. 500 caracteres).
+      <div class="field">
+        <label for="categoria">Categoria do Equipamento</label>
+        <p-select
+          inputId="categoria"
+          formControlName="categoria"
+          [options]="categorias"
+          [fluid]="true"
+          placeholder="Selecione uma categoria"
+          [invalid]="!!(form.get('categoria')?.invalid && form.get('categoria')?.touched)"
+        />
+        @if (form.get('categoria')?.invalid && form.get('categoria')?.touched) {
+          <p-message severity="error" variant="simple" size="small">
+            Selecione a categoria do equipamento.
+          </p-message>
+        }
       </div>
-      }
-    </div>
 
-    <div class="d-flex justify-content-end gap-2">
-      <button type="button" class="btn btn-outline-secondary" (click)="cancel()">Cancelar</button>
-      <button type="submit" class="btn btn-primary">Registrar Solicitação</button>
-    </div>
+      <div class="field">
+        <label for="descricaoDefeito">Descrição do Defeito</label>
+        <textarea
+          pTextarea
+          id="descricaoDefeito"
+          rows="4"
+          formControlName="descricaoDefeito"
+          placeholder="Descreva o problema apresentado pelo equipamento"
+          [invalid]="
+            !!(form.get('descricaoDefeito')?.invalid && form.get('descricaoDefeito')?.touched)
+          "
+        ></textarea>
+        @if (form.get('descricaoDefeito')?.invalid && form.get('descricaoDefeito')?.touched) {
+          <p-message severity="error" variant="simple" size="small">
+            Informe a descrição do defeito (máx. 500 caracteres).
+          </p-message>
+        }
+      </div>
 
-  </form>
+      <div class="form-actions">
+        <button pButton type="button" severity="secondary" [outlined]="true" (click)="cancel()">
+          Cancelar
+        </button>
+        <button pButton type="submit">Registrar Solicitação</button>
+      </div>
+    </form>
+  </p-card>
 </div>

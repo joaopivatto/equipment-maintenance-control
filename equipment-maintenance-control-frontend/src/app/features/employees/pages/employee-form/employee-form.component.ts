@@ -1,12 +1,23 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ContentBoxComponent } from '../../../../shared';
+import { CardModule } from 'primeng/card';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { MessageModule } from 'primeng/message';
 import { EmployeeService } from '../../services/employee.service';
 
 @Component({
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, ContentBoxComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    CardModule,
+    InputTextModule,
+    ButtonModule,
+    MessageModule,
+  ],
   selector: 'app-employee-form',
   styleUrl: './employee-form.component.scss',
   templateUrl: './employee-form.component.html',
@@ -16,6 +27,7 @@ export class EmployeeFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private location = inject(Location);
 
   editingId: number | null = null;
 
@@ -28,6 +40,10 @@ export class EmployeeFormComponent implements OnInit {
 
   get isEditing(): boolean {
     return this.editingId !== null;
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   ngOnInit(): void {
@@ -43,7 +59,7 @@ export class EmployeeFormComponent implements OnInit {
     }
 
     this.editingId = employee.id;
-    // Na edição a senha não é alterada por aqui (RF018)
+    // Na edição a senha não é alterada por aqui
     this.form.get('password')?.clearValidators();
     this.form.get('password')?.updateValueAndValidity();
     this.form.patchValue({

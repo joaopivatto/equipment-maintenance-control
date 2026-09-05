@@ -1,0 +1,69 @@
+:host {
+  display: block;
+}
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 250px;
+  flex-shrink: 0;
+  padding: 1.25rem 1rem;
+  background: var(--p-content-background);
+  border-right: 1px solid var(--p-content-border-color);
+}
+
+.app-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.5rem;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--p-text-color);
+}
+
+.app-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.app-nav__link {
+  display: flex;
+  align-items: center;
+  gap: var(--p-navigation-item-gap, 0.625rem);
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--p-navigation-item-border-radius, var(--p-content-border-radius));
+  color: var(--p-navigation-item-color, var(--p-text-color));
+  font-size: 0.9375rem;
+
+  i {
+    color: var(--p-navigation-item-icon-color, var(--p-text-muted-color));
+  }
+
+  &:hover {
+    background: var(--p-navigation-item-focus-background, var(--p-content-hover-background));
+    color: var(--p-navigation-item-focus-color, var(--p-text-color));
+  }
+
+  &--active {
+    background: var(--p-navigation-item-active-background, var(--p-content-hover-background));
+    color: var(--p-navigation-item-active-color, var(--p-text-color));
+    font-weight: 600;
+
+    i {
+      color: var(--p-navigation-item-icon-active-color, var(--p-primary-color));
+    }
+  }
+}
+
+.app-content {
+  flex: 1;
+  min-width: 0;
+}

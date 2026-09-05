@@ -1,16 +1,28 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CardModule } from 'primeng/card';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { MessageModule } from 'primeng/message';
 import { EquipmentCategoryService } from '../../services/equipment-category.service';
 import { EquipmentCategory } from '../../models/equipment-category.model';
 
 @Component({
   selector: 'app-category-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    CardModule,
+    InputTextModule,
+    ButtonModule,
+    MessageModule,
+  ],
   templateUrl: './category-form.component.html',
-  styleUrl: './category-form.component.css'
+  styleUrl: './category-form.component.scss'
 })
 export class CategoryFormComponent implements OnInit {
   // Obtém a referência do formulário HTML para validações
@@ -19,6 +31,7 @@ export class CategoryFormComponent implements OnInit {
   private categoryService = inject(EquipmentCategoryService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private location = inject(Location);
 
   // Instancia um modelo de categoria vazio
   public category: EquipmentCategory = new EquipmentCategory();
@@ -38,9 +51,13 @@ export class CategoryFormComponent implements OnInit {
         this.category = { ...found };
       } else {
         alert('Categoria não encontrada!');
-        this.router.navigate(['/categories']); // Volta para a listagem se der erro
+        this.router.navigate(['/categories/list']); // Volta para a listagem se der erro
       }
     }
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   save(): void {
@@ -55,7 +72,7 @@ export class CategoryFormComponent implements OnInit {
         alert('Categoria atualizada com sucesso!');
       }
       // Redireciona de volta para a tela de listagem
-      this.router.navigate(['/categories']);
+      this.router.navigate(['/categories/list']);
     }
   }
 }

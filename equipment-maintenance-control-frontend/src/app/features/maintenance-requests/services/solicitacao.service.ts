@@ -5,7 +5,7 @@ import { Solicitacao } from '../models/solicitacao.model';
   providedIn: 'root'
 })
 export class SolicitacaoService {
-  // Massa de teste fictícia para validar todos os estados de RF003
+  // Massa de teste fictícia para validar todos os estados possíveis da solicitação
   private listaSolicitacoes: Solicitacao[] = [
     new Solicitacao(1, '2026-08-25 09:00', 'Notebook Dell Inspiron', 'Tela piscando sem parar', 'ABERTA'),
     new Solicitacao(2, '2026-08-25 10:30', 'Impressora HP Laserjet Pro', 'Papel enroscando na saída', 'ORÇADA'),

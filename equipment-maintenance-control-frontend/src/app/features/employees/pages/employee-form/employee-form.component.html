@@ -1,10 +1,11 @@
-<div class="page container-xxl py-4">
-  <div class="page__head mb-4">
-    <a routerLink="/employees/list" class="page__back">
-      <i class="bi bi-arrow-left me-1"></i>Voltar para a lista
-    </a>
-    <h2 class="page__title mb-1">{{ isEditing ? 'Editar funcionário' : 'Novo funcionário' }}</h2>
-    <p class="page__subtitle mb-0">
+<div class="app-page">
+  <div class="page__head">
+    <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Voltar
+    </button>
+    <h2 class="page__title">{{ isEditing ? 'Editar funcionário' : 'Novo funcionário' }}</h2>
+    <p class="page__subtitle">
       {{
         isEditing
           ? 'Atualize os dados do funcionário.'
@@ -13,71 +14,81 @@
     </p>
   </div>
 
-  <app-content-box title="Dados do funcionário">
-    <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3">
-      <div class="col-md-6">
-        <label class="form-label">Nome</label>
+  <p-card header="Dados do funcionário">
+    <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+      <div class="field">
+        <label for="name">Nome</label>
         <input
+          pInputText
+          id="name"
           type="text"
-          class="form-control"
           formControlName="name"
-          [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
+          [invalid]="!!(form.get('name')?.invalid && form.get('name')?.touched)"
         />
         @if (form.get('name')?.invalid && form.get('name')?.touched) {
-          <div class="invalid-feedback">Informe o nome.</div>
+          <p-message severity="error" variant="simple" size="small">Informe o nome.</p-message>
         }
       </div>
 
-      <div class="col-md-6">
-        <label class="form-label">E-mail</label>
+      <div class="field">
+        <label for="email">E-mail</label>
         <input
+          pInputText
+          id="email"
           type="email"
-          class="form-control"
           formControlName="email"
-          [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched"
+          [invalid]="!!(form.get('email')?.invalid && form.get('email')?.touched)"
         />
         @if (form.get('email')?.invalid && form.get('email')?.touched) {
-          <div class="invalid-feedback">Informe um e-mail válido.</div>
+          <p-message severity="error" variant="simple" size="small">Informe um e-mail válido.</p-message>
         }
       </div>
 
-      <div class="col-md-6">
-        <label class="form-label">Data de Nascimento</label>
+      <div class="field">
+        <label for="birthDate">Data de Nascimento</label>
         <input
+          pInputText
+          id="birthDate"
           type="date"
-          class="form-control"
           formControlName="birthDate"
-          [class.is-invalid]="form.get('birthDate')?.invalid && form.get('birthDate')?.touched"
+          [invalid]="!!(form.get('birthDate')?.invalid && form.get('birthDate')?.touched)"
         />
         @if (form.get('birthDate')?.invalid && form.get('birthDate')?.touched) {
-          <div class="invalid-feedback">Informe a data de nascimento.</div>
+          <p-message severity="error" variant="simple" size="small">
+            Informe a data de nascimento.
+          </p-message>
         }
       </div>
 
       @if (!isEditing) {
-        <div class="col-md-6">
-          <label class="form-label">Senha (4 dígitos)</label>
+        <div class="field">
+          <label for="password">Senha (4 dígitos)</label>
           <input
+            pInputText
+            id="password"
             type="password"
-            class="form-control"
             formControlName="password"
             maxlength="4"
-            [class.is-invalid]="form.get('password')?.invalid && form.get('password')?.touched"
+            [invalid]="!!(form.get('password')?.invalid && form.get('password')?.touched)"
           />
           @if (form.get('password')?.invalid && form.get('password')?.touched) {
-            <div class="invalid-feedback">A senha deve ter exatamente 4 números.</div>
+            <p-message severity="error" variant="simple" size="small">
+              A senha deve ter exatamente 4 números.
+            </p-message>
           }
         </div>
       }
 
-      <div class="col-12 d-flex gap-2 pt-2">
-        <button type="submit" class="btn btn-primary">
-          <i class="bi bi-check-lg me-2"></i>{{ isEditing ? 'Salvar' : 'Adicionar' }}
+      <div class="form-actions">
+        <button pButton type="submit">
+          <i class="pi pi-check"></i>
+          {{ isEditing ? 'Salvar' : 'Adicionar' }}
         </button>
-        <a routerLink="/employees/list" class="btn btn-outline-secondary">
-          <i class="bi bi-x-lg me-2"></i>Cancelar
+        <a pButton severity="secondary" [outlined]="true" routerLink="/employees/list">
+          <i class="pi pi-times"></i>
+          Cancelar
         </a>
       </div>
     </form>
-  </app-content-box>
+  </p-card>
 </div>

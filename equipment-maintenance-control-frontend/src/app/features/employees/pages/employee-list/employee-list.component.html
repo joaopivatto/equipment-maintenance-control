@@ -1,60 +1,66 @@
-<div class="page container-xxl py-4">
-  <div class="page__head d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-    <div>
-      <h2 class="page__title mb-1">Funcionários</h2>
-      <p class="page__subtitle mb-0">Funcionários com acesso ao sistema de manutenção.</p>
+<div class="app-page">
+  <div class="page__head">
+    <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Voltar
+    </button>
+    <div class="page__head-row">
+      <div>
+        <h2 class="page__title">Funcionários</h2>
+      </div>
+      <a pButton routerLink="/employees/new">
+        <i class="pi pi-plus"></i>
+        Novo funcionário
+      </a>
     </div>
-    <a routerLink="/employees/new" class="btn btn-primary">
-      <i class="bi bi-plus-lg me-2"></i>Novo funcionário
-    </a>
   </div>
 
-  <app-content-box title="Funcionários cadastrados">
-    <div class="table-responsive">
-      <table class="table table-hover align-middle mb-0">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>E-mail</th>
-            <th>Data de Nascimento</th>
-            <th class="text-end">Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (employee of employees; track employee.id) {
-            <tr>
-              <td>{{ employee.name }}</td>
-              <td>{{ employee.email }}</td>
-              <td>{{ employee.birthDate }}</td>
-              <td class="text-end text-nowrap">
-                <a
-                  [routerLink]="['/employees', employee.id, 'edit']"
-                  class="btn btn-sm btn-outline-secondary me-2"
-                  title="Editar"
-                  aria-label="Editar funcionário"
-                >
-                  <i class="bi bi-pencil"></i>
-                </a>
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-danger"
-                  (click)="remove(employee)"
-                  title="Remover"
-                  aria-label="Remover funcionário"
-                >
-                  <i class="bi bi-trash"></i>
-                </button>
-              </td>
-            </tr>
-          } @empty {
-            <tr>
-              <td colspan="4" class="text-center text-muted py-4">
-                Nenhum funcionário cadastrado.
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </app-content-box>
+  <p-card header="Funcionários cadastrados">
+    <p-table [value]="employees">
+      <ng-template #header>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Data de Nascimento</th>
+          <th class="text-end">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-employee>
+        <tr>
+          <td>{{ employee.name }}</td>
+          <td>{{ employee.email }}</td>
+          <td>{{ employee.birthDate }}</td>
+          <td class="text-end">
+            <a
+              pButton
+              [rounded]="true"
+              [text]="true"
+              severity="secondary"
+              [routerLink]="['/employees', employee.id, 'edit']"
+              title="Editar"
+              aria-label="Editar funcionário"
+            >
+              <i class="pi pi-pencil"></i>
+            </a>
+            <button
+              pButton
+              [rounded]="true"
+              [text]="true"
+              severity="danger"
+              (click)="remove(employee)"
+              title="Remover"
+              aria-label="Remover funcionário"
+            >
+              <i class="pi pi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="4" class="page__empty">Nenhum funcionário cadastrado.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
 </div>
