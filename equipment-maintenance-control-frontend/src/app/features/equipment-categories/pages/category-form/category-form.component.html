@@ -1,59 +1,60 @@
-<!-- src/app/features/equipment-categories/pages/category-form/category-form.component.html -->
-<div class="container mt-5">
-  <div class="card shadow-sm">
-    <div class="card-header bg-dark text-white">
-      <h3 class="mb-0">
-        <i class="fa" [ngClass]="isNew ? 'fa-plus-circle' : 'fa-edit'"></i>
-        {{ isNew ? 'Nova Categoria' : 'Editar Categoria #' + category.id }}
-      </h3>
-    </div>
-    <div class="card-body p-4">
-
-      <!-- Formulário Angular Standalone com Two-Way Binding [(ngModel)] -->
-      <form #formCategory="ngForm" (ngSubmit)="save()">
-
-        <div class="form-group mb-4">
-          <label for="name" class="form-label fw-bold">Nome da Categoria:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            class="form-control"
-            [(ngModel)]="category.name"
-            #nameModel="ngModel"
-            placeholder="Ex: Impressora, Notebook, Desktop..."
-            required
-            minlength="3"
-          />
-
-          <!-- Mensagens de validação em tempo real com Bootstrap -->
-          @if (nameModel.errors && (nameModel.dirty || nameModel.touched)) {
-            <div class="alert alert-danger mt-2">
-              @if (nameModel.errors['required']) {
-                <span>O nome da categoria é obrigatório.</span>
-              }
-              @if (nameModel.errors['minlength']) {
-                <span>O nome deve possuir no mínimo 3 caracteres.</span>
-              }
-            </div>
-          }
-        </div>
-
-        <!-- Botões de Ação -->
-        <div class="d-flex justify-content-between">
-          <a class="btn btn-outline-secondary" routerLink="/categories">
-            <i class="fa fa-arrow-left"></i> Voltar para Lista
-          </a>
-          <button
-            type="submit"
-            class="btn btn-success"
-            [disabled]="!formCategory.form.valid"
-          >
-            <i class="fa fa-save"></i> Salvar Categoria
-          </button>
-        </div>
-
-      </form>
-    </div>
+<div class="app-page">
+  <div class="page__head">
+    <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Voltar
+    </button>
+    <h2 class="page__title">
+      {{ isNew ? 'Nova Categoria' : 'Editar Categoria #' + category.id }}
+    </h2>
+    <p class="page__subtitle">
+      {{
+        isNew
+          ? 'Preencha os dados para cadastrar uma nova categoria.'
+          : 'Atualize os dados da categoria.'
+      }}
+    </p>
   </div>
+
+  <p-card header="Dados da categoria">
+    <form #formCategory="ngForm" (ngSubmit)="save()">
+      <div class="field">
+        <label for="name">Nome da Categoria</label>
+        <input
+          pInputText
+          type="text"
+          id="name"
+          name="name"
+          [(ngModel)]="category.name"
+          #nameModel="ngModel"
+          placeholder="Ex: Impressora, Notebook, Desktop..."
+          required
+          minlength="3"
+          [invalid]="!!(nameModel.errors && (nameModel.dirty || nameModel.touched))"
+        />
+
+        @if (nameModel.errors && (nameModel.dirty || nameModel.touched)) {
+          <p-message severity="error" variant="simple" size="small">
+            @if (nameModel.errors['required']) {
+              <span>O nome da categoria é obrigatório.</span>
+            }
+            @if (nameModel.errors['minlength']) {
+              <span>O nome deve possuir no mínimo 3 caracteres.</span>
+            }
+          </p-message>
+        }
+      </div>
+
+      <div class="form-actions">
+        <button pButton type="submit" [disabled]="!formCategory.form.valid">
+          <i class="pi pi-check"></i>
+          {{ isNew ? 'Adicionar' : 'Salvar' }}
+        </button>
+        <a pButton severity="secondary" [outlined]="true" routerLink="/categories/list">
+          <i class="pi pi-times"></i>
+          Cancelar
+        </a>
+      </div>
+    </form>
+  </p-card>
 </div>

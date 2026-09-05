@@ -6,7 +6,7 @@ export const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
   {
-    path: 'cliente',
+    path: 'requests',
     loadChildren: () =>
       import('./features/maintenance-requests/maintenance-requests.routes').then(
         (m) => m.MAINTENANCE_REQUESTS_ROUTES,

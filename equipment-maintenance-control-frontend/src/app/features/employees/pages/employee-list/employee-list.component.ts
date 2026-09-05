@@ -1,18 +1,21 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ContentBoxComponent } from '../../../../shared';
+import { CardModule } from 'primeng/card';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
 import { EmployeeService } from '../../services/employee.service';
 import { Employee } from '../../models/employee.model';
 
 @Component({
-  imports: [CommonModule, RouterLink, ContentBoxComponent],
+  imports: [CommonModule, RouterLink, CardModule, TableModule, ButtonModule],
   selector: 'app-employee-list',
   styleUrl: './employee-list.component.scss',
   templateUrl: './employee-list.component.html',
 })
 export class EmployeeListComponent implements OnInit {
   private employeeService = inject(EmployeeService);
+  private location = inject(Location);
 
   // TODO: substituir por AuthService real quando o login/sessão estiver implementado
   private currentEmployeeId = 1;
@@ -21,6 +24,10 @@ export class EmployeeListComponent implements OnInit {
 
   ngOnInit(): void {
     this.reload();
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   private reload(): void {

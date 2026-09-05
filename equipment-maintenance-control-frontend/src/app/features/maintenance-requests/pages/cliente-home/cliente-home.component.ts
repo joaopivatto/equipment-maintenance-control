@@ -1,22 +1,34 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+import { ButtonModule } from 'primeng/button';
 import { SolicitacaoService } from '../../services/solicitacao.service';
 import { Solicitacao } from '../../models/solicitacao.model';
+
+const ESTADO_SEVERITY: Record<string, 'secondary' | 'info' | 'success' | 'danger' | 'contrast'> = {
+  ABERTA: 'secondary',
+  ORÇADA: 'info',
+  APROVADA: 'success',
+  REJEITADA: 'danger',
+  ARRUMADA: 'contrast',
+};
 
 @Component({
   selector: 'app-cliente-home',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TableModule, TagModule, ButtonModule],
   templateUrl: './cliente-home.component.html',
-  styleUrl: './cliente-home.component.css'
+  styleUrl: './cliente-home.component.scss'
 })
 export class ClienteHomeComponent implements OnInit {
   private solicitacaoService = inject(SolicitacaoService); // Injeção de dependência via inject()
+  private location = inject(Location);
   public solicitacoes: Solicitacao[] = [];
 
   ngOnInit(): void {
-    // Busca as solicitações e as ordena de forma crescente por data/hora (Exigência RF003)
+    // Busca as solicitações e as ordena de forma crescente por data/hora
     // Tipagem explícita de (a: Solicitacao, b: Solicitacao) resolve os erros TS7006
     this.solicitacoes = this.solicitacaoService.listarTodas().sort((a: Solicitacao, b: Solicitacao) => {
       return new Date(a.dataHora).getTime() - new Date(b.dataHora).getTime();
@@ -28,4 +40,12 @@ export class ClienteHomeComponent implements OnInit {
   resgatar(id: number) { alert(`Resgatando serviço #${id} (RF009)`); }
   pagar(id: number) { alert(`Ir para Pagar Serviço #${id} (RF010)`); }
   visualizar(id: number) { alert(`Visualizando dados e histórico da solicitação #${id} (RF008)`); }
+
+  estadoSeverity(estado: string) {
+    return ESTADO_SEVERITY[estado] ?? 'secondary';
+  }
+
+  goBack(): void {
+    this.location.back();
+  }
 }
