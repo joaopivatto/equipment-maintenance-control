@@ -5,7 +5,7 @@ import { Employee } from '../models/employee.model';
   providedIn: 'root',
 })
 export class EmployeeService {
-  // Massa de teste (RF018) - depois substituído pela API REST
+  // Massa de teste - depois substituído pela API REST
   private employees: Employee[] = [
     new Employee(1, 'Maria', 'maria@empresa.com', '1990-04-12'),
     new Employee(2, 'Mário', 'mario@empresa.com', '1988-11-03'),
@@ -34,7 +34,7 @@ export class EmployeeService {
     }
   }
 
-  // RF018: não pode remover a si mesmo, nem remover se for o único funcionário ativo
+  // Não pode remover a si mesmo, nem remover se for o único funcionário ativo
   canRemove(id: number, currentEmployeeId: number): { allowed: boolean; reason?: string } {
     if (id === currentEmployeeId) {
       return { allowed: false, reason: 'Você não pode remover a si mesmo.' };

@@ -1,25 +1,23 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { CommonModule, Location } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
 import { EquipmentCategoryService } from '../../services/equipment-category.service';
 import { EquipmentCategory } from '../../models/equipment-category.model';
 
 @Component({
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterLink, CardModule, ButtonModule, TableModule],
   selector: 'app-category-list',
   styleUrl: './category-list.component.scss',
   templateUrl: './category-list.component.html',
 })
 export class CategoryListComponent implements OnInit {
   private categoryService = inject(EquipmentCategoryService);
-  private fb = inject(FormBuilder);
+  private location = inject(Location);
 
   categories: EquipmentCategory[] = [];
-  editingId: number | null = null;
-
-  form = this.fb.group({
-    name: ['', [Validators.required, Validators.maxLength(50)]],
-  });
 
   ngOnInit(): void {
     this.reload();
@@ -29,32 +27,8 @@ export class CategoryListComponent implements OnInit {
     this.categories = this.categoryService.listAll();
   }
 
-  startEdit(category: EquipmentCategory): void {
-    this.editingId = category.id;
-    this.form.setValue({ name: category.name });
-  }
-
-  cancelEdit(): void {
-    this.editingId = null;
-    this.form.reset();
-  }
-
-  submit(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    const name = this.form.value.name!;
-
-    if (this.editingId !== null) {
-      this.categoryService.update(this.editingId, name);
-    } else {
-      this.categoryService.insert(name);
-    }
-
-    this.cancelEdit();
-    this.reload();
+  goBack(): void {
+    this.location.back();
   }
 
   remove(category: EquipmentCategory): void {

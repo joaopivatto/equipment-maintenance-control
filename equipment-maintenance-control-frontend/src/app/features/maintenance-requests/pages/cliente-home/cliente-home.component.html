@@ -1,62 +1,93 @@
-<div class="container mt-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Minhas Solicitações de Manutenção</h2>
-    <button class="btn btn-primary" routerLink="/cliente/new-request"><i class="fa fa-plus"></i> Nova Solicitação</button>
+<div class="app-page">
+  <div class="page__head">
+    <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Voltar
+    </button>
+    <div class="page__head-row">
+      <h2 class="page__title">Minhas Solicitações de Manutenção</h2>
+      <a pButton routerLink="/requests/new">
+        <i class="pi pi-plus"></i>
+        Nova Solicitação
+      </a>
+    </div>
   </div>
 
-  <div class="table-responsive">
-    <table class="table table-striped table-hover align-middle">
-      <thead class="table-dark">
-        <tr>
-          <th>Data/Hora</th>
-          <th>Equipamento</th>
-          <th>Estado</th>
-          <th class="text-end">Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (soli of solicitacoes; track soli.id) {
-          <tr>
-            <td>{{ soli.dataHora }}</td>
-            <!-- Limita o equipamento a 30 caracteres (Exigência RF003) -->
-            <td>{{ soli.descricaoEquipamento.substring(0, 30) }}</td>
-            <td>
-              <span class="badge" [ngClass]="{
-                'bg-secondary': soli.estado === 'ABERTA',
-                'bg-info': soli.estado === 'ORÇADA',
-                'bg-success': soli.estado === 'APROVADA',
-                'bg-danger': soli.estado === 'REJEITADA',
-                'bg-primary': soli.estado === 'ARRUMADA'
-              }">{{ soli.estado }}</span>
-            </td>
-            <td class="text-end">
-              <!-- Botão padrão de Visualização (Sempre visível para RF008) -->
-              <button class="btn btn-sm btn-outline-secondary me-2" (click)="visualizar(soli.id)">
-                Visualizar
-              </button>
+  <p-table [value]="solicitacoes">
+    <ng-template #header>
+      <tr>
+        <th>Data/Hora</th>
+        <th>Equipamento</th>
+        <th>Estado</th>
+        <th class="text-end">Ações</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-soli>
+      <tr>
+        <td>{{ soli.dataHora }}</td>
+        <!-- Limita o equipamento a 30 caracteres -->
+        <td>{{ soli.descricaoEquipamento.substring(0, 30) }}</td>
+        <td>
+          <p-tag [value]="soli.estado" [severity]="estadoSeverity(soli.estado)" />
+        </td>
+        <td class="text-end">
+          <!-- Botão padrão de Visualização (sempre visível) -->
+          <button
+            pButton
+            [rounded]="true"
+            [text]="true"
+            severity="secondary"
+            (click)="visualizar(soli.id)"
+            title="Visualizar"
+            aria-label="Visualizar"
+          >
+            <i class="pi pi-eye"></i>
+          </button>
 
-              <!-- Botões de Ação Condicionais conforme o Estado (Exigências RF003) -->
-              @if (soli.estado === 'ORÇADA') {
-                <button class="btn btn-sm btn-success" (click)="aprovarRejeitar(soli.id)">
-                  Aprovar/Rejeitar
-                </button>
-              } @else if (soli.estado === 'REJEITADA') {
-                <button class="btn btn-sm btn-warning" (click)="resgatar(soli.id)">
-                  Resgatar
-                </button>
-              } @else if (soli.estado === 'ARRUMADA') {
-                <button class="btn btn-sm btn-primary" (click)="pagar(soli.id)">
-                  Pagar
-                </button>
-              }
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="4" class="text-center text-muted">Nenhuma solicitação encontrada.</td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+          <!-- Botões de Ação Condicionais conforme o Estado -->
+          @if (soli.estado === 'ORÇADA') {
+            <button
+              pButton
+              [rounded]="true"
+              [text]="true"
+              severity="success"
+              (click)="aprovarRejeitar(soli.id)"
+              title="Aprovar/Rejeitar"
+              aria-label="Aprovar/Rejeitar"
+            >
+              <i class="pi pi-check-square"></i>
+            </button>
+          } @else if (soli.estado === 'REJEITADA') {
+            <button
+              pButton
+              [rounded]="true"
+              [text]="true"
+              severity="warn"
+              (click)="resgatar(soli.id)"
+              title="Resgatar"
+              aria-label="Resgatar"
+            >
+              <i class="pi pi-undo"></i>
+            </button>
+          } @else if (soli.estado === 'ARRUMADA') {
+            <button
+              pButton
+              [rounded]="true"
+              [text]="true"
+              (click)="pagar(soli.id)"
+              title="Pagar"
+              aria-label="Pagar"
+            >
+              <i class="pi pi-wallet"></i>
+            </button>
+          }
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="4" class="page__empty">Nenhuma solicitação encontrada.</td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>
