@@ -27,13 +27,13 @@
 
 ## P0 - Fundação e autenticação
 
-**Responsável: Pessoa 1**
+**Responsável: João Victor Dourado**
 
-- [ ] **P0-01 - Validar o projeto atual**
+- [x] **P0-01 - Validar o projeto atual**
   - Rodar build e testes.
   - Corrigir erros de import, rota ou template antes de novas implementações.
 
-- [ ] **P0-02 - Separar layout público e autenticado**
+- [/] **P0-02 - Separar layout público e autenticado**
   - Login e autocadastro sem sidebar.
   - Cliente e funcionário com sidebar, perfil mockado e ação de logout.
 

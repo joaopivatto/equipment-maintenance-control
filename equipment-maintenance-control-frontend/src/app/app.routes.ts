@@ -7,13 +7,20 @@ export const routes: Routes = [
   },
   {
     path: 'requests',
-    loadChildren: () =>
-      import('./features/maintenance-requests/maintenance-requests.routes').then(
-        (m) => m.MAINTENANCE_REQUESTS_ROUTES,
+    loadComponent: () =>
+      import('./core/layout/authenticated-layout/authenticated-layout.component').then(
+        (m) => m.AuthenticatedLayoutComponent,
       ),
+    loadChildren: () => import('./features/maintenance-requests/maintenance-requests.routes').then(
+          (m) => m.MAINTENANCE_REQUESTS_ROUTES,
+        ),
   },
   {
     path: 'categories',
+    loadComponent: () =>
+      import('./core/layout/authenticated-layout/authenticated-layout.component').then(
+        (m) => m.AuthenticatedLayoutComponent,
+      ),
     loadChildren: () =>
       import('./features/equipment-categories/equipment-categories.routes').then(
         (m) => m.EQUIPMENT_CATEGORIES_ROUTES,
@@ -21,8 +28,11 @@ export const routes: Routes = [
   },
   {
     path: 'employees',
+    loadComponent: () =>
+      import('./core/layout/authenticated-layout/authenticated-layout.component').then(
+        (m) => m.AuthenticatedLayoutComponent,
+      ),
     loadChildren: () =>
       import('./features/employees/employees.routes').then((m) => m.EMPLOYEES_ROUTES),
   },
-  //ex para outras features { path: 'categories', loadChildren: () => import('./features/categories/categories.routes').then(m => m.CATEGORIES_ROUTES) },
 ];
