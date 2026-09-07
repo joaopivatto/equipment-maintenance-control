@@ -2,7 +2,7 @@
   @if (isMobile()) {
   <p-sidebar-backdrop class="absolute!" />
   }
-  <p-sidebar id="mobile-nav" variant="floating" [openOnHover]="true" [collapsible]="isMobile() ? 'offcanvas' : 'icon'" [overlay]="isMobile()" [open]="!isMobile()" width="16rem">
+  <p-sidebar id="mobile-nav" variant="floating" [openOnHover]="true" collapsible="icon" [overlay]="isMobile()" [open]="!isMobile()" width="16rem">
     <p-sidebar-spacer />
     <p-sidebar-aside>
       <p-sidebar-panel>
@@ -36,10 +36,13 @@
         <p-sidebar-footer>
           <p-sidebar-menu>
             <p-sidebar-menu-item>
-              <button pSidebarMenuButton class="p-1!">
-                <p-avatar label="JD" shape="circle" class="size-6 shrink-0 text-xs" />
-                <span>John Doe</span>
+              <button pSidebarMenuButton class="p-1!" (click)="p.toggle($event)">
+                <p-avatar label="{{ sessionService.currentUser()?.name?.charAt(0) }}" shape="circle" class="size-6 shrink-0 text-xs" />
+                <span>{{ sessionService.currentUser()?.name }}</span>
               </button>
+              <p-popover #p>
+                <button pButton type="button" class="p-button-text" (click)="sessionService.logout(); router.navigate(['/login']);" ><svg data-p-icon="sign-out"></svg> Sair</button>
+              </p-popover>
             </p-sidebar-menu-item>
           </p-sidebar-menu>
         </p-sidebar-footer>

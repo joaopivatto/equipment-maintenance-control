@@ -9,21 +9,21 @@ interface MockAccount extends SessionUser {
 @Service()
 export class SessionService {
   private readonly mockAccounts: MockAccount[] = [
-  {
-    id: 1,
-    name: 'João da Silva',
-    email: 'joao@cliente.com',
-    password: '1234',
-    profileType: ProfileType.CUSTOMER,
-  },
-  {
-    id: 2,
-    name: 'Maria da Costa',
-    email: 'maria@empresa.com',
-    password: '1234',
-    profileType: ProfileType.EMPLOYEE,
-  },
-];
+    {
+      id: 1,
+      name: 'João da Silva',
+      email: 'joao@cliente.com',
+      password: '1234',
+      profileType: ProfileType.CUSTOMER,
+    },
+    {
+      id: 2,
+      name: 'Maria da Costa',
+      email: 'maria@empresa.com',
+      password: '1234',
+      profileType: ProfileType.EMPLOYEE,
+    },
+  ];
   private readonly currentUserState = signal<SessionUser | null>(null);
 
   readonly currentUser = this.currentUserState.asReadonly();
@@ -36,7 +36,7 @@ export class SessionService {
     () => this.currentUser()?.profileType ?? null,
   );
 
-  login(email: string, password: string): boolean {
+  login(email: string, password: string): ProfileType | null {
     const account = this.mockAccounts.find(
       (acc) => acc.email === email && acc.password === password,
     );
@@ -47,9 +47,9 @@ export class SessionService {
         email: account.email,
         profileType: account.profileType,
       });
-      return true;
+      return account.profileType;
     }
-    return false;
+    return null;
   }
 
   logout(): void {

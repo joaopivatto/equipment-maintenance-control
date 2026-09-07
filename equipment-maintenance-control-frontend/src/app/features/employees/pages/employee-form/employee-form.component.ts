@@ -7,6 +7,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { EmployeeService } from '../../services/employee.service';
+import { DatePickerModule } from 'primeng/datepicker';
+import { DateService } from '../../../../shared/services/date.service';
 
 @Component({
   imports: [
@@ -17,6 +19,7 @@ import { EmployeeService } from '../../services/employee.service';
     InputTextModule,
     ButtonModule,
     MessageModule,
+    DatePickerModule
   ],
   selector: 'app-employee-form',
   styleUrl: './employee-form.component.scss',
@@ -24,6 +27,7 @@ import { EmployeeService } from '../../services/employee.service';
 })
 export class EmployeeFormComponent implements OnInit {
   private employeeService = inject(EmployeeService);
+  private dateService = inject(DateService);
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -34,7 +38,7 @@ export class EmployeeFormComponent implements OnInit {
   form = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(100)]],
     email: ['', [Validators.required, Validators.email]],
-    birthDate: ['', Validators.required],
+    birthDate: this.fb.control<Date | null>(null, Validators.required),
     password: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]],
   });
 
@@ -65,7 +69,7 @@ export class EmployeeFormComponent implements OnInit {
     this.form.patchValue({
       name: employee.name,
       email: employee.email,
-      birthDate: employee.birthDate,
+      birthDate: this.dateService.fromIsoDate(employee.birthDate),
     });
   }
 
@@ -77,10 +81,12 @@ export class EmployeeFormComponent implements OnInit {
 
     const { name, email, birthDate, password } = this.form.value;
 
+    const birthDateIso = this.dateService.toIsoDate(birthDate!);
+
     if (this.editingId !== null) {
-      this.employeeService.update(this.editingId, name!, email!, birthDate!);
+      this.employeeService.update(this.editingId, name!, email!, birthDateIso);
     } else {
-      this.employeeService.insert(name!, email!, birthDate!, password!);
+      this.employeeService.insert(name!, email!, birthDateIso, password!);
     }
 
     this.router.navigate(['/employees/list']);
