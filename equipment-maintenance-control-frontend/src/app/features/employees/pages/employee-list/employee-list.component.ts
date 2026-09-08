@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { EmployeeService } from '../../services/employee.service';
 import { Employee } from '../../models/employee.model';
 import { SkeletonModule } from 'primeng/skeleton';
+import { NotificationService } from '../../../../core/notifications/notification.service';
 
 @Component({
   imports: [CommonModule, RouterLink, CardModule, TableModule, ButtonModule, SkeletonModule],
@@ -17,6 +18,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 export class EmployeeListComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private location = inject(Location);
+  private notificationService = inject(NotificationService);
 
   protected readonly skeletonRows: Employee[] = Array.from(
     { length: 5 },
@@ -47,7 +49,7 @@ export class EmployeeListComponent implements OnInit {
     const check = this.employeeService.canRemove(employee.id, this.currentEmployeeId);
 
     if (!check.allowed) {
-      alert(check.reason);
+      this.notificationService.warning('Atenção', check.reason);
       return;
     }
 
