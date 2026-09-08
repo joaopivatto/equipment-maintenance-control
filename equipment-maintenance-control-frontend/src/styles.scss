@@ -33,6 +33,10 @@ a:focus {
   padding: 2rem 1.5rem;
 }
 
+.app-page .p-button {
+  transition: none;
+}
+
 .field {
   display: flex;
   flex-direction: column;

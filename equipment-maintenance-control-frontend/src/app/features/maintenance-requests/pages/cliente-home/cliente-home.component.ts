@@ -4,6 +4,8 @@ import { RouterLink } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+
 import { SolicitacaoService } from '../../services/solicitacao.service';
 import { Solicitacao } from '../../models/solicitacao.model';
 
@@ -18,7 +20,7 @@ const ESTADO_SEVERITY: Record<string, 'secondary' | 'info' | 'success' | 'danger
 @Component({
   selector: 'app-cliente-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, TableModule, TagModule, ButtonModule],
+  imports: [CommonModule, RouterLink, TableModule, TagModule, ButtonModule, CardModule],
   templateUrl: './cliente-home.component.html',
   styleUrl: './cliente-home.component.scss'
 })

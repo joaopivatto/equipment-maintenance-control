@@ -46,10 +46,10 @@
 
       <div class="field">
         <label for="birthDate">Data de Nascimento</label>
-        <input
-          pInputText
-          id="birthDate"
-          type="date"
+        <p-datepicker
+          inputId="birthDate"
+          [showIcon]="true"
+          [iconDisplay]="'input'"
           formControlName="birthDate"
           [invalid]="!!(form.get('birthDate')?.invalid && form.get('birthDate')?.touched)"
         />

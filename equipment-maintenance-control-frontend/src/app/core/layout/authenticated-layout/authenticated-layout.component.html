@@ -1,0 +1,55 @@
+<p-sidebar-layout class="h-full relative!">
+  @if (isMobile()) {
+  <p-sidebar-backdrop class="absolute!" />
+  }
+  <p-sidebar id="mobile-nav" variant="floating" [openOnHover]="true" collapsible="icon" [overlay]="isMobile()" [open]="!isMobile()" width="16rem">
+    <p-sidebar-spacer />
+    <p-sidebar-aside>
+      <p-sidebar-panel>
+        <p-sidebar-header>
+          <p-sidebar-menu>
+            <p-sidebar-menu-item>
+              <button pSidebarMenuButton class="p-1!">
+                <div class="flex size-6 shrink-0 items-center justify-center rounded-md bg-linear-to-br from-violet-500 to-indigo-600 text-white text-xs font-bold leading-none"><svg data-p-icon="wrench" color="white"></svg></div>
+                <span class="font-semibold text-sm">Sistema de Gerenciamento</span>
+              </button>
+            </p-sidebar-menu-item>
+          </p-sidebar-menu>
+        </p-sidebar-header>
+        <p-sidebar-content>
+          <p-sidebar-group>
+            <p-sidebar-group-label>Menu</p-sidebar-group-label>
+            <p-sidebar-group-content>
+              <p-sidebar-menu>
+                @for(navItem of navItems; track navItem.label) {
+                <p-sidebar-menu-item>
+                  <button pSidebarMenuButton [routerLink]="navItem.link" routerLinkActive #rla="routerLinkActive" [isActive]="rla.isActive">
+                    <i [class]="navItem.icon"></i>
+                    <span>{{navItem.label}}</span>
+                  </button>
+                </p-sidebar-menu-item>
+                }
+              </p-sidebar-menu>
+            </p-sidebar-group-content>
+          </p-sidebar-group>
+        </p-sidebar-content>
+        <p-sidebar-footer>
+          <p-sidebar-menu>
+            <p-sidebar-menu-item>
+              <button pSidebarMenuButton class="p-1!" (click)="p.toggle($event)">
+                <p-avatar label="{{ sessionService.currentUser()?.name?.charAt(0) }}" shape="circle" class="size-6 shrink-0 text-xs" />
+                <span>{{ sessionService.currentUser()?.name }}</span>
+              </button>
+              <p-popover #p>
+                <button pButton type="button" class="p-button-text" (click)="sessionService.logout(); router.navigate(['/login']);" ><svg data-p-icon="sign-out"></svg> Sair</button>
+              </p-popover>
+            </p-sidebar-menu-item>
+          </p-sidebar-menu>
+        </p-sidebar-footer>
+      </p-sidebar-panel>
+    </p-sidebar-aside>
+  </p-sidebar>
+  <p-sidebar-main>
+    <router-outlet></router-outlet>
+  </p-sidebar-main>
+</p-sidebar-layout>

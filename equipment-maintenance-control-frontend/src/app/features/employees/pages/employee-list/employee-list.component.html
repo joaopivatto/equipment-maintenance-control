@@ -15,14 +15,14 @@
     </div>
   </div>
 
-  <p-card header="Funcionários cadastrados">
-    <p-table [value]="employees">
+  <p-card>
+    <p-table [value]="employees" size="large" [paginator]="true" [rows]="20" [rowsPerPageOptions]="[5, 10, 20]">
       <ng-template #header>
         <tr>
           <th>Nome</th>
           <th>E-mail</th>
           <th>Data de Nascimento</th>
-          <th class="text-end">Ações</th>
+          <th class="text-end" style="width: 110px;">Ações</th>
         </tr>
       </ng-template>
       <ng-template #body let-employee>
