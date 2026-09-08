@@ -1,14 +1,15 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
+import { SkeletonModule } from 'primeng/skeleton';
 import { EquipmentCategoryService } from '../../services/equipment-category.service';
 import { EquipmentCategory } from '../../models/equipment-category.model';
 
 @Component({
-  imports: [CommonModule, RouterLink, CardModule, ButtonModule, TableModule],
+  imports: [CommonModule, RouterLink, CardModule, ButtonModule, TableModule, SkeletonModule],
   selector: 'app-category-list',
   styleUrl: './category-list.component.scss',
   templateUrl: './category-list.component.html',
@@ -17,6 +18,12 @@ export class CategoryListComponent implements OnInit {
   private categoryService = inject(EquipmentCategoryService);
   private location = inject(Location);
 
+  isLoading = signal(true);
+  protected readonly skeletonRows: EquipmentCategory[] = Array.from(
+      { length: 5 },
+      () => ({}) as EquipmentCategory
+    );
+
   categories: EquipmentCategory[] = [];
 
   ngOnInit(): void {
@@ -24,7 +31,9 @@ export class CategoryListComponent implements OnInit {
   }
 
   private reload(): void {
+    this.isLoading.set(true);
     this.categories = this.categoryService.listAll();
+    this.isLoading.set(false);
   }
 
   goBack(): void {
