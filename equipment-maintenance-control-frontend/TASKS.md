@@ -146,7 +146,7 @@
   - Confirmar remoção e impedir dados inválidos/duplicados.
   - Integrar seleção de categorias com a criação de solicitação.
 
-- [ ] **P0-19 - Revisar CRUD de funcionários (RF018)**
+- [ X ] **P0-19 - Revisar CRUD de funcionários (RF018)**
   - Criar, listar, editar e desativar funcionários.
   - Impedir remover a si mesmo e o único funcionário ativo.
   - Validar e-mail e data de nascimento.
