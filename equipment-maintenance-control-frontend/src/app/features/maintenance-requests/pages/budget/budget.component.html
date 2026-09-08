@@ -1,0 +1,61 @@
+<div class="app-page" *ngIf="solicitacao as soli">
+  <div class="page__head">
+    <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Voltar
+    </button>
+    <h2 class="page__title">Orçamento da Solicitação #{{ soli.id }}</h2>
+  </div>
+
+  <p-card>
+    <div class="budget-details">
+      <div class="budget-details__row">
+        <span class="budget-details__label">Equipamento</span>
+        <span>{{ soli.descricaoEquipamento }}</span>
+      </div>
+      <div class="budget-details__row">
+        <span class="budget-details__label">Defeito relatado</span>
+        <span>{{ soli.descricaoDefeito }}</span>
+      </div>
+      <div class="budget-details__row">
+        <span class="budget-details__label">Data/Hora da solicitação</span>
+        <span>{{ soli.dataHora }}</span>
+      </div>
+      <div class="budget-details__row">
+        <span class="budget-details__label">Status</span>
+        <p-tag value="ORÇADA" severity="info" />
+      </div>
+    </div>
+
+    <div class="budget-value">
+      <span class="budget-value__label">Valor do orçamento</span>
+      <span class="budget-value__amount">R$ {{ soli.budget?.value?.toFixed(2) }}</span>
+    </div>
+
+    <div class="budget-actions" *ngIf="!showRejectReason()">
+      <button pButton severity="success" (click)="approve()">
+        <i class="pi pi-check"></i>
+        Aprovar
+      </button>
+      <button pButton severity="danger" [outlined]="true" (click)="openRejectReason()">
+        <i class="pi pi-times"></i>
+        Rejeitar
+      </button>
+    </div>
+
+    <div class="budget-reject" *ngIf="showRejectReason()">
+      <label for="rejectionReason">Motivo da rejeição</label>
+      <textarea
+        pTextarea
+        id="rejectionReason"
+        rows="3"
+        [(ngModel)]="rejectionReason"
+        placeholder="Descreva o motivo da rejeição"
+      ></textarea>
+      <div class="budget-reject__actions">
+        <button pButton severity="danger" (click)="confirmReject()">Confirmar rejeição</button>
+        <button pButton severity="secondary" [text]="true" (click)="cancelReject()">Cancelar</button>
+      </div>
+    </div>
+  </p-card>
+</div>

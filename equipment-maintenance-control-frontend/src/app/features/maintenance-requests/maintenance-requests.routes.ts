@@ -5,11 +5,15 @@ export const MAINTENANCE_REQUESTS_ROUTES: Routes = [
   {
     path: 'list',
     loadComponent: () =>
-      import('./pages/cliente-home/cliente-home.component').then(m => m.ClienteHomeComponent)
+      import('./pages/cliente-home/cliente-home.component').then((m) => m.ClienteHomeComponent),
   },
   {
     path: 'new',
     loadComponent: () =>
-      import('./pages/new-request/new-request.component').then(m => m.NewRequestComponent)
-  }
+      import('./pages/new-request/new-request.component').then((m) => m.NewRequestComponent),
+  },
+  {
+    path: ':id/budget',
+    loadComponent: () => import('./pages/budget/budget.component').then((m) => m.BudgetComponent),
+  },
 ];

@@ -102,17 +102,17 @@
 
 > Depende de P0-05 e P0-12.
 
-- [ ] **P0-13 - Mostrar orçamento (RF005)**
+- [x] **P0-13 - Mostrar orçamento (RF005)**
   - Dados completos da solicitação.
   - Valor em destaque.
   - Botões Aprovar e Rejeitar.
 
-- [ ] **P0-14 - Aprovar serviço (RF006)**
+- [x] **P0-14 - Aprovar serviço (RF006)**
   - Atualizar estado para `APROVADA`.
   - Mostrar confirmação com valor.
   - Registrar evento no histórico.
 
-- [ ] **P0-15 - Rejeitar serviço (RF007)**
+- [x] **P0-15 - Rejeitar serviço (RF007)**
   - Coletar motivo da rejeição.
   - Atualizar estado para `REJEITADA`.
   - Registrar motivo e evento no histórico.
