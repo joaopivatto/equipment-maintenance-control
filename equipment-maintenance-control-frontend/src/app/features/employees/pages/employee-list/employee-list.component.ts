@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
@@ -6,9 +6,10 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { EmployeeService } from '../../services/employee.service';
 import { Employee } from '../../models/employee.model';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
-  imports: [CommonModule, RouterLink, CardModule, TableModule, ButtonModule],
+  imports: [CommonModule, RouterLink, CardModule, TableModule, ButtonModule, SkeletonModule],
   selector: 'app-employee-list',
   styleUrl: './employee-list.component.scss',
   templateUrl: './employee-list.component.html',
@@ -16,6 +17,12 @@ import { Employee } from '../../models/employee.model';
 export class EmployeeListComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private location = inject(Location);
+
+  protected readonly skeletonRows: Employee[] = Array.from(
+    { length: 5 },
+    () => ({}) as Employee
+  );
+  isLoading = signal(true);
 
   // TODO: substituir por AuthService real quando o login/sessão estiver implementado
   private currentEmployeeId = 1;
@@ -31,7 +38,9 @@ export class EmployeeListComponent implements OnInit {
   }
 
   private reload(): void {
+    this.isLoading.set(true);
     this.employees = this.employeeService.listAll();
+    this.isLoading.set(false);
   }
 
   remove(employee: Employee): void {

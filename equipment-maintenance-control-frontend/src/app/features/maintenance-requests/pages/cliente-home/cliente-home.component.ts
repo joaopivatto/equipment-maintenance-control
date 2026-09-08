@@ -1,10 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { SkeletonModule } from 'primeng/skeleton';
 
 import { SolicitacaoService } from '../../services/solicitacao.service';
 import { Solicitacao } from '../../models/solicitacao.model';
@@ -20,7 +21,7 @@ const ESTADO_SEVERITY: Record<string, 'secondary' | 'info' | 'success' | 'danger
 @Component({
   selector: 'app-cliente-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, TableModule, TagModule, ButtonModule, CardModule],
+  imports: [CommonModule, RouterLink, TableModule, TagModule, ButtonModule, CardModule, SkeletonModule],
   templateUrl: './cliente-home.component.html',
   styleUrl: './cliente-home.component.scss'
 })
@@ -29,12 +30,24 @@ export class ClienteHomeComponent implements OnInit {
   private location = inject(Location);
   public solicitacoes: Solicitacao[] = [];
 
+  isLoading = signal(true);
+  protected readonly skeletonRows: Solicitacao[] = Array.from(
+        { length: 5 },
+        () => ({}) as Solicitacao
+      );
+
   ngOnInit(): void {
     // Busca as solicitações e as ordena de forma crescente por data/hora
     // Tipagem explícita de (a: Solicitacao, b: Solicitacao) resolve os erros TS7006
+    this.reload();
+  }
+
+  private reload(): void {
+    this.isLoading.set(true);
     this.solicitacoes = this.solicitacaoService.listarTodas().sort((a: Solicitacao, b: Solicitacao) => {
       return new Date(a.dataHora).getTime() - new Date(b.dataHora).getTime();
     });
+    this.isLoading.set(false);
   }
 
   // Métodos de ação fictícios para testar cliques na tela
