@@ -9,6 +9,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { SolicitacaoService } from '../../services/solicitacao.service';
+import { NotificationService } from '../../../../core/notifications/notification.service';
 
 @Component({
   imports: [
@@ -30,6 +31,7 @@ export class NewRequestComponent {
   private solicitacaoService = inject(SolicitacaoService);
   private router = inject(Router);
   private location = inject(Location);
+  private notificationService = inject(NotificationService);
 
   // Categorias mockadas por enquanto (backend ainda não implementado)
   categorias = ['Notebook', 'Desktop', 'Impressora', 'Mouse', 'Teclado'];
@@ -43,12 +45,13 @@ export class NewRequestComponent {
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.notificationService.warning('Aviso', 'Por favor, corrija os erros no formulário antes de enviar.');
       return;
     }
 
     // TODO: substituir por chamada real à API REST quando o backend estiver pronto
     console.log('Nova solicitação:', this.form.value);
-    alert('Solicitação registrada com sucesso!');
+    this.notificationService.success('Sucesso', 'Solicitação registrada com sucesso!');
     this.router.navigate(['/requests/list']);
   }
 

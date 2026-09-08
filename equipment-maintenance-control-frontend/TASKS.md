@@ -33,7 +33,7 @@
   - Rodar build e testes.
   - Corrigir erros de import, rota ou template antes de novas implementações.
 
-- [/] **P0-02 - Separar layout público e autenticado**
+- [x] **P0-02 - Separar layout público e autenticado**
   - Login e autocadastro sem sidebar.
   - Cliente e funcionário com sidebar, perfil mockado e ação de logout.
 

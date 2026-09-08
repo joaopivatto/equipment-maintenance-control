@@ -9,6 +9,7 @@ import { MessageModule } from 'primeng/message';
 import { EmployeeService } from '../../services/employee.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DateService } from '../../../../shared/services/date.service';
+import { NotificationService } from '../../../../core/notifications/notification.service';
 
 @Component({
   imports: [
@@ -28,6 +29,7 @@ import { DateService } from '../../../../shared/services/date.service';
 export class EmployeeFormComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private dateService = inject(DateService);
+  private notificationService = inject(NotificationService);
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -76,6 +78,7 @@ export class EmployeeFormComponent implements OnInit {
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.notificationService.warning('Aviso', 'Por favor, corrija os erros no formulário antes de enviar.');
       return;
     }
 
@@ -85,8 +88,10 @@ export class EmployeeFormComponent implements OnInit {
 
     if (this.editingId !== null) {
       this.employeeService.update(this.editingId, name!, email!, birthDateIso);
+      this.notificationService.success('Sucesso', 'Funcionário atualizado com sucesso.');
     } else {
       this.employeeService.insert(name!, email!, birthDateIso, password!);
+      this.notificationService.success('Sucesso', 'Funcionário cadastrado com sucesso.');
     }
 
     this.router.navigate(['/employees/list']);

@@ -8,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { EquipmentCategoryService } from '../../services/equipment-category.service';
 import { EquipmentCategory } from '../../models/equipment-category.model';
+import { NotificationService } from '../../../../core/notifications/notification.service';
 
 @Component({
   selector: 'app-category-form',
@@ -32,6 +33,7 @@ export class CategoryFormComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private location = inject(Location);
+  private notificationService = inject(NotificationService);
 
   // Instancia um modelo de categoria vazio
   public category: EquipmentCategory = new EquipmentCategory();
@@ -65,14 +67,16 @@ export class CategoryFormComponent implements OnInit {
       if (this.isNew) {
         // Chama o método de inserção do serviço passando apenas o nome (conforme criado pelo seu grupo)
         this.categoryService.insert(this.category.name);
-        alert('Categoria cadastrada com sucesso!');
+        this.notificationService.success('Sucesso', 'Categoria cadastrada com sucesso!');
       } else {
         // Chama o método de atualização do serviço passando ID e novo nome
         this.categoryService.update(this.category.id, this.category.name);
-        alert('Categoria atualizada com sucesso!');
+        this.notificationService.success('Sucesso', 'Categoria atualizada com sucesso!');
       }
       // Redireciona de volta para a tela de listagem
       this.router.navigate(['/categories/list']);
+    } else {
+      this.notificationService.warning('Aviso', 'Por favor, corrija os erros no formulário antes de enviar.');
     }
   }
 }
