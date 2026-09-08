@@ -10,6 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { SolicitacaoService } from '../../services/solicitacao.service';
 import { NotificationService } from '../../../../core/notifications/notification.service';
+import { EquipmentCategoryService } from '../../../equipment-categories/services/equipment-category.service';
 
 @Component({
   imports: [
@@ -33,8 +34,10 @@ export class NewRequestComponent {
   private location = inject(Location);
   private notificationService = inject(NotificationService);
 
+  private equipmentCategoriesService = inject(EquipmentCategoryService)
+
   // Categorias mockadas por enquanto (backend ainda não implementado)
-  categorias = ['Notebook', 'Desktop', 'Impressora', 'Mouse', 'Teclado'];
+  equipmentCategories = this.equipmentCategoriesService.listAll();
 
   form = this.fb.group({
     descricaoEquipamento: ['', [Validators.required, Validators.maxLength(100)]],
