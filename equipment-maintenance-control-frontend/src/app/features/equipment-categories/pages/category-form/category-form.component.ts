@@ -36,7 +36,7 @@ export class CategoryFormComponent implements OnInit {
   private notificationService = inject(NotificationService);
 
   // Instancia um modelo de categoria vazio
-  public category: EquipmentCategory = new EquipmentCategory();
+  public category: EquipmentCategory = { id: 0, name: '', active: true };
   public isNew: boolean = true; // Flag para saber se é criação ou edição
 
   ngOnInit(): void {
@@ -52,7 +52,7 @@ export class CategoryFormComponent implements OnInit {
         // Clona o objeto para não alterar o serviço antes de clicar em "Salvar"
         this.category = { ...found };
       } else {
-        alert('Categoria não encontrada!');
+        this.notificationService.error('Erro', 'Categoria não encontrada!');
         this.router.navigate(['/categories/list']); // Volta para a listagem se der erro
       }
     }
@@ -64,14 +64,18 @@ export class CategoryFormComponent implements OnInit {
 
   save(): void {
     if (this.formCategory.form.valid) {
-      if (this.isNew) {
-        // Chama o método de inserção do serviço passando apenas o nome (conforme criado pelo seu grupo)
-        this.categoryService.insert(this.category.name);
-        this.notificationService.success('Sucesso', 'Categoria cadastrada com sucesso!');
-      } else {
-        // Chama o método de atualização do serviço passando ID e novo nome
-        this.categoryService.update(this.category.id, this.category.name);
-        this.notificationService.success('Sucesso', 'Categoria atualizada com sucesso!');
+      try {
+        if (this.isNew) {
+          // Chama o método de inserção do serviço passando apenas o nome (conforme criado pelo seu grupo)
+          this.categoryService.insert(this.category.name);
+          this.notificationService.success('Sucesso', 'Categoria cadastrada com sucesso!');
+        } else {
+          // Chama o método de atualização do serviço passando ID e novo nome
+          this.categoryService.update(this.category.id, this.category.name);
+          this.notificationService.success('Sucesso', 'Categoria atualizada com sucesso!');
+        }
+      } catch (error: any) {
+        this.notificationService.error('Erro', error.message);
       }
       // Redireciona de volta para a tela de listagem
       this.router.navigate(['/categories/list']);

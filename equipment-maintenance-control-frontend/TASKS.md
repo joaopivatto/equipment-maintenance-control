@@ -139,10 +139,10 @@
 
 ## P0 - Administração
 
-**Responsável: Pessoa 5**
+**Responsável: João Guilherme Pivatto**
 
-- [ ] **P0-18 - Revisar CRUD de categorias (RF017)**
-  - Criar, listar, editar e desativar categorias.
+- [ X ] **P0-18 - Revisar CRUD de categorias (RF017)**
+  - Criar, listar_, editar e desativar categorias.
   - Confirmar remoção e impedir dados inválidos/duplicados.
   - Integrar seleção de categorias com a criação de solicitação.
 
