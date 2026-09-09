@@ -8,14 +8,18 @@ import { CardModule } from 'primeng/card';
 import { SkeletonModule } from 'primeng/skeleton';
 
 import { MaintenanceRequestService } from '../../services/maintenance-request.service';
-import { MaintenanceRequest } from '../../models/maintenance-request.model';
+import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
 
-const ESTADO_SEVERITY: Record<string, 'secondary' | 'info' | 'success' | 'danger' | 'contrast'> = {
-  ABERTA: 'secondary',
-  ORÇADA: 'info',
-  APROVADA: 'success',
-  REJEITADA: 'danger',
-  ARRUMADA: 'contrast',
+const ESTADO_SEVERITY: Record<
+  RequestStatus,
+  'secondary' | 'info' | 'success' | 'danger' | 'contrast'
+> = {
+  [RequestStatus.ABERTA]: 'secondary',
+  [RequestStatus.ORCADA]: 'info',
+  [RequestStatus.APROVADA]: 'success',
+  [RequestStatus.REJEITADA]: 'danger',
+  [RequestStatus.ARRUMADA]: 'contrast',
+  [RequestStatus.PAGA]: 'contrast',
 };
 
 @Component({
@@ -46,8 +50,6 @@ export class ClienteHomeComponent implements OnInit {
   );
 
   ngOnInit(): void {
-    // Busca as solicitações e as ordena de forma crescente por data/hora
-    // Tipagem explícita de (a: MaintenanceRequest, b: MaintenanceRequest) resolve os erros TS7006
     this.reload();
   }
 
@@ -61,7 +63,6 @@ export class ClienteHomeComponent implements OnInit {
     this.isLoading.set(false);
   }
 
-  // Métodos de ação fictícios para testar cliques na tela
   aprovarRejeitar(id: number) {
     this.router.navigate(['/requests', id, 'budget']);
   }
@@ -75,9 +76,11 @@ export class ClienteHomeComponent implements OnInit {
     alert(`Visualizando dados e histórico da solicitação #${id} (RF008)`);
   }
 
-  estadoSeverity(estado: string) {
+  estadoSeverity(estado: RequestStatus) {
     return ESTADO_SEVERITY[estado] ?? 'secondary';
   }
+
+  readonly RequestStatus = RequestStatus;
 
   goBack(): void {
     this.location.back();

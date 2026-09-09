@@ -7,9 +7,11 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { MessageModule } from 'primeng/message';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 import { MaintenanceRequestService } from '../../services/maintenance-request.service';
-import { MaintenanceRequest } from '../../models/maintenance-request.model';
+import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 
 @Component({
@@ -23,7 +25,9 @@ import { NotificationService } from '../../../../core/notifications/notification
     TagModule,
     TextareaModule,
     MessageModule,
+    ConfirmDialogModule,
   ],
+  providers: [ConfirmationService],
   templateUrl: './budget.component.html',
   styleUrl: './budget.component.scss',
 })
@@ -33,6 +37,7 @@ export class BudgetComponent implements OnInit {
   private router = inject(Router);
   private location = inject(Location);
   private notificationService = inject(NotificationService);
+  private confirmationService = inject(ConfirmationService);
 
   solicitacao: MaintenanceRequest | undefined;
 
@@ -50,7 +55,7 @@ export class BudgetComponent implements OnInit {
       return;
     }
 
-    if (this.solicitacao.estado !== 'ORÇADA') {
+    if (this.solicitacao.estado !== RequestStatus.ORCADA) {
       this.notificationService.warning(
         'Aviso',
         'Esta solicitação não está mais aguardando aprovação de orçamento.',
@@ -68,20 +73,27 @@ export class BudgetComponent implements OnInit {
     if (!this.solicitacao) {
       return;
     }
-    if (
-      !confirm(
-        `Confirmar aprovação do orçamento de R$ ${this.solicitacao.budget?.value.toFixed(2)}?`,
-      )
-    ) {
-      return;
-    }
 
-    this.maintenanceRequestService.approve(this.solicitacao.id);
-    this.notificationService.success(
-      'Orçamento aprovado',
-      `Serviço aprovado com valor de R$ ${this.solicitacao.budget?.value.toFixed(2)}.`,
-    );
-    this.router.navigate(['/requests/list']);
+    this.confirmationService.confirm({
+      message: `Confirmar aprovação do orçamento de R$ ${this.solicitacao.budget?.value.toFixed(2)}?`,
+      header: 'Aprovar orçamento',
+      icon: 'pi pi-check-circle',
+      acceptLabel: 'Aprovar',
+      rejectLabel: 'Cancelar',
+      acceptButtonProps: { severity: 'success' },
+      rejectButtonProps: { severity: 'secondary', outlined: true },
+      accept: () => {
+        if (!this.solicitacao) {
+          return;
+        }
+        this.maintenanceRequestService.approve(this.solicitacao.id);
+        this.notificationService.success(
+          'Orçamento aprovado',
+          `Serviço aprovado com valor de R$ ${this.solicitacao.budget?.value.toFixed(2)}.`,
+        );
+        this.router.navigate(['/requests/list']);
+      },
+    });
   }
 
   // RF007 - Rejeitar serviço (abre o campo de motivo)
@@ -100,8 +112,22 @@ export class BudgetComponent implements OnInit {
       return;
     }
 
-    this.maintenanceRequestService.reject(this.solicitacao.id, this.rejectionReason.trim());
-    this.notificationService.success('Orçamento rejeitado', 'A rejeição foi registrada.');
-    this.router.navigate(['/requests/list']);
+    this.confirmationService.confirm({
+      message: 'Tem certeza que deseja rejeitar este orçamento? Essa ação não pode ser desfeita.',
+      header: 'Rejeitar orçamento',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Rejeitar',
+      rejectLabel: 'Cancelar',
+      acceptButtonProps: { severity: 'danger' },
+      rejectButtonProps: { severity: 'secondary', outlined: true },
+      accept: () => {
+        if (!this.solicitacao) {
+          return;
+        }
+        this.maintenanceRequestService.reject(this.solicitacao.id, this.rejectionReason.trim());
+        this.notificationService.success('Orçamento rejeitado', 'A rejeição foi registrada.');
+        this.router.navigate(['/requests/list']);
+      },
+    });
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MaintenanceRequest } from '../models/maintenance-request.model';
+import { MaintenanceRequest, RequestStatus } from '../models/maintenance-request.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ export class MaintenanceRequestService {
       dataHora: '2026-08-25 09:00',
       descricaoEquipamento: 'Notebook Dell Inspiron',
       descricaoDefeito: 'Tela piscando sem parar',
-      estado: 'ABERTA',
+      estado: RequestStatus.ABERTA,
       history: [],
     },
     {
@@ -20,7 +20,7 @@ export class MaintenanceRequestService {
       dataHora: '2026-08-25 10:30',
       descricaoEquipamento: 'Impressora HP Laserjet Pro',
       descricaoDefeito: 'Papel enroscando na saída',
-      estado: 'ORÇADA',
+      estado: RequestStatus.ORCADA,
       budget: { id: 1, value: 180.5, createdAt: '2026-08-25 11:00', employeeId: 1 },
       history: [],
     },
@@ -29,7 +29,7 @@ export class MaintenanceRequestService {
       dataHora: '2026-08-26 14:00',
       descricaoEquipamento: 'Desktop Gamer Core i7',
       descricaoDefeito: 'Não liga, bipa 3 vezes',
-      estado: 'APROVADA',
+      estado: RequestStatus.APROVADA,
       history: [],
     },
     {
@@ -37,7 +37,7 @@ export class MaintenanceRequestService {
       dataHora: '2026-08-26 15:15',
       descricaoEquipamento: 'Teclado Mecânico HyperX',
       descricaoDefeito: 'Tecla Espaço parou de funcionar',
-      estado: 'REJEITADA',
+      estado: RequestStatus.REJEITADA,
       history: [],
     },
     {
@@ -45,7 +45,7 @@ export class MaintenanceRequestService {
       dataHora: '2026-08-27 08:30',
       descricaoEquipamento: 'Mouse Logitech MX Master',
       descricaoDefeito: 'Clique duplo involuntário',
-      estado: 'ARRUMADA',
+      estado: RequestStatus.ARRUMADA,
       history: [],
     },
   ];
@@ -66,9 +66,9 @@ export class MaintenanceRequestService {
       return undefined;
     }
 
-    solicitacao.estado = 'APROVADA';
+    solicitacao.estado = RequestStatus.APROVADA;
     solicitacao.history.push({
-      status: 'APROVADA',
+      status: RequestStatus.APROVADA,
       dateTime: new Date().toISOString(),
     });
 
@@ -82,10 +82,10 @@ export class MaintenanceRequestService {
       return undefined;
     }
 
-    solicitacao.estado = 'REJEITADA';
+    solicitacao.estado = RequestStatus.REJEITADA;
     solicitacao.rejectionReason = reason;
     solicitacao.history.push({
-      status: 'REJEITADA',
+      status: RequestStatus.REJEITADA,
       dateTime: new Date().toISOString(),
       reason,
     });
