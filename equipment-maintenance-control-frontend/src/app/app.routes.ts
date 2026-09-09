@@ -35,4 +35,10 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/employees/employees.routes').then((m) => m.EMPLOYEES_ROUTES),
   },
+  // sempre deixar por último, para que seja a última rota a ser verificada
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./core/pages/not-found/not-found.component').then((m) => m.NotFoundComponent),
+  },
 ];

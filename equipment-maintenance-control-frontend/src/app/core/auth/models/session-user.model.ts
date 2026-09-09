@@ -1,4 +1,4 @@
-import { ProfileType } from '../../../shared/models/base-profile.model';
+import { ProfileType } from '../../../shared/models/user/base-profile.model';
 
 export interface SessionUser {
   id: number;
