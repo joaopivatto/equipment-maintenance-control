@@ -42,7 +42,7 @@
   - Criar rota curinga para URLs inexistentes.
   - Manter áreas de autenticação, cliente, funcionário e administração separadas.
 
-- [/] **P0-04 - Consolidar models e enums compartilhados**
+- [X] **P0-04 - Consolidar models e enums compartilhados**
   - Status de solicitação.
   - Solicitação, histórico, orçamento, manutenção e redirecionamento.
   - Cliente, endereço, funcionário e categoria.
