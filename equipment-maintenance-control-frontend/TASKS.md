@@ -37,7 +37,7 @@
   - Login e autocadastro sem sidebar.
   - Cliente e funcionário com sidebar, perfil mockado e ação de logout.
 
-- [ ] **P0-03 - Consolidar rotas globais**
+- [X] **P0-03 - Consolidar rotas globais**
   - `/` redireciona para `/login`.
   - Criar rota curinga para URLs inexistentes.
   - Manter áreas de autenticação, cliente, funcionário e administração separadas.
@@ -47,27 +47,27 @@
   - Solicitação, histórico, orçamento, manutenção e redirecionamento.
   - Cliente, endereço, funcionário e categoria.
 
-- [ ] **P0-05 - Criar massa de dados mockada**
+- [/] **P0-05 - Criar massa de dados mockada**
   - 2 funcionários: Maria e Mário.
   - 4 clientes: João, José, Joana e Joaquina.
   - 5 categorias: Notebook, Desktop, Impressora, Mouse e Teclado.
   - Pelo menos 20 solicitações com datas, estados e históricos variados.
 
-- [ ] **P0-06 - Criar sessão mockada**
+- [/] **P0-06 - Criar sessão mockada**
   - Usuário atual, tipo de perfil e logout.
   - Login redireciona cliente e funcionário para áreas distintas.
 
-- [ ] **P0-07 - Implementar Login (RF002)**
+- [/] **P0-07 - Implementar Login (RF002)**
   - Campos de e-mail e senha com validação.
   - Mensagem para credenciais inválidas.
   - Link para autocadastro.
 
-- [ ] **P0-08 - Implementar Autocadastro de cliente (RF001)**
+- [/] **P0-08 - Implementar Autocadastro de cliente (RF001)**
   - CPF, nome, e-mail, telefone e endereço completo.
   - Validações e mensagens de erro.
   - Confirmação visual de cadastro realizado.
 
-- [ ] **P0-09 - Preenchimento de endereço por CEP**
+- [/] **P0-09 - Preenchimento de endereço por CEP**
   - Preencher endereço ao informar CEP válido.
   - Definir fallback mockado se a ViaCEP estiver indisponível.
 
