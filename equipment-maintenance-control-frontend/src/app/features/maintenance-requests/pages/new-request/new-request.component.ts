@@ -8,7 +8,7 @@ import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
-import { SolicitacaoService } from '../../services/solicitacao.service';
+import { MaintenanceRequestService } from '../../services/maintenance-request.service';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 import { EquipmentCategoryService } from '../../../equipment-categories/services/equipment-category.service';
 
@@ -29,7 +29,7 @@ import { EquipmentCategoryService } from '../../../equipment-categories/services
 })
 export class NewRequestComponent {
   private fb = inject(FormBuilder);
-  private solicitacaoService = inject(SolicitacaoService);
+  private maintenanceRequestService = inject(MaintenanceRequestService);
   private router = inject(Router);
   private location = inject(Location);
   private notificationService = inject(NotificationService);
@@ -48,7 +48,10 @@ export class NewRequestComponent {
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      this.notificationService.warning('Aviso', 'Por favor, corrija os erros no formulário antes de enviar.');
+      this.notificationService.warning(
+        'Aviso',
+        'Por favor, corrija os erros no formulário antes de enviar.',
+      );
       return;
     }
 
