@@ -10,7 +10,8 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { MaintenanceRequestService } from '../../services/maintenance-request.service';
 import { NotificationService } from '../../../../core/notifications/notification.service';
-import { EquipmentCategoryService } from '../../../equipment-categories/services/equipment-category.service';
+import { EquipmentCategoryApiClient } from '../../../equipment-categories/api/equipment-category-api-client';
+import { EquipmentCategory } from '../../../equipment-categories/models/equipment-category.model';
 
 @Component({
   imports: [
@@ -34,10 +35,15 @@ export class NewRequestComponent {
   private location = inject(Location);
   private notificationService = inject(NotificationService);
 
-  private equipmentCategoryService = inject(EquipmentCategoryService);
+  private equipmentCategoryApiClient = inject(EquipmentCategoryApiClient);
 
-  // Categorias mockadas por enquanto (backend ainda não implementado)
-  equipmentCategories = this.equipmentCategoryService.listAll();
+  equipmentCategories: EquipmentCategory[] = [];
+
+  constructor() {
+    this.equipmentCategoryApiClient.listAll().subscribe((categories) => {
+      this.equipmentCategories = categories;
+    });
+  }
 
   form = this.formBuilder.group({
     equipmentDescription: ['', [Validators.required, Validators.maxLength(100)]],

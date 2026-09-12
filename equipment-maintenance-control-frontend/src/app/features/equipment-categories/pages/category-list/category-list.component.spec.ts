@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { EquipmentCategoryApiClient } from '../../api/equipment-category-api-client';
+import { MockEquipmentCategoryApiClient } from '../../api/mock-equipment-category-api-client';
 import { CategoryListComponent } from './category-list.component';
 
 describe('CategoryListComponent', () => {
@@ -9,7 +11,10 @@ describe('CategoryListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CategoryListComponent],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        { provide: EquipmentCategoryApiClient, useClass: MockEquipmentCategoryApiClient },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CategoryListComponent);
