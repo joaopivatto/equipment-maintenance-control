@@ -2,142 +2,271 @@
 
 <div class="app-page">
   <div class="page__head">
-    <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
+    <button
+      type="button"
+      pButton
+      [text]="true"
+      class="page__back"
+      (click)="goBack()"
+    >
       <i class="pi pi-arrow-left"></i>
       Voltar
     </button>
+
     <div class="page__head-row">
-      <h2 class="page__title">Solicitações de Manutenção</h2>
+      <h2 class="page__title">
+        {{
+        isEmployee()
+        ? 'Solicitações de Manutenção'
+        : 'Minhas Solicitações de Manutenção'
+        }}
+      </h2>
+
+      @if (!isEmployee()) {
       <a pButton routerLink="/requests/new">
         <i class="pi pi-plus"></i>
         Nova Solicitação
       </a>
+      }
     </div>
+
   </div>
+
   <p-card>
-    <p-table
-      [value]="isLoading() ? skeletonRows : requests"
-      size="large"
-      [paginator]="true"
-      [rows]="20"
-      [rowsPerPageOptions]="[5, 10, 20]"
-    >
+    @if (isEmployee()) {
+    <div class="filters">
+      <p-selectbutton
+        [options]="filterOptions"
+        [(ngModel)]="filterMode"
+        optionLabel="label"
+        optionValue="value"
+        (onChange)="onFilterModeChange()"
+      />
+
+      @if (filterMode === 'period') {
+      <div class="filters__period">
+        <div class="field">
+          <label for="periodStart">Data inicial</label>
+
+          <p-datepicker
+            inputId="periodStart"
+            [(ngModel)]="periodStart"
+            dateFormat="dd/mm/yy"
+            [showIcon]="true"
+            [iconDisplay]="'input'"
+            [showClear]="true"
+            (ngModelChange)="onPeriodChange()"
+          />
+        </div>
+
+        <div class="field">
+          <label for="periodEnd">Data final</label>
+
+          <p-datepicker
+            inputId="periodEnd"
+            [(ngModel)]="periodEnd"
+            dateFormat="dd/mm/yy"
+            [showIcon]="true"
+            [iconDisplay]="'input'"
+            [showClear]="true"
+            (ngModelChange)="onPeriodChange()"
+          />
+        </div>
+      </div>
+      }
+    </div>
+    }
+
+    @if (isLoading()) {
+    <p-table [value]="skeletonRows">
       <ng-template #header>
         <tr>
           <th>Data/Hora</th>
+
+          @if (isEmployee()) {
+          <th>Cliente</th>
+          }
+
           <th>Equipamento</th>
           <th>Estado</th>
-          <th class="text-end" style="width: 150px">Ações</th>
+          <th>Ações</th>
         </tr>
       </ng-template>
-      <ng-template #body let-request>
+
+      <ng-template #body>
         <tr>
-          @if (isLoading()) {
-          <td>
-            <p-skeleton width="100%" height="2rem" styleClass="mb-2"></p-skeleton>
-          </td>
-          <td>
-            <p-skeleton width="100%" height="2rem" styleClass="mb-2"></p-skeleton>
-          </td>
-          <td>
-            <p-skeleton width="100%" height="2rem" styleClass="mb-2"></p-skeleton>
-          </td>
-          <td>
-            <p-skeleton width="100%" height="2rem" styleClass="mb-2"></p-skeleton>
-          </td>
-          } @else {
-          <td>{{ request.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
-          <!-- Limita o equipamento a 30 caracteres -->
-          <td>{{ request.equipmentDescription | slice: 0 : 30 }}</td>
-          <td>
-            <p-tag [value]="request.status" [severity]="statusSeverity(request.status)" />
-          </td>
-          <td class="text-end">
-            <!-- Botão padrão de Visualização (sempre visível) -->
-            <button
-              pButton
-              [rounded]="true"
-              [text]="true"
-              severity="secondary"
-              (click)="viewDetails(request.id)"
-              title="Visualizar"
-              aria-label="Visualizar"
-            >
-              <i class="pi pi-eye"></i>
-            </button>
+          <td><p-skeleton /></td>
 
-            <!-- Ações do cliente -->
-            @if (request.status === RequestStatus.QUOTED) {
-            <button
-              pButton
-              [rounded]="true"
-              [text]="true"
-              severity="success"
-              (click)="reviewBudget(request.id)"
-              title="Aprovar/Rejeitar"
-              aria-label="Aprovar/Rejeitar"
-            >
-              <i class="pi pi-check-square"></i>
-            </button>
-            } @else if (request.status === RequestStatus.REJECTED) {
-            <button
-              pButton
-              [rounded]="true"
-              [text]="true"
-              severity="warn"
-              (click)="recoverService(request.id)"
-              title="Resgatar"
-              aria-label="Resgatar"
-            >
-              <i class="pi pi-undo"></i>
-            </button>
-            } @else if (request.status === RequestStatus.REPAIRED) {
-            <button
-              pButton
-              [rounded]="true"
-              [text]="true"
-              (click)="payForService(request.id)"
-              title="Pagar"
-              aria-label="Pagar"
-            >
-              <i class="pi pi-wallet"></i>
-            </button>
-            }
-
-            <!-- Ações do funcionário -->
-            @if (isEmployee() && request.status === RequestStatus.APPROVED) {
-            <button
-              pButton
-              [rounded]="true"
-              [text]="true"
-              severity="info"
-              (click)="performMaintenance(request.id)"
-              title="Efetuar manutenção"
-              aria-label="Efetuar manutenção"
-            >
-              <i class="pi pi-wrench"></i>
-            </button>
-            <button
-              pButton
-              [rounded]="true"
-              [text]="true"
-              severity="secondary"
-              (click)="redirectService(request.id)"
-              title="Redirecionar"
-              aria-label="Redirecionar"
-            >
-              <i class="pi pi-directions"></i>
-            </button>
-            }
-          </td>
+          @if (isEmployee()) {
+          <td><p-skeleton /></td>
           }
-        </tr>
-      </ng-template>
-      <ng-template #emptymessage>
-        <tr>
-          <td colspan="4" class="page__empty">Nenhuma solicitação encontrada.</td>
+
+          <td><p-skeleton /></td>
+          <td><p-skeleton /></td>
+          <td><p-skeleton /></td>
         </tr>
       </ng-template>
     </p-table>
+    } @else {
+    <p-table [value]="requests">
+      <ng-template #header>
+        <tr>
+          <th>Data/Hora</th>
+
+          @if (isEmployee()) {
+          <th>Cliente</th>
+          }
+
+          <th>Equipamento</th>
+          <th>Estado</th>
+          <th>Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-request>
+        <tr>
+          <td>
+            {{ request.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+          </td>
+
+          @if (isEmployee()) {
+          <td>
+            {{ request.customerName || '-' }}
+          </td>
+          }
+
+          <td>
+            {{ request.equipmentDescription }}
+          </td>
+
+          <td>
+            @if (isEmployee()) {
+            <span
+              class="status-badge"
+              [style.background-color]="statusColor(request.status)"
+            >
+              {{ request.status }}
+            </span>
+            } @else {
+            <p-tag
+              [value]="request.status"
+              [severity]="statusSeverity(request.status)"
+            />
+            }
+          </td>
+
+          <td>
+            <div class="actions">
+              @if (isEmployee()) {
+              @if (request.status === RequestStatus.OPEN) {
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="reviewBudget(request.id)"
+              >
+                <i class="pi pi-dollar"></i>
+                Orçar
+              </button>
+              }
+
+              @if (
+              request.status === RequestStatus.APPROVED ||
+              request.status === RequestStatus.REDIRECTED
+              ) {
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="performMaintenance(request.id)"
+              >
+                <i class="pi pi-wrench"></i>
+                Manutenção
+              </button>
+
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="redirectService(request.id)"
+              >
+                <i class="pi pi-arrow-right"></i>
+                Redirecionar
+              </button>
+              }
+
+              @if (request.status === RequestStatus.PAID) {
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="finalizeService(request.id)"
+              >
+                <i class="pi pi-check"></i>
+                Finalizar
+              </button>
+              }
+              } @else {
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="viewDetails(request.id)"
+              >
+                <i class="pi pi-eye"></i>
+                Detalhes
+              </button>
+
+              @if (request.status === RequestStatus.QUOTED) {
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="reviewBudget(request.id)"
+              >
+                <i class="pi pi-dollar"></i>
+                Ver orçamento
+              </button>
+              }
+
+              @if (request.status === RequestStatus.REJECTED) {
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="recoverService(request.id)"
+              >
+                <i class="pi pi-refresh"></i>
+                Recuperar
+              </button>
+              }
+
+              @if (request.status === RequestStatus.REPAIRED) {
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="payForService(request.id)"
+              >
+                <i class="pi pi-credit-card"></i>
+                Pagar
+              </button>
+              }
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template #emptymessage>
+        <tr>
+          <td [attr.colspan]="isEmployee() ? 5 : 4">
+            Nenhuma solicitação encontrada.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    }
+
   </p-card>
 </div>
