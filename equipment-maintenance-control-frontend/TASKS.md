@@ -157,16 +157,16 @@
 
 > Iniciar somente após os itens P0 estarem navegáveis.
 
-- [ ] **P1-01 - Resgatar serviço (RF009)** - Pessoa 3
+- [X] **P1-01 - Resgatar serviço (RF009)** - Pessoa 3
   - `REJEITADA` para `APROVADA`, com evento no histórico.
 
-- [ ] **P1-02 - Pagar serviço (RF010)** - Pessoa 3
+- [X] **P1-02 - Pagar serviço (RF010)** - Pessoa 3
   - Exibir valor, confirmar pagamento, registrar data/hora e mudar para `PAGA`.
 
-- [ ] **P1-03 - Efetuar manutenção (RF014)** - Pessoa 4
+- [X] **P1-03 - Efetuar manutenção (RF014)** - Pessoa 4
   - Descrição da manutenção, orientações, funcionário responsável e estado `ARRUMADA`.
 
-- [ ] **P1-04 - Redirecionar manutenção (RF015)** - Pessoa 4
+- [X] **P1-04 - Redirecionar manutenção (RF015)** - Pessoa 4
   - Escolher destino, impedir redirecionamento para si mesmo e registrar origem/destino.
 
 - [ ] **P1-05 - Finalizar solicitação (RF016)** - Pessoa 4
