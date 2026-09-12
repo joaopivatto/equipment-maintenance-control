@@ -4,12 +4,14 @@ import { ProfileType } from '../../shared';
 import { AuthApiClient } from '../api/auth-api-client';
 import { SessionUser } from './models/session-user.model';
 
+const STORAGE_KEY = 'session-user';
+
 @Injectable({
   providedIn: 'root',
 })
 export class SessionService {
   private readonly authApiClient = inject(AuthApiClient);
-  private readonly currentUserState = signal<SessionUser | null>(null);
+  private readonly currentUserState = signal<SessionUser | null>(this.readStoredUser());
 
   readonly currentUser = this.currentUserState.asReadonly();
 
@@ -23,12 +25,35 @@ export class SessionService {
 
   login(email: string, password: string): Observable<ProfileType | null> {
     return this.authApiClient.login(email, password).pipe(
-      tap((user) => this.currentUserState.set(user)),
+      tap((user) => this.setCurrentUser(user)),
       map((user) => user?.profileType ?? null),
     );
   }
 
   logout(): void {
-    this.authApiClient.logout().subscribe(() => this.currentUserState.set(null));
+    this.authApiClient.logout().subscribe(() => this.setCurrentUser(null));
+  }
+
+  private setCurrentUser(user: SessionUser | null): void {
+    this.currentUserState.set(user);
+    if (user) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }
+
+  private readStoredUser(): SessionUser | null {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(raw) as SessionUser;
+    } catch {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
   }
 }
