@@ -53,7 +53,7 @@
   - 5 categorias: Notebook, Desktop, Impressora, Mouse e Teclado.
   - Pelo menos 20 solicitações com datas, estados e históricos variados.
 
-- [/] **P0-06 - Criar sessão mockada**
+- [X] **P0-06 - Criar sessão mockada**
   - Usuário atual, tipo de perfil e logout.
   - Login redireciona cliente e funcionário para áreas distintas.
 

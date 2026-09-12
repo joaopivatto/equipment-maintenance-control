@@ -1,29 +1,14 @@
-import { Service, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
+import { map, Observable, tap } from 'rxjs';
 import { ProfileType } from '../../shared';
+import { AuthApiClient } from '../api/auth-api-client';
 import { SessionUser } from './models/session-user.model';
 
-interface MockAccount extends SessionUser {
-  password: string;
-}
-
-@Service()
+@Injectable({
+  providedIn: 'root',
+})
 export class SessionService {
-  private readonly mockAccounts: MockAccount[] = [
-    {
-      id: 1,
-      name: 'João da Silva',
-      email: 'joao@cliente.com',
-      password: '1234',
-      profileType: ProfileType.CUSTOMER,
-    },
-    {
-      id: 2,
-      name: 'Maria da Costa',
-      email: 'maria@empresa.com',
-      password: '1234',
-      profileType: ProfileType.EMPLOYEE,
-    },
-  ];
+  private readonly authApiClient = inject(AuthApiClient);
   private readonly currentUserState = signal<SessionUser | null>(null);
 
   readonly currentUser = this.currentUserState.asReadonly();
@@ -36,23 +21,14 @@ export class SessionService {
 
   readonly isCustomer = computed(() => this.profileType() === ProfileType.CUSTOMER);
 
-  login(email: string, password: string): ProfileType | null {
-    const account = this.mockAccounts.find(
-      (acc) => acc.email === email && acc.password === password,
+  login(email: string, password: string): Observable<ProfileType | null> {
+    return this.authApiClient.login(email, password).pipe(
+      tap((user) => this.currentUserState.set(user)),
+      map((user) => user?.profileType ?? null),
     );
-    if (account) {
-      this.currentUserState.set({
-        id: account.id,
-        name: account.name,
-        email: account.email,
-        profileType: account.profileType,
-      });
-      return account.profileType;
-    }
-    return null;
   }
 
   logout(): void {
-    this.currentUserState.set(null);
+    this.authApiClient.logout().subscribe(() => this.currentUserState.set(null));
   }
 }

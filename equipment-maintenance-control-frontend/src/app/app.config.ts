@@ -7,6 +7,8 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { MessageService } from 'primeng/api';
 
+import { AuthApiClient } from './core/api/auth-api-client';
+import { MockAuthApiClient } from './core/api/mock-auth-api-client';
 import { routes } from './app.routes';
 
 registerLocaleData(localePt);
@@ -14,6 +16,7 @@ registerLocaleData(localePt);
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: AuthApiClient, useClass: MockAuthApiClient },
     MessageService,
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
