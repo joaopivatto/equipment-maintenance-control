@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 import { CustomerRequestListComponent } from './customer-request-list.component';
 
@@ -10,7 +11,7 @@ describe('CustomerRequestListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CustomerRequestListComponent],
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), MessageService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CustomerRequestListComponent);
