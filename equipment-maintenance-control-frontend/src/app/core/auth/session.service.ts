@@ -28,13 +28,13 @@ export class SessionService {
 
   readonly currentUser = this.currentUserState.asReadonly();
 
-  readonly isAuthenticated = computed(
-    () => this.currentUser() !== null,
-  );
+  readonly isAuthenticated = computed(() => this.currentUser() !== null);
 
-  readonly profileType = computed(
-    () => this.currentUser()?.profileType ?? null,
-  );
+  readonly profileType = computed(() => this.currentUser()?.profileType ?? null);
+
+  readonly isEmployee = computed(() => this.profileType() === ProfileType.EMPLOYEE);
+
+  readonly isCustomer = computed(() => this.profileType() === ProfileType.CUSTOMER);
 
   login(email: string, password: string): ProfileType | null {
     const account = this.mockAccounts.find(

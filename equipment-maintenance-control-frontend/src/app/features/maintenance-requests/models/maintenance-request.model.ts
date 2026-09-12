@@ -6,6 +6,7 @@ export enum RequestStatus {
   QUOTED = 'ORÇADA',
   APPROVED = 'APROVADA',
   REJECTED = 'REJEITADA',
+  REDIRECTED = 'REDIRECIONADA',
   REPAIRED = 'ARRUMADA',
   PAID = 'PAGA',
 }
@@ -18,5 +19,17 @@ export interface MaintenanceRequest {
   status: RequestStatus;
   budget?: Budget;
   rejectionReason?: string;
+
+  // RF014 - Efetuar manutenção
+  maintenanceDescription?: string;
+  maintenanceInstructions?: string;
+
+  // Funcionário responsável atual pela solicitação (orçamento, manutenção ou redirecionamento)
+  assignedEmployeeId?: number;
+  assignedEmployeeName?: string;
+
+  // RF010 - Pagar serviço
+  paidAt?: string;
+
   history: HistoryEntry[];
 }
