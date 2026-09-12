@@ -57,7 +57,7 @@
   - Usuário atual, tipo de perfil e logout.
   - Login redireciona cliente e funcionário para áreas distintas.
 
-- [/] **P0-07 - Implementar Login (RF002)**
+- [X] **P0-07 - Implementar Login (RF002)**
   - Campos de e-mail e senha com validação.
   - Mensagem para credenciais inválidas.
   - Link para autocadastro.
