@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { EmployeeFormComponent } from './employee-form.component';
 
 describe('EmployeeFormComponent', () => {
@@ -9,7 +10,7 @@ describe('EmployeeFormComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [EmployeeFormComponent],
-      providers: [provideRouter([])],
+      providers: [MessageService, provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EmployeeFormComponent);

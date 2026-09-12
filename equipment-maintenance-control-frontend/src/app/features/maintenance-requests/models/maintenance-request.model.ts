@@ -2,20 +2,20 @@ import { Budget } from './budget.model';
 import { HistoryEntry } from './history-entry.model';
 
 export enum RequestStatus {
-  ABERTA = 'ABERTA',
-  ORCADA = 'ORÇADA',
-  APROVADA = 'APROVADA',
-  REJEITADA = 'REJEITADA',
-  ARRUMADA = 'ARRUMADA',
-  PAGA = 'PAGA',
+  OPEN = 'ABERTA',
+  QUOTED = 'ORÇADA',
+  APPROVED = 'APROVADA',
+  REJECTED = 'REJEITADA',
+  REPAIRED = 'ARRUMADA',
+  PAID = 'PAGA',
 }
 
 export interface MaintenanceRequest {
   id: number;
-  dataHora: string;
-  descricaoEquipamento: string;
-  descricaoDefeito: string;
-  estado: RequestStatus;
+  createdAt: string;
+  equipmentDescription: string;
+  defectDescription: string;
+  status: RequestStatus;
   budget?: Budget;
   rejectionReason?: string;
   history: HistoryEntry[];

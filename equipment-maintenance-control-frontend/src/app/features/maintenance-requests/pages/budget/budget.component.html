@@ -1,27 +1,27 @@
 <p-confirmdialog />
 
-<div class="app-page" *ngIf="solicitacao as soli">
+<div class="app-page" *ngIf="request as maintenanceRequest">
   <div class="page__head">
     <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
       <i class="pi pi-arrow-left"></i>
       Voltar
     </button>
-    <h2 class="page__title">Orçamento da Solicitação #{{ soli.id }}</h2>
+    <h2 class="page__title">Orçamento da Solicitação #{{ maintenanceRequest.id }}</h2>
   </div>
 
   <p-card>
     <div class="budget-details">
       <div class="budget-details__row">
         <span class="budget-details__label">Equipamento</span>
-        <span>{{ soli.descricaoEquipamento }}</span>
+        <span>{{ maintenanceRequest.equipmentDescription }}</span>
       </div>
       <div class="budget-details__row">
         <span class="budget-details__label">Defeito relatado</span>
-        <span>{{ soli.descricaoDefeito }}</span>
+        <span>{{ maintenanceRequest.defectDescription }}</span>
       </div>
       <div class="budget-details__row">
         <span class="budget-details__label">Data/Hora da solicitação</span>
-        <span>{{ soli.dataHora }}</span>
+        <span>{{ maintenanceRequest.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
       </div>
       <div class="budget-details__row">
         <span class="budget-details__label">Status</span>
@@ -31,7 +31,9 @@
 
     <div class="budget-value">
       <span class="budget-value__label">Valor do orçamento</span>
-      <span class="budget-value__amount">R$ {{ soli.budget?.value?.toFixed(2) }}</span>
+      <span class="budget-value__amount">
+        {{ maintenanceRequest.budget?.value | currency: 'BRL' }}
+      </span>
     </div>
 
     <div class="budget-actions" *ngIf="!showRejectReason()">
@@ -56,7 +58,9 @@
       ></textarea>
       <div class="budget-reject__actions">
         <button pButton severity="danger" (click)="confirmReject()">Confirmar rejeição</button>
-        <button pButton severity="secondary" [text]="true" (click)="cancelReject()">Cancelar</button>
+        <button pButton severity="secondary" [text]="true" (click)="cancelReject()">
+          Cancelar
+        </button>
       </div>
     </div>
   </p-card>

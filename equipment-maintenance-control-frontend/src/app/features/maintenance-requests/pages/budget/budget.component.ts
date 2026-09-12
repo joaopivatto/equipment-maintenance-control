@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule, CurrencyPipe, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardModule } from 'primeng/card';
@@ -27,7 +27,7 @@ import { NotificationService } from '../../../../core/notifications/notification
     MessageModule,
     ConfirmDialogModule,
   ],
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, CurrencyPipe],
   templateUrl: './budget.component.html',
   styleUrl: './budget.component.scss',
 })
@@ -38,8 +38,9 @@ export class BudgetComponent implements OnInit {
   private location = inject(Location);
   private notificationService = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
+  private currencyPipe = inject(CurrencyPipe);
 
-  solicitacao: MaintenanceRequest | undefined;
+  request: MaintenanceRequest | undefined;
 
   // Controla a exibição do campo de motivo antes de confirmar a rejeição (RF007)
   showRejectReason = signal(false);
@@ -47,15 +48,15 @@ export class BudgetComponent implements OnInit {
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
-    this.solicitacao = this.maintenanceRequestService.findById(id);
+    this.request = this.maintenanceRequestService.findById(id);
 
-    if (!this.solicitacao) {
+    if (!this.request) {
       this.notificationService.error('Erro', 'Solicitação não encontrada.');
       this.router.navigate(['/requests/list']);
       return;
     }
 
-    if (this.solicitacao.estado !== RequestStatus.ORCADA) {
+    if (this.request.status !== RequestStatus.QUOTED) {
       this.notificationService.warning(
         'Aviso',
         'Esta solicitação não está mais aguardando aprovação de orçamento.',
@@ -70,12 +71,14 @@ export class BudgetComponent implements OnInit {
 
   // RF006 - Aprovar serviço
   approve(): void {
-    if (!this.solicitacao) {
+    if (!this.request) {
       return;
     }
 
+    const formattedBudgetValue = this.currencyPipe.transform(this.request.budget?.value, 'BRL');
+
     this.confirmationService.confirm({
-      message: `Confirmar aprovação do orçamento de R$ ${this.solicitacao.budget?.value.toFixed(2)}?`,
+      message: `Confirmar aprovação do orçamento de ${formattedBudgetValue}?`,
       header: 'Aprovar orçamento',
       icon: 'pi pi-check-circle',
       acceptLabel: 'Aprovar',
@@ -83,13 +86,13 @@ export class BudgetComponent implements OnInit {
       acceptButtonProps: { severity: 'success' },
       rejectButtonProps: { severity: 'secondary', outlined: true },
       accept: () => {
-        if (!this.solicitacao) {
+        if (!this.request) {
           return;
         }
-        this.maintenanceRequestService.approve(this.solicitacao.id);
+        this.maintenanceRequestService.approve(this.request.id);
         this.notificationService.success(
           'Orçamento aprovado',
-          `Serviço aprovado com valor de R$ ${this.solicitacao.budget?.value.toFixed(2)}.`,
+          `Serviço aprovado com valor de ${formattedBudgetValue}.`,
         );
         this.router.navigate(['/requests/list']);
       },
@@ -107,7 +110,7 @@ export class BudgetComponent implements OnInit {
   }
 
   confirmReject(): void {
-    if (!this.solicitacao || !this.rejectionReason.trim()) {
+    if (!this.request || !this.rejectionReason.trim()) {
       this.notificationService.warning('Aviso', 'Informe o motivo da rejeição.');
       return;
     }
@@ -121,10 +124,10 @@ export class BudgetComponent implements OnInit {
       acceptButtonProps: { severity: 'danger' },
       rejectButtonProps: { severity: 'secondary', outlined: true },
       accept: () => {
-        if (!this.solicitacao) {
+        if (!this.request) {
           return;
         }
-        this.maintenanceRequestService.reject(this.solicitacao.id, this.rejectionReason.trim());
+        this.maintenanceRequestService.reject(this.request.id, this.rejectionReason.trim());
         this.notificationService.success('Orçamento rejeitado', 'A rejeição foi registrada.');
         this.router.navigate(['/requests/list']);
       },
