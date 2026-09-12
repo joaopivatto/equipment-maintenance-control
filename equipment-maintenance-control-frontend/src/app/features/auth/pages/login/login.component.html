@@ -1,1 +1,56 @@
-<p>login works!</p>
+<div class="auth-page">
+  <p-card header="Entrar" class="auth-card">
+    <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          formControlName="email"
+          [invalid]="!!(form.get('email')?.invalid && form.get('email')?.touched)"
+        />
+        @if (form.get('email')?.invalid && form.get('email')?.touched) {
+          <p-message severity="error" variant="simple" size="small">
+            Informe um e-mail válido.
+          </p-message>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Senha (4 dígitos)</label>
+        <p-inputotp
+          inputId="password"
+          formControlName="password"
+          [length]="4"
+          [integerOnly]="true"
+          [mask]="true"
+          [invalid]="!!(form.get('password')?.invalid && form.get('password')?.touched)"
+        />
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          <p-message severity="error" variant="simple" size="small">
+            A senha deve ter exatamente 4 números.
+          </p-message>
+        }
+      </div>
+
+      @if (invalidCredentials()) {
+        <p-message severity="error" variant="simple" size="small">
+          E-mail ou senha inválidos.
+        </p-message>
+      }
+
+      <div class="form-actions">
+        <button pButton type="submit" class="auth-submit">
+          <i class="pi pi-sign-in"></i>
+          Entrar
+        </button>
+      </div>
+
+      <p class="auth-footer">
+        Não tem uma conta?
+        <a routerLink="/customer-registration">Cadastrar</a>
+      </p>
+    </form>
+  </p-card>
+</div>
