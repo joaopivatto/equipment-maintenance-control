@@ -27,7 +27,7 @@
 
 ## P0 - Fundação e autenticação
 
-**Responsável: João Victor Dourado**
+**Responsável: João Victor Dourado + Matheus Alves** 
 
 - [x] **P0-01 - Validar o projeto atual**
   - Rodar build e testes.
@@ -47,7 +47,7 @@
   - Solicitação, histórico, orçamento, manutenção e redirecionamento.
   - Cliente, endereço, funcionário e categoria.
 
-- [/] **P0-05 - Criar massa de dados mockada**
+- [X] **P0-05 - Criar massa de dados mockada**
   - 2 funcionários: Maria e Mário.
   - 4 clientes: João, José, Joana e Joaquina.
   - 5 categorias: Notebook, Desktop, Impressora, Mouse e Teclado.
