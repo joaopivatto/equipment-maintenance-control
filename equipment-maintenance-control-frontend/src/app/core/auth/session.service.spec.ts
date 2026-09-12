@@ -7,6 +7,7 @@ describe('SessionService', () => {
   let service: SessionService;
 
   beforeEach(() => {
+    localStorage.clear();
     TestBed.configureTestingModule({
       providers: [{ provide: AuthApiClient, useClass: MockAuthApiClient }],
     });
