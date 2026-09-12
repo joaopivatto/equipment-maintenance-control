@@ -18,4 +18,14 @@ export const MAINTENANCE_REQUESTS_ROUTES: Routes = [
     path: ':id/budget',
     loadComponent: () => import('./pages/budget/budget.component').then((m) => m.BudgetComponent),
   },
+  {
+    path: ':id/maintenance',
+    loadComponent: () =>
+      import('./pages/maintenance/maintenance.component').then((m) => m.MaintenanceComponent),
+  },
+  {
+    path: ':id/redirect',
+    loadComponent: () =>
+      import('./pages/redirect/redirect.component').then((m) => m.RedirectComponent),
+  },
 ];

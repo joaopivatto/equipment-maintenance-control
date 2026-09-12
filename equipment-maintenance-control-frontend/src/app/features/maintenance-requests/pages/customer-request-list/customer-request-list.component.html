@@ -1,3 +1,5 @@
+<p-confirmdialog />
+
 <div class="app-page">
   <div class="page__head">
     <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
@@ -5,7 +7,7 @@
       Voltar
     </button>
     <div class="page__head-row">
-      <h2 class="page__title">Minhas Solicitações de Manutenção</h2>
+      <h2 class="page__title">Solicitações de Manutenção</h2>
       <a pButton routerLink="/requests/new">
         <i class="pi pi-plus"></i>
         Nova Solicitação
@@ -25,83 +27,109 @@
           <th>Data/Hora</th>
           <th>Equipamento</th>
           <th>Estado</th>
-          <th class="text-end" style="width: 110px">Ações</th>
+          <th class="text-end" style="width: 150px">Ações</th>
         </tr>
       </ng-template>
       <ng-template #body let-request>
         <tr>
           @if (isLoading()) {
-            <td>
-              <p-skeleton width="100%" height="2rem" styleClass="mb-2"></p-skeleton>
-            </td>
-            <td>
-              <p-skeleton width="100%" height="2rem" styleClass="mb-2"></p-skeleton>
-            </td>
-            <td>
-              <p-skeleton width="100%" height="2rem" styleClass="mb-2"></p-skeleton>
-            </td>
-            <td>
-              <p-skeleton width="100%" height="2rem" styleClass="mb-2"></p-skeleton>
-            </td>
+          <td>
+            <p-skeleton width="100%" height="2rem" styleClass="mb-2"></p-skeleton>
+          </td>
+          <td>
+            <p-skeleton width="100%" height="2rem" styleClass="mb-2"></p-skeleton>
+          </td>
+          <td>
+            <p-skeleton width="100%" height="2rem" styleClass="mb-2"></p-skeleton>
+          </td>
+          <td>
+            <p-skeleton width="100%" height="2rem" styleClass="mb-2"></p-skeleton>
+          </td>
           } @else {
-            <td>{{ request.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
-            <!-- Limita o equipamento a 30 caracteres -->
-            <td>{{ request.equipmentDescription | slice: 0 : 30 }}</td>
-            <td>
-              <p-tag [value]="request.status" [severity]="statusSeverity(request.status)" />
-            </td>
-            <td class="text-end">
-              <!-- Botão padrão de Visualização (sempre visível) -->
-              <button
-                pButton
-                [rounded]="true"
-                [text]="true"
-                severity="secondary"
-                (click)="viewDetails(request.id)"
-                title="Visualizar"
-                aria-label="Visualizar"
-              >
-                <i class="pi pi-eye"></i>
-              </button>
+          <td>{{ request.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+          <!-- Limita o equipamento a 30 caracteres -->
+          <td>{{ request.equipmentDescription | slice: 0 : 30 }}</td>
+          <td>
+            <p-tag [value]="request.status" [severity]="statusSeverity(request.status)" />
+          </td>
+          <td class="text-end">
+            <!-- Botão padrão de Visualização (sempre visível) -->
+            <button
+              pButton
+              [rounded]="true"
+              [text]="true"
+              severity="secondary"
+              (click)="viewDetails(request.id)"
+              title="Visualizar"
+              aria-label="Visualizar"
+            >
+              <i class="pi pi-eye"></i>
+            </button>
 
-              <!-- Botões de Ação Condicionais conforme o Estado -->
-              @if (request.status === RequestStatus.QUOTED) {
-                <button
-                  pButton
-                  [rounded]="true"
-                  [text]="true"
-                  severity="success"
-                  (click)="reviewBudget(request.id)"
-                  title="Aprovar/Rejeitar"
-                  aria-label="Aprovar/Rejeitar"
-                >
-                  <i class="pi pi-check-square"></i>
-                </button>
-              } @else if (request.status === RequestStatus.REJECTED) {
-                <button
-                  pButton
-                  [rounded]="true"
-                  [text]="true"
-                  severity="warn"
-                  (click)="recoverService(request.id)"
-                  title="Resgatar"
-                  aria-label="Resgatar"
-                >
-                  <i class="pi pi-undo"></i>
-                </button>
-              } @else if (request.status === RequestStatus.REPAIRED) {
-                <button
-                  pButton
-                  [rounded]="true"
-                  [text]="true"
-                  (click)="payForService(request.id)"
-                  title="Pagar"
-                  aria-label="Pagar"
-                >
-                  <i class="pi pi-wallet"></i>
-                </button>
-              }
-            </td>
+            <!-- Ações do cliente -->
+            @if (request.status === RequestStatus.QUOTED) {
+            <button
+              pButton
+              [rounded]="true"
+              [text]="true"
+              severity="success"
+              (click)="reviewBudget(request.id)"
+              title="Aprovar/Rejeitar"
+              aria-label="Aprovar/Rejeitar"
+            >
+              <i class="pi pi-check-square"></i>
+            </button>
+            } @else if (request.status === RequestStatus.REJECTED) {
+            <button
+              pButton
+              [rounded]="true"
+              [text]="true"
+              severity="warn"
+              (click)="recoverService(request.id)"
+              title="Resgatar"
+              aria-label="Resgatar"
+            >
+              <i class="pi pi-undo"></i>
+            </button>
+            } @else if (request.status === RequestStatus.REPAIRED) {
+            <button
+              pButton
+              [rounded]="true"
+              [text]="true"
+              (click)="payForService(request.id)"
+              title="Pagar"
+              aria-label="Pagar"
+            >
+              <i class="pi pi-wallet"></i>
+            </button>
+            }
+
+            <!-- Ações do funcionário -->
+            @if (isEmployee() && request.status === RequestStatus.APPROVED) {
+            <button
+              pButton
+              [rounded]="true"
+              [text]="true"
+              severity="info"
+              (click)="performMaintenance(request.id)"
+              title="Efetuar manutenção"
+              aria-label="Efetuar manutenção"
+            >
+              <i class="pi pi-wrench"></i>
+            </button>
+            <button
+              pButton
+              [rounded]="true"
+              [text]="true"
+              severity="secondary"
+              (click)="redirectService(request.id)"
+              title="Redirecionar"
+              aria-label="Redirecionar"
+            >
+              <i class="pi pi-directions"></i>
+            </button>
+            }
+          </td>
           }
         </tr>
       </ng-template>
