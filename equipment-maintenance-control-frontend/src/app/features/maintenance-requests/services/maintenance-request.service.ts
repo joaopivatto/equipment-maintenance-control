@@ -6,90 +6,90 @@ import { MaintenanceRequest, RequestStatus } from '../models/maintenance-request
 })
 export class MaintenanceRequestService {
   // Massa de teste fictícia para validar todos os estados possíveis da solicitação
-  private listaSolicitacoes: MaintenanceRequest[] = [
+  private requests: MaintenanceRequest[] = [
     {
       id: 1,
-      dataHora: '2026-08-25 09:00',
-      descricaoEquipamento: 'Notebook Dell Inspiron',
-      descricaoDefeito: 'Tela piscando sem parar',
-      estado: RequestStatus.ABERTA,
+      createdAt: '2026-08-25 09:00',
+      equipmentDescription: 'Notebook Dell Inspiron',
+      defectDescription: 'Tela piscando sem parar',
+      status: RequestStatus.OPEN,
       history: [],
     },
     {
       id: 2,
-      dataHora: '2026-08-25 10:30',
-      descricaoEquipamento: 'Impressora HP Laserjet Pro',
-      descricaoDefeito: 'Papel enroscando na saída',
-      estado: RequestStatus.ORCADA,
+      createdAt: '2026-08-25 10:30',
+      equipmentDescription: 'Impressora HP Laserjet Pro',
+      defectDescription: 'Papel enroscando na saída',
+      status: RequestStatus.QUOTED,
       budget: { id: 1, value: 180.5, createdAt: '2026-08-25 11:00', employeeId: 1 },
       history: [],
     },
     {
       id: 3,
-      dataHora: '2026-08-26 14:00',
-      descricaoEquipamento: 'Desktop Gamer Core i7',
-      descricaoDefeito: 'Não liga, bipa 3 vezes',
-      estado: RequestStatus.APROVADA,
+      createdAt: '2026-08-26 14:00',
+      equipmentDescription: 'Desktop Gamer Core i7',
+      defectDescription: 'Não liga, bipa 3 vezes',
+      status: RequestStatus.APPROVED,
       history: [],
     },
     {
       id: 4,
-      dataHora: '2026-08-26 15:15',
-      descricaoEquipamento: 'Teclado Mecânico HyperX',
-      descricaoDefeito: 'Tecla Espaço parou de funcionar',
-      estado: RequestStatus.REJEITADA,
+      createdAt: '2026-08-26 15:15',
+      equipmentDescription: 'Teclado Mecânico HyperX',
+      defectDescription: 'Tecla Espaço parou de funcionar',
+      status: RequestStatus.REJECTED,
       history: [],
     },
     {
       id: 5,
-      dataHora: '2026-08-27 08:30',
-      descricaoEquipamento: 'Mouse Logitech MX Master',
-      descricaoDefeito: 'Clique duplo involuntário',
-      estado: RequestStatus.ARRUMADA,
+      createdAt: '2026-08-27 08:30',
+      equipmentDescription: 'Mouse Logitech MX Master',
+      defectDescription: 'Clique duplo involuntário',
+      status: RequestStatus.REPAIRED,
       history: [],
     },
   ];
 
   // Retorna a lista de solicitações simuladas
-  listarTodas(): MaintenanceRequest[] {
-    return this.listaSolicitacoes;
+  listAll(): MaintenanceRequest[] {
+    return this.requests;
   }
 
   findById(id: number): MaintenanceRequest | undefined {
-    return this.listaSolicitacoes.find((s) => s.id === id);
+    return this.requests.find((request) => request.id === id);
   }
 
   // RF006 - Aprovar serviço: ORÇADA -> APROVADA
   approve(id: number): MaintenanceRequest | undefined {
-    const solicitacao = this.findById(id);
-    if (!solicitacao) {
+    const request = this.findById(id);
+    if (!request) {
       return undefined;
     }
 
-    solicitacao.estado = RequestStatus.APROVADA;
-    solicitacao.history.push({
-      status: RequestStatus.APROVADA,
+    request.status = RequestStatus.APPROVED;
+    request.history.push({
+      status: RequestStatus.APPROVED,
       dateTime: new Date().toISOString(),
     });
 
-    return solicitacao;
+    return request;
   }
 
   // RF007 - Rejeitar serviço: ORÇADA -> REJEITADA, com motivo obrigatório
   reject(id: number, reason: string): MaintenanceRequest | undefined {
-    const solicitacao = this.findById(id);
-    if (!solicitacao) {
+    const request = this.findById(id);
+    if (!request) {
       return undefined;
     }
 
-    solicitacao.estado = RequestStatus.REJEITADA;
-    solicitacao.rejectionReason = reason;
-    solicitacao.history.push({
-      status: RequestStatus.REJEITADA,
+    request.status = RequestStatus.REJECTED;
+    request.rejectionReason = reason;
+    request.history.push({
+      status: RequestStatus.REJECTED,
       dateTime: new Date().toISOString(),
       reason,
     });
 
-    return solicitacao;
+    return request;
   }
 }

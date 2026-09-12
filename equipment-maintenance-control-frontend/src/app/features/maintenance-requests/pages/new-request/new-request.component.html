@@ -10,21 +10,22 @@
   <p-card>
     <form [formGroup]="form" (ngSubmit)="submit()" class="request-form">
       <div class="field">
-        <label for="descricaoEquipamento">Descrição do Equipamento</label>
+        <label for="equipmentDescription">Descrição do Equipamento</label>
         <input
           pInputText
-          id="descricaoEquipamento"
+          id="equipmentDescription"
           type="text"
-          formControlName="descricaoEquipamento"
+          formControlName="equipmentDescription"
           placeholder="Ex: Notebook Dell Inspiron 15"
           [invalid]="
             !!(
-              form.get('descricaoEquipamento')?.invalid &&
-              form.get('descricaoEquipamento')?.touched
+              form.get('equipmentDescription')?.invalid && form.get('equipmentDescription')?.touched
             )
           "
         />
-        @if (form.get('descricaoEquipamento')?.invalid && form.get('descricaoEquipamento')?.touched) {
+        @if (
+          form.get('equipmentDescription')?.invalid && form.get('equipmentDescription')?.touched
+        ) {
           <p-message severity="error" variant="simple" size="small">
             Informe a descrição do equipamento (máx. 100 caracteres).
           </p-message>
@@ -32,18 +33,20 @@
       </div>
 
       <div class="field">
-        <label for="categoria">Categoria do Equipamento</label>
+        <label for="equipmentCategoryId">Categoria do Equipamento</label>
         <p-select
-          inputId="categoria"
-          formControlName="categoria"
+          inputId="equipmentCategoryId"
+          formControlName="equipmentCategoryId"
           [options]="equipmentCategories"
           optionValue="id"
           optionLabel="name"
           [fluid]="true"
           placeholder="Selecione uma categoria"
-          [invalid]="!!(form.get('categoria')?.invalid && form.get('categoria')?.touched)"
+          [invalid]="
+            !!(form.get('equipmentCategoryId')?.invalid && form.get('equipmentCategoryId')?.touched)
+          "
         />
-        @if (form.get('categoria')?.invalid && form.get('categoria')?.touched) {
+        @if (form.get('equipmentCategoryId')?.invalid && form.get('equipmentCategoryId')?.touched) {
           <p-message severity="error" variant="simple" size="small">
             Selecione a categoria do equipamento.
           </p-message>
@@ -51,18 +54,18 @@
       </div>
 
       <div class="field">
-        <label for="descricaoDefeito">Descrição do Defeito</label>
+        <label for="defectDescription">Descrição do Defeito</label>
         <textarea
           pTextarea
-          id="descricaoDefeito"
+          id="defectDescription"
           rows="4"
-          formControlName="descricaoDefeito"
+          formControlName="defectDescription"
           placeholder="Descreva o problema apresentado pelo equipamento"
           [invalid]="
-            !!(form.get('descricaoDefeito')?.invalid && form.get('descricaoDefeito')?.touched)
+            !!(form.get('defectDescription')?.invalid && form.get('defectDescription')?.touched)
           "
         ></textarea>
-        @if (form.get('descricaoDefeito')?.invalid && form.get('descricaoDefeito')?.touched) {
+        @if (form.get('defectDescription')?.invalid && form.get('defectDescription')?.touched) {
           <p-message severity="error" variant="simple" size="small">
             Informe a descrição do defeito (máx. 500 caracteres).
           </p-message>

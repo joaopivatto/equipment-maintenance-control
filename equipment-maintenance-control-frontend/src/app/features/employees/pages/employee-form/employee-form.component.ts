@@ -20,7 +20,7 @@ import { NotificationService } from '../../../../core/notifications/notification
     InputTextModule,
     ButtonModule,
     MessageModule,
-    DatePickerModule
+    DatePickerModule,
   ],
   selector: 'app-employee-form',
   styleUrl: './employee-form.component.scss',
@@ -30,17 +30,17 @@ export class EmployeeFormComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private dateService = inject(DateService);
   private notificationService = inject(NotificationService);
-  private fb = inject(FormBuilder);
+  private formBuilder = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private location = inject(Location);
 
   editingId: number | null = null;
 
-  form = this.fb.group({
+  form = this.formBuilder.group({
     name: ['', [Validators.required, Validators.maxLength(100)]],
     email: ['', [Validators.required, Validators.email]],
-    birthDate: this.fb.control<Date | null>(null, Validators.required),
+    birthDate: this.formBuilder.control<Date | null>(null, Validators.required),
     password: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]],
   });
 
@@ -78,7 +78,10 @@ export class EmployeeFormComponent implements OnInit {
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      this.notificationService.warning('Aviso', 'Por favor, corrija os erros no formulário antes de enviar.');
+      this.notificationService.warning(
+        'Aviso',
+        'Por favor, corrija os erros no formulário antes de enviar.',
+      );
       return;
     }
 

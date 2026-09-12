@@ -10,20 +10,20 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { MaintenanceRequestService } from '../../services/maintenance-request.service';
 import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
 
-const ESTADO_SEVERITY: Record<
+const STATUS_SEVERITY: Record<
   RequestStatus,
   'secondary' | 'info' | 'success' | 'danger' | 'contrast'
 > = {
-  [RequestStatus.ABERTA]: 'secondary',
-  [RequestStatus.ORCADA]: 'info',
-  [RequestStatus.APROVADA]: 'success',
-  [RequestStatus.REJEITADA]: 'danger',
-  [RequestStatus.ARRUMADA]: 'contrast',
-  [RequestStatus.PAGA]: 'contrast',
+  [RequestStatus.OPEN]: 'secondary',
+  [RequestStatus.QUOTED]: 'info',
+  [RequestStatus.APPROVED]: 'success',
+  [RequestStatus.REJECTED]: 'danger',
+  [RequestStatus.REPAIRED]: 'contrast',
+  [RequestStatus.PAID]: 'contrast',
 };
 
 @Component({
-  selector: 'app-cliente-home',
+  selector: 'app-customer-request-list',
   standalone: true,
   imports: [
     CommonModule,
@@ -34,14 +34,14 @@ const ESTADO_SEVERITY: Record<
     CardModule,
     SkeletonModule,
   ],
-  templateUrl: './cliente-home.component.html',
-  styleUrl: './cliente-home.component.scss',
+  templateUrl: './customer-request-list.component.html',
+  styleUrl: './customer-request-list.component.scss',
 })
-export class ClienteHomeComponent implements OnInit {
-  private maintenanceRequestService = inject(MaintenanceRequestService); // Injeção de dependência via inject()
+export class CustomerRequestListComponent implements OnInit {
+  private maintenanceRequestService = inject(MaintenanceRequestService);
   private location = inject(Location);
   private router = inject(Router);
-  public solicitacoes: MaintenanceRequest[] = [];
+  requests: MaintenanceRequest[] = [];
 
   isLoading = signal(true);
   protected readonly skeletonRows: MaintenanceRequest[] = Array.from(
@@ -55,29 +55,29 @@ export class ClienteHomeComponent implements OnInit {
 
   private reload(): void {
     this.isLoading.set(true);
-    this.solicitacoes = this.maintenanceRequestService
-      .listarTodas()
+    this.requests = this.maintenanceRequestService
+      .listAll()
       .sort((a: MaintenanceRequest, b: MaintenanceRequest) => {
-        return new Date(a.dataHora).getTime() - new Date(b.dataHora).getTime();
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
       });
     this.isLoading.set(false);
   }
 
-  aprovarRejeitar(id: number) {
+  reviewBudget(id: number): void {
     this.router.navigate(['/requests', id, 'budget']);
   }
-  resgatar(id: number) {
+  recoverService(id: number): void {
     alert(`Resgatando serviço #${id} (RF009)`);
   }
-  pagar(id: number) {
+  payForService(id: number): void {
     alert(`Ir para Pagar Serviço #${id} (RF010)`);
   }
-  visualizar(id: number) {
+  viewDetails(id: number): void {
     alert(`Visualizando dados e histórico da solicitação #${id} (RF008)`);
   }
 
-  estadoSeverity(estado: RequestStatus) {
-    return ESTADO_SEVERITY[estado] ?? 'secondary';
+  statusSeverity(status: RequestStatus) {
+    return STATUS_SEVERITY[status] ?? 'secondary';
   }
 
   readonly RequestStatus = RequestStatus;

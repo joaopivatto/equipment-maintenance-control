@@ -5,7 +5,9 @@ export const MAINTENANCE_REQUESTS_ROUTES: Routes = [
   {
     path: 'list',
     loadComponent: () =>
-      import('./pages/cliente-home/cliente-home.component').then((m) => m.ClienteHomeComponent),
+      import('./pages/customer-request-list/customer-request-list.component').then(
+        (m) => m.CustomerRequestListComponent,
+      ),
   },
   {
     path: 'new',

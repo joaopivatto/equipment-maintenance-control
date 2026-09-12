@@ -23,11 +23,11 @@ import { NotificationService } from '../../../../core/notifications/notification
     MessageModule,
   ],
   templateUrl: './category-form.component.html',
-  styleUrl: './category-form.component.scss'
+  styleUrl: './category-form.component.scss',
 })
 export class CategoryFormComponent implements OnInit {
   // Obtém a referência do formulário HTML para validações
-  @ViewChild('formCategory') formCategory!: NgForm;
+  @ViewChild('categoryForm') categoryForm!: NgForm;
 
   private categoryService = inject(EquipmentCategoryService);
   private route = inject(ActivatedRoute);
@@ -36,17 +36,17 @@ export class CategoryFormComponent implements OnInit {
   private notificationService = inject(NotificationService);
 
   // Instancia um modelo de categoria vazio
-  public category: EquipmentCategory = { id: 0, name: '', active: true };
-  public isNew: boolean = true; // Flag para saber se é criação ou edição
+  category: EquipmentCategory = { id: 0, name: '', active: true };
+  isEditing = false;
 
   ngOnInit(): void {
     // Captura o parâmetro ":id" da URL (se existir)
     const id = this.route.snapshot.params['id'];
 
     if (id) {
-      this.isNew = false;
+      this.isEditing = true;
       // Busca a categoria para edição de dentro da lista ativa do serviço
-      const found = this.categoryService.listAll().find(c => c.id === +id);
+      const found = this.categoryService.listAll().find((c) => c.id === +id);
 
       if (found) {
         // Clona o objeto para não alterar o serviço antes de clicar em "Salvar"
@@ -63,9 +63,9 @@ export class CategoryFormComponent implements OnInit {
   }
 
   save(): void {
-    if (this.formCategory.form.valid) {
+    if (this.categoryForm.form.valid) {
       try {
-        if (this.isNew) {
+        if (!this.isEditing) {
           // Chama o método de inserção do serviço passando apenas o nome (conforme criado pelo seu grupo)
           this.categoryService.insert(this.category.name);
           this.notificationService.success('Sucesso', 'Categoria cadastrada com sucesso!');
@@ -80,7 +80,10 @@ export class CategoryFormComponent implements OnInit {
       // Redireciona de volta para a tela de listagem
       this.router.navigate(['/categories/list']);
     } else {
-      this.notificationService.warning('Aviso', 'Por favor, corrija os erros no formulário antes de enviar.');
+      this.notificationService.warning(
+        'Aviso',
+        'Por favor, corrija os erros no formulário antes de enviar.',
+      );
     }
   }
 }

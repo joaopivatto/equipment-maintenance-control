@@ -1,13 +1,13 @@
-import { MaintenanceRequest } from './maintenance-request.model';
+import { MaintenanceRequest, RequestStatus } from './maintenance-request.model';
 
 describe('MaintenanceRequest', () => {
   it('should accept a valid object shape', () => {
     const request: MaintenanceRequest = {
       id: 1,
-      dataHora: '2026-08-25 09:00',
-      descricaoEquipamento: 'Notebook Dell Inspiron',
-      descricaoDefeito: 'Tela piscando sem parar',
-      estado: 'ABERTA',
+      createdAt: '2026-08-25 09:00',
+      equipmentDescription: 'Notebook Dell Inspiron',
+      defectDescription: 'Tela piscando sem parar',
+      status: RequestStatus.OPEN,
       history: [],
     };
 

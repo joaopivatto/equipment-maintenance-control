@@ -1,4 +1,5 @@
 import { Component, signal, inject } from '@angular/core';
+import { SlicePipe } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { SessionService } from '../../auth/session.service';
 import { SidebarModule } from 'primeng/sidebar';
@@ -20,7 +21,8 @@ import { SignOut } from '@primeicons/angular/sign-out';
     CardModule,
     Wrench,
     PopoverModule,
-    SignOut
+    SignOut,
+    SlicePipe,
   ],
   selector: 'app-authenticated-layout',
   styleUrl: './authenticated-layout.component.scss',

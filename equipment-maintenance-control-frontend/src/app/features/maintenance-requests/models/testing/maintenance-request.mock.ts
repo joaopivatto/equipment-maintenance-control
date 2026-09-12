@@ -10,17 +10,24 @@ export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRe
   private readonly historyFactory = new HistoryEntryMockFactory();
 
   private readonly statuses = [
-    RequestStatus.ABERTA,
-    RequestStatus.ORCADA,
-    RequestStatus.APROVADA,
-    RequestStatus.REJEITADA,
-    RequestStatus.ARRUMADA,
-    RequestStatus.PAGA,
+    RequestStatus.OPEN,
+    RequestStatus.QUOTED,
+    RequestStatus.APPROVED,
+    RequestStatus.REJECTED,
+    RequestStatus.REPAIRED,
+    RequestStatus.PAID,
   ];
 
-  private readonly equipamentos = ['Computador', 'Celular', 'Notebook', 'Tablet', 'Monitor', 'Impressora'];
+  private readonly equipmentDescriptions = [
+    'Computador',
+    'Celular',
+    'Notebook',
+    'Tablet',
+    'Monitor',
+    'Impressora',
+  ];
 
-  private readonly defeitos = [
+  private readonly defectDescriptions = [
     'Não liga',
     'Tela quebrada',
     'Bateria não carrega',
@@ -33,14 +40,14 @@ export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRe
 
   protected build(index: number): MaintenanceRequest {
     const status = this.statuses[index % this.statuses.length];
-    const isBudgeted = status !== RequestStatus.ABERTA;
+    const isBudgeted = status !== RequestStatus.OPEN;
 
     const request: MaintenanceRequest = {
       id: index + 1,
-      dataHora: new Date(Date.UTC(2026, 0, 1 + index, 8, 0, 0)).toISOString(),
-      descricaoEquipamento: this.equipamentos[index % this.equipamentos.length],
-      descricaoDefeito: this.defeitos[index % this.defeitos.length],
-      estado: status,
+      createdAt: new Date(Date.UTC(2026, 0, 1 + index, 8, 0, 0)).toISOString(),
+      equipmentDescription: this.equipmentDescriptions[index % this.equipmentDescriptions.length],
+      defectDescription: this.defectDescriptions[index % this.defectDescriptions.length],
+      status,
       history: [this.historyFactory.generate({ status })],
     };
 
@@ -48,7 +55,7 @@ export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRe
       request.budget = this.budgetFactory.generate();
     }
 
-    if (status === RequestStatus.REJEITADA) {
+    if (status === RequestStatus.REJECTED) {
       request.rejectionReason = this.rejectionReasons[index % this.rejectionReasons.length];
     }
 

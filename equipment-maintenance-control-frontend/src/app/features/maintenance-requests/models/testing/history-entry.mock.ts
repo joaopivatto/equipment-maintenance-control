@@ -6,12 +6,12 @@ export class HistoryEntryMockFactory extends BaseMockFactory<HistoryEntry> {
   protected readonly length = 6;
 
   private readonly statuses = [
-    RequestStatus.ABERTA,
-    RequestStatus.ORCADA,
-    RequestStatus.APROVADA,
-    RequestStatus.REJEITADA,
-    RequestStatus.ARRUMADA,
-    RequestStatus.PAGA,
+    RequestStatus.OPEN,
+    RequestStatus.QUOTED,
+    RequestStatus.APPROVED,
+    RequestStatus.REJECTED,
+    RequestStatus.REPAIRED,
+    RequestStatus.PAID,
   ];
 
   private readonly dateTimes = [
