@@ -10,7 +10,7 @@ import { MessageModule } from 'primeng/message';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
-import { MaintenanceRequestService } from '../../services/maintenance-request.service';
+import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
 import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 import { SessionService } from '../../../../core/auth/session.service';
@@ -35,7 +35,7 @@ import { Employee } from '../../../employees/models/employee.model';
   styleUrl: './redirect.component.scss',
 })
 export class RedirectComponent implements OnInit {
-  private maintenanceRequestService = inject(MaintenanceRequestService);
+  private maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
   private employeeService = inject(EmployeeService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -67,24 +67,26 @@ export class RedirectComponent implements OnInit {
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
-    this.request = this.maintenanceRequestService.findById(id);
+    this.maintenanceRequestApiClient.findById(id).subscribe((request) => {
+      this.request = request;
 
-    if (!this.request) {
-      this.notificationService.error('Erro', 'Solicitação não encontrada.');
-      this.router.navigate(['/requests/list']);
-      return;
-    }
+      if (!this.request) {
+        this.notificationService.error('Erro', 'Solicitação não encontrada.');
+        this.router.navigate(['/requests/list']);
+        return;
+      }
 
-    if (
-      this.request.status !== RequestStatus.APPROVED &&
-      this.request.status !== RequestStatus.QUOTED
-    ) {
-      this.notificationService.warning(
-        'Aviso',
-        'Esta solicitação não pode mais ser redirecionada neste estado.',
-      );
-      this.router.navigate(['/requests/list']);
-    }
+      if (
+        this.request.status !== RequestStatus.APPROVED &&
+        this.request.status !== RequestStatus.QUOTED
+      ) {
+        this.notificationService.warning(
+          'Aviso',
+          'Esta solicitação não pode mais ser redirecionada neste estado.',
+        );
+        this.router.navigate(['/requests/list']);
+      }
+    });
   }
 
   goBack(): void {
@@ -138,24 +140,26 @@ export class RedirectComponent implements OnInit {
           return;
         }
 
-        const result = this.maintenanceRequestService.redirect(
-          this.request.id,
-          fromEmployee.id,
-          fromEmployee.name,
-          toEmployee.id,
-          toEmployee.name,
-        );
+        this.maintenanceRequestApiClient
+          .redirect(
+            this.request.id,
+            fromEmployee.id,
+            fromEmployee.name,
+            toEmployee.id,
+            toEmployee.name,
+          )
+          .subscribe((result) => {
+            if (result.error) {
+              this.notificationService.error('Erro', result.error);
+              return;
+            }
 
-        if (result.error) {
-          this.notificationService.error('Erro', result.error);
-          return;
-        }
-
-        this.notificationService.success(
-          'Solicitação redirecionada',
-          `Encaminhada para ${toEmployee.name}.`,
-        );
-        this.router.navigate(['/requests/list']);
+            this.notificationService.success(
+              'Solicitação redirecionada',
+              `Encaminhada para ${toEmployee.name}.`,
+            );
+            this.router.navigate(['/requests/list']);
+          });
       },
     });
   }

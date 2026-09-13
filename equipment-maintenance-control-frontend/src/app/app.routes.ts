@@ -1,12 +1,17 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/auth/guards/auth.guard';
+import { employeeGuard } from './core/auth/guards/profile.guard';
+import { guestGuard } from './core/auth/guards/guest.guard';
 
 export const routes: Routes = [
   {
     path: '',
+    canActivate: [guestGuard],
     loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
   {
     path: 'requests',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./core/layout/authenticated-layout/authenticated-layout.component').then(
         (m) => m.AuthenticatedLayoutComponent,
@@ -17,6 +22,7 @@ export const routes: Routes = [
   },
   {
     path: 'categories',
+    canActivate: [employeeGuard],
     loadComponent: () =>
       import('./core/layout/authenticated-layout/authenticated-layout.component').then(
         (m) => m.AuthenticatedLayoutComponent,
@@ -28,6 +34,7 @@ export const routes: Routes = [
   },
   {
     path: 'employees',
+    canActivate: [employeeGuard],
     loadComponent: () =>
       import('./core/layout/authenticated-layout/authenticated-layout.component').then(
         (m) => m.AuthenticatedLayoutComponent,

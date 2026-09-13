@@ -1,5 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
+import { MockMaintenanceRequestApiClient } from '../../api/mock-maintenance-request-api-client';
+import { AuthApiClient } from '../../../../core/api/auth-api-client';
+import { MockAuthApiClient } from '../../../../core/api/mock-auth-api-client';
 
 import { CustomerRequestListComponent } from './customer-request-list.component';
 
@@ -10,7 +15,12 @@ describe('CustomerRequestListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CustomerRequestListComponent],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        MessageService,
+        { provide: MaintenanceRequestApiClient, useClass: MockMaintenanceRequestApiClient },
+        { provide: AuthApiClient, useClass: MockAuthApiClient },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CustomerRequestListComponent);
