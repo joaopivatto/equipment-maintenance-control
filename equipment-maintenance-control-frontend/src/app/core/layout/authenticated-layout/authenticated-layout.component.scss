@@ -1,0 +1,23 @@
+// O menu (p-sidebar) deve ficar fixo na viewport; apenas o conteúdo
+// (p-sidebar-main) deve rolar quando a listagem for maior que a tela.
+:host {
+  display: block;
+  height: 100%;
+}
+
+p-sidebar-layout {
+  height: 100%;
+  min-height: 0;
+}
+
+p-sidebar {
+  height: 100%;
+  flex-shrink: 0;
+}
+
+p-sidebar-main {
+  display: block;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+}

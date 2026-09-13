@@ -108,7 +108,12 @@
       </ng-template>
     </p-table>
     } @else {
-    <p-table [value]="requests">
+    <p-table
+      [value]="requests"
+      [paginator]="true"
+      [rows]="20"
+      [rowsPerPageOptions]="[5, 10, 20]"
+    >
       <ng-template #header>
         <tr>
           <th>Data/Hora</th>

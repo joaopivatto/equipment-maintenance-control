@@ -12,7 +12,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
-import { MaintenanceRequestService } from '../../services/maintenance-request.service';
+import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
 import {
   MaintenanceRequest,
   RequestStatus,
@@ -22,19 +22,19 @@ import { NotificationService } from '../../../../core/notifications/notification
 import { SessionService } from '../../../../core/auth/session.service';
 import { EmployeeService } from '../../../employees/services/employee.service';
 
-const STATUS_SEVERITY: Record<
-  RequestStatus,
+const STATUS_SEVERITY: Record <
+RequestStatus,
   'secondary' | 'info' | 'success' | 'danger' | 'contrast' | 'warn'
-> = {
-  [RequestStatus.OPEN]: 'secondary',
-  [RequestStatus.QUOTED]: 'info',
-  [RequestStatus.APPROVED]: 'success',
-  [RequestStatus.REJECTED]: 'danger',
-  [RequestStatus.REDIRECTED]: 'warn',
-  [RequestStatus.REPAIRED]: 'contrast',
-  [RequestStatus.PAID]: 'contrast',
-  [RequestStatus.FINALIZED]: 'success',
-};
+  > = {
+    [RequestStatus.OPEN]: 'secondary',
+    [RequestStatus.QUOTED]: 'info',
+    [RequestStatus.APPROVED]: 'success',
+    [RequestStatus.REJECTED]: 'danger',
+    [RequestStatus.REDIRECTED]: 'warn',
+    [RequestStatus.REPAIRED]: 'contrast',
+    [RequestStatus.PAID]: 'contrast',
+    [RequestStatus.FINALIZED]: 'success',
+  };
 
 type FilterMode = 'today' | 'period' | 'all';
 
@@ -65,7 +65,7 @@ const FILTER_OPTIONS: { label: string; value: FilterMode }[] = [
   styleUrl: './customer-request-list.component.scss',
 })
 export class CustomerRequestListComponent implements OnInit {
-  private maintenanceRequestService = inject(MaintenanceRequestService);
+  private maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
   private employeeService = inject(EmployeeService);
   private sessionService = inject(SessionService);
   private location = inject(Location);
@@ -109,11 +109,13 @@ export class CustomerRequestListComponent implements OnInit {
   private reload(): void {
     this.isLoading.set(true);
 
-    this.allRequests = this.maintenanceRequestService.listAll();
+    this.maintenanceRequestApiClient.listAll().subscribe((requests) => {
+      this.allRequests = requests;
 
-    this.applyFilters();
+      this.applyFilters();
 
-    this.isLoading.set(false);
+      this.isLoading.set(false);
+    });
   }
 
   onFilterModeChange(): void {
@@ -171,6 +173,11 @@ export class CustomerRequestListComponent implements OnInit {
           });
         }
       }
+    } else {
+      // Cliente só pode ver as próprias solicitações
+      const customerName = this.sessionService.currentUser()?.name;
+
+      filtered = filtered.filter((request) => request.customerName === customerName);
     }
 
     this.requests = filtered.sort(
@@ -248,58 +255,59 @@ export class CustomerRequestListComponent implements OnInit {
         outlined: true,
       },
       accept: () => {
-        const updated = this.maintenanceRequestService.recover(id);
+        this.maintenanceRequestApiClient.recover(id).subscribe((updated) => {
+          if (!updated) {
+            this.notificationService.error('Erro', 'Não foi possível resgatar o serviço.');
 
-        if (!updated) {
-          this.notificationService.error('Erro', 'Não foi possível resgatar o serviço.');
+            return;
+          }
 
-          return;
-        }
+          this.notificationService.success(
+            'Serviço resgatado',
+            'A solicitação voltou a ser aprovada.',
+          );
 
-        this.notificationService.success(
-          'Serviço resgatado',
-          'A solicitação voltou a ser aprovada.',
-        );
-
-        this.reload();
+          this.reload();
+        });
       },
     });
   }
 
   // RF010 - Pagar serviço: ARRUMADA -> PAGA
   payForService(id: number): void {
-    const request = this.maintenanceRequestService.findById(id);
-    const formattedValue = this.currencyPipe.transform(request?.budget?.value, 'BRL');
+    this.maintenanceRequestApiClient.findById(id).subscribe((request) => {
+      const formattedValue = this.currencyPipe.transform(request?.budget?.value, 'BRL');
 
-    this.confirmationService.confirm({
-      message: `Confirmar o pagamento no valor de ${formattedValue}?`,
-      header: 'Pagar serviço',
-      icon: 'pi pi-wallet',
-      acceptLabel: 'Confirmar pagamento',
-      rejectLabel: 'Cancelar',
-      acceptButtonProps: {
-        severity: 'success',
-      },
-      rejectButtonProps: {
-        severity: 'secondary',
-        outlined: true,
-      },
-      accept: () => {
-        const updated = this.maintenanceRequestService.pay(id);
+      this.confirmationService.confirm({
+        message: `Confirmar o pagamento no valor de ${formattedValue}?`,
+        header: 'Pagar serviço',
+        icon: 'pi pi-wallet',
+        acceptLabel: 'Confirmar pagamento',
+        rejectLabel: 'Cancelar',
+        acceptButtonProps: {
+          severity: 'success',
+        },
+        rejectButtonProps: {
+          severity: 'secondary',
+          outlined: true,
+        },
+        accept: () => {
+          this.maintenanceRequestApiClient.pay(id).subscribe((updated) => {
+            if (!updated) {
+              this.notificationService.error('Erro', 'Não foi possível registrar o pagamento.');
 
-        if (!updated) {
-          this.notificationService.error('Erro', 'Não foi possível registrar o pagamento.');
+              return;
+            }
 
-          return;
-        }
+            this.notificationService.success(
+              'Pagamento confirmado',
+              `Serviço pago no valor de ${formattedValue}.`,
+            );
 
-        this.notificationService.success(
-          'Pagamento confirmado',
-          `Serviço pago no valor de ${formattedValue}.`,
-        );
-
-        this.reload();
-      },
+            this.reload();
+          });
+        },
+      });
     });
   }
 
@@ -347,17 +355,22 @@ export class CustomerRequestListComponent implements OnInit {
         outlined: true,
       },
       accept: () => {
-        const updated = this.maintenanceRequestService.finalize(id, employee.id, employee.name);
+        this.maintenanceRequestApiClient
+          .finalize(id, employee.id, employee.name)
+          .subscribe((updated) => {
+            if (!updated) {
+              this.notificationService.error('Erro', 'Não foi possível finalizar a solicitação.');
 
-        if (!updated) {
-          this.notificationService.error('Erro', 'Não foi possível finalizar a solicitação.');
+              return;
+            }
 
-          return;
-        }
+            this.notificationService.success(
+              'Solicitação finalizada',
+              'O atendimento foi concluído.',
+            );
 
-        this.notificationService.success('Solicitação finalizada', 'O atendimento foi concluído.');
-
-        this.reload();
+            this.reload();
+          });
       },
     });
   }
