@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, effect, inject, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -20,21 +20,21 @@ import {
 } from '../../models/maintenance-request.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 import { SessionService } from '../../../../core/auth/session.service';
-import { EmployeeService } from '../../../employees/services/employee.service';
+import { CurrentEmployeeService } from '../../../employees/services/current-employee.service';
 
-const STATUS_SEVERITY: Record <
-RequestStatus,
+const STATUS_SEVERITY: Record<
+  RequestStatus,
   'secondary' | 'info' | 'success' | 'danger' | 'contrast' | 'warn'
-  > = {
-    [RequestStatus.OPEN]: 'secondary',
-    [RequestStatus.QUOTED]: 'info',
-    [RequestStatus.APPROVED]: 'success',
-    [RequestStatus.REJECTED]: 'danger',
-    [RequestStatus.REDIRECTED]: 'warn',
-    [RequestStatus.REPAIRED]: 'contrast',
-    [RequestStatus.PAID]: 'contrast',
-    [RequestStatus.FINALIZED]: 'success',
-  };
+> = {
+  [RequestStatus.OPEN]: 'secondary',
+  [RequestStatus.QUOTED]: 'info',
+  [RequestStatus.APPROVED]: 'success',
+  [RequestStatus.REJECTED]: 'danger',
+  [RequestStatus.REDIRECTED]: 'warn',
+  [RequestStatus.REPAIRED]: 'contrast',
+  [RequestStatus.PAID]: 'contrast',
+  [RequestStatus.FINALIZED]: 'success',
+};
 
 type FilterMode = 'today' | 'period' | 'all';
 
@@ -66,7 +66,7 @@ const FILTER_OPTIONS: { label: string; value: FilterMode }[] = [
 })
 export class CustomerRequestListComponent implements OnInit {
   private maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
-  private employeeService = inject(EmployeeService);
+  private currentEmployeeService = inject(CurrentEmployeeService);
   private sessionService = inject(SessionService);
   private location = inject(Location);
   private router = inject(Router);
@@ -96,11 +96,14 @@ export class CustomerRequestListComponent implements OnInit {
   periodEnd: Date | null = null;
 
   // Funcionário logado, correlacionado via e-mail
-  readonly currentEmployee = computed(() => {
-    const email = this.sessionService.currentUser()?.email;
+  readonly currentEmployee = this.currentEmployeeService.currentEmployee;
 
-    return email ? this.employeeService.findByEmail(email) : undefined;
-  });
+  constructor() {
+    effect(() => {
+      this.currentEmployee();
+      this.applyFilters();
+    });
+  }
 
   ngOnInit(): void {
     this.reload();

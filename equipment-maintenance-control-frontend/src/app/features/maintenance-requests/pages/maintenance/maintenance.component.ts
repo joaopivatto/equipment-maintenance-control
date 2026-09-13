@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,8 +12,7 @@ import { ConfirmationService } from 'primeng/api';
 import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
 import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
-import { SessionService } from '../../../../core/auth/session.service';
-import { EmployeeService } from '../../../employees/services/employee.service';
+import { CurrentEmployeeService } from '../../../employees/services/current-employee.service';
 
 @Component({
   selector: 'app-maintenance',
@@ -33,24 +32,19 @@ import { EmployeeService } from '../../../employees/services/employee.service';
 })
 export class MaintenanceComponent implements OnInit {
   private maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
-  private employeeService = inject(EmployeeService);
+  private currentEmployeeService = inject(CurrentEmployeeService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private location = inject(Location);
   private notificationService = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
-  private sessionService = inject(SessionService);
 
   request: MaintenanceRequest | undefined;
 
   maintenanceDescription = '';
   maintenanceInstructions = '';
 
-  // Funcionário logado, correlacionado via e-mail (SessionUser.id != Employee.id)
-  readonly currentEmployee = computed(() => {
-    const email = this.sessionService.currentUser()?.email;
-    return email ? this.employeeService.findByEmail(email) : undefined;
-  });
+  readonly currentEmployee = this.currentEmployeeService.currentEmployee;
 
   get responsibleEmployeeName(): string {
     return this.currentEmployee()?.name ?? 'Funcionário não identificado';

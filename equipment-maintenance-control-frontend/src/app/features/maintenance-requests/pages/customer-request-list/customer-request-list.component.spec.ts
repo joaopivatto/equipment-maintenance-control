@@ -3,6 +3,8 @@ import { provideRouter } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
 import { MockMaintenanceRequestApiClient } from '../../api/mock-maintenance-request-api-client';
+import { EmployeeApiClient } from '../../../employees/api/employee-api-client';
+import { MockEmployeeApiClient } from '../../../employees/api/mock-employee-api-client';
 import { AuthApiClient } from '../../../../core/api/auth-api-client';
 import { MockAuthApiClient } from '../../../../core/api/mock-auth-api-client';
 
@@ -19,6 +21,7 @@ describe('CustomerRequestListComponent', () => {
         provideRouter([]),
         MessageService,
         { provide: MaintenanceRequestApiClient, useClass: MockMaintenanceRequestApiClient },
+        { provide: EmployeeApiClient, useClass: MockEmployeeApiClient },
         { provide: AuthApiClient, useClass: MockAuthApiClient },
       ],
     }).compileComponents();

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,8 +13,8 @@ import { ConfirmationService } from 'primeng/api';
 import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
 import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
-import { SessionService } from '../../../../core/auth/session.service';
-import { EmployeeService } from '../../../employees/services/employee.service';
+import { EmployeeApiClient } from '../../../employees/api/employee-api-client';
+import { CurrentEmployeeService } from '../../../employees/services/current-employee.service';
 import { Employee } from '../../../employees/models/employee.model';
 
 @Component({
@@ -36,27 +36,25 @@ import { Employee } from '../../../employees/models/employee.model';
 })
 export class RedirectComponent implements OnInit {
   private maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
-  private employeeService = inject(EmployeeService);
+  private employeeApiClient = inject(EmployeeApiClient);
+  private currentEmployeeService = inject(CurrentEmployeeService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private location = inject(Location);
   private notificationService = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
-  private sessionService = inject(SessionService);
 
   request: MaintenanceRequest | undefined;
   selectedEmployeeId: number | null = null;
 
-  // Funcionário logado, correlacionado via e-mail (SessionUser.id != Employee.id)
-  readonly currentEmployee = computed<Employee | undefined>(() => {
-    const email = this.sessionService.currentUser()?.email;
-    return email ? this.employeeService.findByEmail(email) : undefined;
-  });
+  readonly currentEmployee = this.currentEmployeeService.currentEmployee;
+
+  private readonly allEmployees = signal<Employee[]>([]);
 
   // Impede que o próprio funcionário logado apareça como opção de destino (RF015)
-  readonly availableEmployees = computed<Employee[]>(() => {
+  readonly availableEmployees = computed(() => {
     const currentEmployeeId = this.currentEmployee()?.id;
-    return this.employeeService.listAll().filter((employee) => employee.id !== currentEmployeeId);
+    return this.allEmployees().filter((employee) => employee.id !== currentEmployeeId);
   });
 
   errorMessage = signal<string | null>(null);
@@ -66,6 +64,10 @@ export class RedirectComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.employeeApiClient.listAll().subscribe((employees) => {
+      this.allEmployees.set(employees);
+    });
+
     const id = Number(this.route.snapshot.params['id']);
     this.maintenanceRequestApiClient.findById(id).subscribe((request) => {
       this.request = request;
