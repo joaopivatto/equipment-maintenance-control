@@ -5,7 +5,7 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { SkeletonModule } from 'primeng/skeleton';
-import { EquipmentCategoryService } from '../../services/equipment-category.service';
+import { EquipmentCategoryApiClient } from '../../api/equipment-category-api-client';
 import { EquipmentCategory } from '../../models/equipment-category.model';
 
 @Component({
@@ -15,14 +15,14 @@ import { EquipmentCategory } from '../../models/equipment-category.model';
   templateUrl: './category-list.component.html',
 })
 export class CategoryListComponent implements OnInit {
-  private categoryService = inject(EquipmentCategoryService);
+  private categoryApiClient = inject(EquipmentCategoryApiClient);
   private location = inject(Location);
 
   isLoading = signal(true);
   protected readonly skeletonRows: EquipmentCategory[] = Array.from(
-      { length: 5 },
-      () => ({}) as EquipmentCategory
-    );
+    { length: 5 },
+    () => ({}) as EquipmentCategory,
+  );
 
   categories: EquipmentCategory[] = [];
 
@@ -32,8 +32,10 @@ export class CategoryListComponent implements OnInit {
 
   private reload(): void {
     this.isLoading.set(true);
-    this.categories = this.categoryService.listAll();
-    this.isLoading.set(false);
+    this.categoryApiClient.listAll().subscribe((categories) => {
+      this.categories = categories;
+      this.isLoading.set(false);
+    });
   }
 
   goBack(): void {
@@ -43,8 +45,7 @@ export class CategoryListComponent implements OnInit {
   remove(category: EquipmentCategory): void {
     // Confirmação obrigatória antes de qualquer remoção (requisito não-funcional)
     if (confirm(`Deseja realmente remover a categoria "${category.name}"?`)) {
-      this.categoryService.deactivate(category.id);
-      this.reload();
+      this.categoryApiClient.deactivate(category.id).subscribe(() => this.reload());
     }
   }
 }
