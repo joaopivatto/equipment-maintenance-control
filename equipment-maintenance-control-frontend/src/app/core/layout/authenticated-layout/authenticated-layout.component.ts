@@ -50,4 +50,10 @@ export class AuthenticatedLayoutComponent {
   protected readonly navItems = computed(() =>
     this.allNavItems.filter((item) => !item.employeeOnly || this.sessionService.isEmployee()),
   );
+
+  logout(): void {
+    this.sessionService.logout().subscribe(() => {
+      this.router.navigate(['/login']);
+    });
+  }
 }
