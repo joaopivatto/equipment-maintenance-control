@@ -10,7 +10,7 @@ import { MessageModule } from 'primeng/message';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
-import { MaintenanceRequestService } from '../../services/maintenance-request.service';
+import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
 import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 
@@ -32,7 +32,7 @@ import { NotificationService } from '../../../../core/notifications/notification
   styleUrl: './budget.component.scss',
 })
 export class BudgetComponent implements OnInit {
-  private maintenanceRequestService = inject(MaintenanceRequestService);
+  private maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private location = inject(Location);
@@ -48,21 +48,23 @@ export class BudgetComponent implements OnInit {
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
-    this.request = this.maintenanceRequestService.findById(id);
+    this.maintenanceRequestApiClient.findById(id).subscribe((request) => {
+      this.request = request;
 
-    if (!this.request) {
-      this.notificationService.error('Erro', 'Solicitação não encontrada.');
-      this.router.navigate(['/requests/list']);
-      return;
-    }
+      if (!this.request) {
+        this.notificationService.error('Erro', 'Solicitação não encontrada.');
+        this.router.navigate(['/requests/list']);
+        return;
+      }
 
-    if (this.request.status !== RequestStatus.QUOTED) {
-      this.notificationService.warning(
-        'Aviso',
-        'Esta solicitação não está mais aguardando aprovação de orçamento.',
-      );
-      this.router.navigate(['/requests/list']);
-    }
+      if (this.request.status !== RequestStatus.QUOTED) {
+        this.notificationService.warning(
+          'Aviso',
+          'Esta solicitação não está mais aguardando aprovação de orçamento.',
+        );
+        this.router.navigate(['/requests/list']);
+      }
+    });
   }
 
   goBack(): void {
@@ -89,12 +91,13 @@ export class BudgetComponent implements OnInit {
         if (!this.request) {
           return;
         }
-        this.maintenanceRequestService.approve(this.request.id);
-        this.notificationService.success(
-          'Orçamento aprovado',
-          `Serviço aprovado com valor de ${formattedBudgetValue}.`,
-        );
-        this.router.navigate(['/requests/list']);
+        this.maintenanceRequestApiClient.approve(this.request.id).subscribe(() => {
+          this.notificationService.success(
+            'Orçamento aprovado',
+            `Serviço aprovado com valor de ${formattedBudgetValue}.`,
+          );
+          this.router.navigate(['/requests/list']);
+        });
       },
     });
   }
@@ -127,9 +130,12 @@ export class BudgetComponent implements OnInit {
         if (!this.request) {
           return;
         }
-        this.maintenanceRequestService.reject(this.request.id, this.rejectionReason.trim());
-        this.notificationService.success('Orçamento rejeitado', 'A rejeição foi registrada.');
-        this.router.navigate(['/requests/list']);
+        this.maintenanceRequestApiClient
+          .reject(this.request.id, this.rejectionReason.trim())
+          .subscribe(() => {
+            this.notificationService.success('Orçamento rejeitado', 'A rejeição foi registrada.');
+            this.router.navigate(['/requests/list']);
+          });
       },
     });
   }

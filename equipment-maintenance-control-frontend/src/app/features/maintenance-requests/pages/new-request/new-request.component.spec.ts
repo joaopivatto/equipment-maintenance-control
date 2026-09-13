@@ -3,6 +3,8 @@ import { provideRouter } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { EquipmentCategoryApiClient } from '../../../equipment-categories/api/equipment-category-api-client';
 import { MockEquipmentCategoryApiClient } from '../../../equipment-categories/api/mock-equipment-category-api-client';
+import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
+import { MockMaintenanceRequestApiClient } from '../../api/mock-maintenance-request-api-client';
 import { NewRequestComponent } from './new-request.component';
 
 describe('NewRequestComponent', () => {
@@ -16,6 +18,7 @@ describe('NewRequestComponent', () => {
         MessageService,
         provideRouter([]),
         { provide: EquipmentCategoryApiClient, useClass: MockEquipmentCategoryApiClient },
+        { provide: MaintenanceRequestApiClient, useClass: MockMaintenanceRequestApiClient },
       ],
     }).compileComponents();
 

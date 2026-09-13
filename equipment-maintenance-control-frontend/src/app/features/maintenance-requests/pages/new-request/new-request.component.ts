@@ -8,7 +8,7 @@ import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
-import { MaintenanceRequestService } from '../../services/maintenance-request.service';
+import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 import { EquipmentCategoryApiClient } from '../../../equipment-categories/api/equipment-category-api-client';
 import { EquipmentCategory } from '../../../equipment-categories/models/equipment-category.model';
@@ -30,7 +30,7 @@ import { EquipmentCategory } from '../../../equipment-categories/models/equipmen
 })
 export class NewRequestComponent {
   private formBuilder = inject(FormBuilder);
-  private maintenanceRequestService = inject(MaintenanceRequestService);
+  private maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
   private router = inject(Router);
   private location = inject(Location);
   private notificationService = inject(NotificationService);

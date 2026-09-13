@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
+import { MockMaintenanceRequestApiClient } from '../../api/mock-maintenance-request-api-client';
 import { BudgetComponent } from './budget.component';
 
 describe('BudgetComponent', () => {
@@ -14,6 +16,7 @@ describe('BudgetComponent', () => {
         MessageService,
         provideRouter([]),
         { provide: ActivatedRoute, useValue: { snapshot: { params: { id: '2' } } } },
+        { provide: MaintenanceRequestApiClient, useClass: MockMaintenanceRequestApiClient },
       ],
     }).compileComponents();
 

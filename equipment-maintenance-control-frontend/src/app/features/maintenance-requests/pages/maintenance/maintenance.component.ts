@@ -9,7 +9,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
-import { MaintenanceRequestService } from '../../services/maintenance-request.service';
+import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
 import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 import { SessionService } from '../../../../core/auth/session.service';
@@ -32,7 +32,7 @@ import { EmployeeService } from '../../../employees/services/employee.service';
   styleUrl: './maintenance.component.scss',
 })
 export class MaintenanceComponent implements OnInit {
-  private maintenanceRequestService = inject(MaintenanceRequestService);
+  private maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
   private employeeService = inject(EmployeeService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -58,21 +58,23 @@ export class MaintenanceComponent implements OnInit {
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
-    this.request = this.maintenanceRequestService.findById(id);
+    this.maintenanceRequestApiClient.findById(id).subscribe((request) => {
+      this.request = request;
 
-    if (!this.request) {
-      this.notificationService.error('Erro', 'Solicitação não encontrada.');
-      this.router.navigate(['/requests/list']);
-      return;
-    }
+      if (!this.request) {
+        this.notificationService.error('Erro', 'Solicitação não encontrada.');
+        this.router.navigate(['/requests/list']);
+        return;
+      }
 
-    if (this.request.status !== RequestStatus.APPROVED) {
-      this.notificationService.warning(
-        'Aviso',
-        'Esta solicitação não está mais aguardando manutenção.',
-      );
-      this.router.navigate(['/requests/list']);
-    }
+      if (this.request.status !== RequestStatus.APPROVED) {
+        this.notificationService.warning(
+          'Aviso',
+          'Esta solicitação não está mais aguardando manutenção.',
+        );
+        this.router.navigate(['/requests/list']);
+      }
+    });
   }
 
   goBack(): void {
@@ -114,18 +116,21 @@ export class MaintenanceComponent implements OnInit {
         if (!this.request) {
           return;
         }
-        this.maintenanceRequestService.performMaintenance(
-          this.request.id,
-          this.maintenanceDescription.trim(),
-          this.maintenanceInstructions.trim(),
-          employee.id,
-          employee.name,
-        );
-        this.notificationService.success(
-          'Manutenção concluída',
-          'A solicitação foi marcada como Arrumada.',
-        );
-        this.router.navigate(['/requests/list']);
+        this.maintenanceRequestApiClient
+          .performMaintenance(
+            this.request.id,
+            this.maintenanceDescription.trim(),
+            this.maintenanceInstructions.trim(),
+            employee.id,
+            employee.name,
+          )
+          .subscribe(() => {
+            this.notificationService.success(
+              'Manutenção concluída',
+              'A solicitação foi marcada como Arrumada.',
+            );
+            this.router.navigate(['/requests/list']);
+          });
       },
     });
   }
