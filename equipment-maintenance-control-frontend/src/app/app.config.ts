@@ -7,6 +7,8 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { MessageService } from 'primeng/api';
 
+import { EquipmentCategoryApiClient } from './features/equipment-categories/api/equipment-category-api-client';
+import { MockEquipmentCategoryApiClient } from './features/equipment-categories/api/mock-equipment-category-api-client';
 import { MaintenanceRequestApiClient } from './features/maintenance-requests/api/maintenance-request-api-client';
 import { MockMaintenanceRequestApiClient } from './features/maintenance-requests/api/mock-maintenance-request-api-client';
 import { AuthApiClient } from './core/api/auth-api-client';
@@ -18,6 +20,7 @@ registerLocaleData(localePt);
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: EquipmentCategoryApiClient, useClass: MockEquipmentCategoryApiClient },
     { provide: MaintenanceRequestApiClient, useClass: MockMaintenanceRequestApiClient },
     { provide: AuthApiClient, useClass: MockAuthApiClient },
     MessageService,
