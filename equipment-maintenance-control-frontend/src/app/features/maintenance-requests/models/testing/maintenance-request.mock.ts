@@ -38,6 +38,13 @@ export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRe
 
   private readonly rejectionReasons = ['Custo do reparo inviável', 'Equipamento fora de garantia'];
 
+  private readonly customerNames = [
+    'João da Silva',
+    'José Pereira',
+    'Joana Fernandes',
+    'Joaquina Martins',
+  ];
+
   protected build(index: number): MaintenanceRequest {
     const status = this.statuses[index % this.statuses.length];
     const isBudgeted = status !== RequestStatus.OPEN;
@@ -48,6 +55,7 @@ export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRe
       equipmentDescription: this.equipmentDescriptions[index % this.equipmentDescriptions.length],
       defectDescription: this.defectDescriptions[index % this.defectDescriptions.length],
       status,
+      customerName: this.customerNames[index % this.customerNames.length],
       history: [this.historyFactory.generate({ status })],
     };
 

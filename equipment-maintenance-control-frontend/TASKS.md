@@ -169,10 +169,10 @@
 - [X] **P1-04 - Redirecionar manutenção (RF015)** - Pessoa 4
   - Escolher destino, impedir redirecionamento para si mesmo e registrar origem/destino.
 
-- [ ] **P1-05 - Finalizar solicitação (RF016)** - Pessoa 4
+- [X] **P1-05 - Finalizar solicitação (RF016)** - Pessoa 4
   - Estado `FINALIZADA`, data/hora e funcionário responsável.
 
-- [ ] **P1-06 - Lista avançada do funcionário (RF013)** - Pessoa 4
+- [X] **P1-06 - Lista avançada do funcionário (RF013)** - Pessoa 4
   - Filtros Hoje, Período e Todas.
   - Todos os estados com cores oficiais.
   - Regra de visibilidade das solicitações redirecionadas.

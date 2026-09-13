@@ -29,4 +29,10 @@ export abstract class MaintenanceRequestApiClient {
     toEmployeeId: number,
     toEmployeeName: string,
   ): Observable<{ request?: MaintenanceRequest; error?: string }>;
+
+  abstract finalize(
+    id: number,
+    employeeId: number,
+    employeeName: string,
+  ): Observable<MaintenanceRequest | undefined>;
 }

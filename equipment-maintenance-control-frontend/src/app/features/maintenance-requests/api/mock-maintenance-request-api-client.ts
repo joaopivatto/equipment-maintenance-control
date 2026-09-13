@@ -148,4 +148,30 @@ export class MockMaintenanceRequestApiClient extends MaintenanceRequestApiClient
 
     return of({ request });
   }
+
+  // RF016 - Finalizar solicitação: PAGA -> FINALIZADA
+  finalize(
+    id: number,
+    employeeId: number,
+    employeeName: string,
+  ): Observable<MaintenanceRequest | undefined> {
+    const request = this.requests.find((r) => r.id === id);
+    if (!request || request.status !== RequestStatus.PAID) {
+      return of(undefined);
+    }
+
+    const now = new Date().toISOString();
+    request.status = RequestStatus.FINALIZED;
+    request.finalizedAt = now;
+    request.finalizedByEmployeeName = employeeName;
+    request.assignedEmployeeId = employeeId;
+    request.assignedEmployeeName = employeeName;
+    request.history.push({
+      status: RequestStatus.FINALIZED,
+      dateTime: now,
+      responsible: employeeName,
+    });
+
+    return of(request);
+  }
 }
