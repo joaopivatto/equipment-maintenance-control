@@ -1,0 +1,225 @@
+<div class="app-page">
+  <div class="page__head">
+    <a pButton [text]="true" class="page__back" routerLink="/login">
+      <i class="pi pi-arrow-left"></i>
+      Voltar
+    </a>
+    <h2 class="page__title">Cadastro de cliente</h2>
+    <p class="page__subtitle">Preencha os dados abaixo para criar sua conta.</p>
+  </div>
+
+  <p-card header="Dados do cliente">
+    <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+      <div class="field">
+        <label for="name">Nome completo</label>
+        <input
+          pInputText
+          id="name"
+          type="text"
+          formControlName="name"
+          [invalid]="!!(form.get('name')?.invalid && form.get('name')?.touched)"
+        />
+        @if (form.get('name')?.invalid && form.get('name')?.touched) {
+          <p-message severity="error" variant="simple" size="small">
+            Informe o nome completo.
+          </p-message>
+        }
+      </div>
+
+      <div class="field">
+        <label for="cpf">CPF</label>
+        <p-inputmask
+          inputId="cpf"
+          mask="999.999.999-99"
+          [unmask]="true"
+          formControlName="cpf"
+          [invalid]="!!(form.get('cpf')?.invalid && form.get('cpf')?.touched)"
+        />
+        @if (form.get('cpf')?.invalid && form.get('cpf')?.touched) {
+          <p-message severity="error" variant="simple" size="small"
+            >Informe um CPF válido.</p-message
+          >
+        }
+      </div>
+
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          formControlName="email"
+          [invalid]="!!(form.get('email')?.invalid && form.get('email')?.touched)"
+        />
+        @if (form.get('email')?.invalid && form.get('email')?.touched) {
+          <p-message severity="error" variant="simple" size="small">
+            Informe um e-mail válido.
+          </p-message>
+        }
+      </div>
+
+      <div class="field">
+        <label for="emailConfirmation">Confirmação de e-mail</label>
+        <input
+          pInputText
+          id="emailConfirmation"
+          type="email"
+          formControlName="emailConfirmation"
+          [invalid]="
+            !!(
+              (form.get('emailConfirmation')?.invalid || form.hasError('mismatch')) &&
+              form.get('emailConfirmation')?.touched
+            )
+          "
+        />
+        @if (form.get('emailConfirmation')?.invalid && form.get('emailConfirmation')?.touched) {
+          <p-message severity="error" variant="simple" size="small">
+            Informe um e-mail válido.
+          </p-message>
+        } @else if (form.hasError('mismatch') && form.get('emailConfirmation')?.touched) {
+          <p-message severity="error" variant="simple" size="small">
+            Os e-mails informados não coincidem.
+          </p-message>
+        }
+      </div>
+
+      <div class="field">
+        <label for="phoneNumber">Telefone</label>
+        <p-inputmask
+          inputId="phoneNumber"
+          mask="(99) 99999-9999"
+          [unmask]="true"
+          formControlName="phoneNumber"
+          [invalid]="!!(form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched)"
+        />
+        @if (form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched) {
+          <p-message severity="error" variant="simple" size="small">
+            Informe um telefone válido.
+          </p-message>
+        }
+      </div>
+
+      <div class="form-section" formGroupName="address">
+        <h3 class="form-section__title">Endereço</h3>
+
+        <div class="field">
+          <label for="zipCode">CEP</label>
+          <p-inputmask
+            inputId="zipCode"
+            mask="99999-999"
+            [unmask]="true"
+            formControlName="zipCode"
+            [invalid]="
+              !!(form.get('address.zipCode')?.invalid && form.get('address.zipCode')?.touched)
+            "
+          />
+          @if (form.get('address.zipCode')?.invalid && form.get('address.zipCode')?.touched) {
+            <p-message severity="error" variant="simple" size="small">
+              Informe um CEP válido.
+            </p-message>
+          }
+        </div>
+
+        <div class="field field--wide">
+          <label for="street">Rua</label>
+          <input
+            pInputText
+            id="street"
+            type="text"
+            formControlName="street"
+            [invalid]="
+              !!(form.get('address.street')?.invalid && form.get('address.street')?.touched)
+            "
+          />
+          @if (form.get('address.street')?.invalid && form.get('address.street')?.touched) {
+            <p-message severity="error" variant="simple" size="small">Informe a rua.</p-message>
+          }
+        </div>
+
+        <div class="field">
+          <label for="number">Número</label>
+          <input
+            pInputText
+            id="number"
+            type="number"
+            formControlName="number"
+            [invalid]="
+              !!(form.get('address.number')?.invalid && form.get('address.number')?.touched)
+            "
+          />
+          @if (form.get('address.number')?.invalid && form.get('address.number')?.touched) {
+            <p-message severity="error" variant="simple" size="small">Informe o número.</p-message>
+          }
+        </div>
+
+        <div class="field">
+          <label for="complement">Complemento</label>
+          <input pInputText id="complement" type="text" formControlName="complement" />
+        </div>
+
+        <div class="field">
+          <label for="neighborhood">Bairro</label>
+          <input
+            pInputText
+            id="neighborhood"
+            type="text"
+            formControlName="neighborhood"
+            [invalid]="
+              !!(
+                form.get('address.neighborhood')?.invalid &&
+                form.get('address.neighborhood')?.touched
+              )
+            "
+          />
+          @if (
+            form.get('address.neighborhood')?.invalid && form.get('address.neighborhood')?.touched
+          ) {
+            <p-message severity="error" variant="simple" size="small">Informe o bairro.</p-message>
+          }
+        </div>
+
+        <div class="field">
+          <label for="city">Cidade</label>
+          <input
+            pInputText
+            id="city"
+            type="text"
+            formControlName="city"
+            [invalid]="!!(form.get('address.city')?.invalid && form.get('address.city')?.touched)"
+          />
+          @if (form.get('address.city')?.invalid && form.get('address.city')?.touched) {
+            <p-message severity="error" variant="simple" size="small">Informe a cidade.</p-message>
+          }
+        </div>
+
+        <div class="field">
+          <label for="state">Estado</label>
+          <p-select
+            inputId="state"
+            [options]="ufOptions"
+            optionLabel="label"
+            optionValue="value"
+            formControlName="state"
+            [invalid]="!!(form.get('address.state')?.invalid && form.get('address.state')?.touched)"
+          />
+          @if (form.get('address.state')?.invalid && form.get('address.state')?.touched) {
+            <p-message severity="error" variant="simple" size="small">
+              Selecione o estado.
+            </p-message>
+          }
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button pButton type="submit">
+          <i class="pi pi-user-plus"></i>
+          Cadastrar
+        </button>
+        <a pButton severity="secondary" [outlined]="true" routerLink="/login">
+          <i class="pi pi-times"></i>
+          Cancelar
+        </a>
+      </div>
+    </form>
+  </p-card>
+</div>
