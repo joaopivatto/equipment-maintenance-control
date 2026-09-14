@@ -11,6 +11,8 @@ import { EquipmentCategoryApiClient } from './features/equipment-categories/api/
 import { MockEquipmentCategoryApiClient } from './features/equipment-categories/api/mock-equipment-category-api-client';
 import { MaintenanceRequestApiClient } from './features/maintenance-requests/api/maintenance-request-api-client';
 import { MockMaintenanceRequestApiClient } from './features/maintenance-requests/api/mock-maintenance-request-api-client';
+import { EmployeeApiClient } from './features/employees/api/employee-api-client';
+import { MockEmployeeApiClient } from './features/employees/api/mock-employee-api-client';
 import { AuthApiClient } from './core/api/auth-api-client';
 import { MockAuthApiClient } from './core/api/mock-auth-api-client';
 import { routes } from './app.routes';
@@ -22,6 +24,7 @@ export const appConfig: ApplicationConfig = {
     { provide: LOCALE_ID, useValue: 'pt-BR' },
     { provide: EquipmentCategoryApiClient, useClass: MockEquipmentCategoryApiClient },
     { provide: MaintenanceRequestApiClient, useClass: MockMaintenanceRequestApiClient },
+    { provide: EmployeeApiClient, useClass: MockEmployeeApiClient },
     { provide: AuthApiClient, useClass: MockAuthApiClient },
     MessageService,
     provideBrowserGlobalErrorListeners(),
