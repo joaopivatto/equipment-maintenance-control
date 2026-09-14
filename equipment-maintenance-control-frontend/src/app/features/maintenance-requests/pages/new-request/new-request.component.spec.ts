@@ -5,6 +5,8 @@ import { EquipmentCategoryApiClient } from '../../../equipment-categories/api/eq
 import { MockEquipmentCategoryApiClient } from '../../../equipment-categories/api/mock-equipment-category-api-client';
 import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
 import { MockMaintenanceRequestApiClient } from '../../api/mock-maintenance-request-api-client';
+import { AuthApiClient } from '../../../../core/api/auth-api-client';
+import { MockAuthApiClient } from '../../../../core/api/mock-auth-api-client';
 import { NewRequestComponent } from './new-request.component';
 
 describe('NewRequestComponent', () => {
@@ -19,6 +21,7 @@ describe('NewRequestComponent', () => {
         provideRouter([]),
         { provide: EquipmentCategoryApiClient, useClass: MockEquipmentCategoryApiClient },
         { provide: MaintenanceRequestApiClient, useClass: MockMaintenanceRequestApiClient },
+        { provide: AuthApiClient, useClass: MockAuthApiClient },
       ],
     }).compileComponents();
 

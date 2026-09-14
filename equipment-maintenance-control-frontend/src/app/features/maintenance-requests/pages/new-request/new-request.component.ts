@@ -10,6 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
 import { NotificationService } from '../../../../core/notifications/notification.service';
+import { SessionService } from '../../../../core/auth/session.service';
 import { EquipmentCategoryApiClient } from '../../../equipment-categories/api/equipment-category-api-client';
 import { EquipmentCategory } from '../../../equipment-categories/models/equipment-category.model';
 
@@ -34,6 +35,7 @@ export class NewRequestComponent {
   private router = inject(Router);
   private location = inject(Location);
   private notificationService = inject(NotificationService);
+  private sessionService = inject(SessionService);
 
   private equipmentCategoryApiClient = inject(EquipmentCategoryApiClient);
 
@@ -61,10 +63,23 @@ export class NewRequestComponent {
       return;
     }
 
-    // TODO: substituir por chamada real à API REST quando o backend estiver pronto
-    console.log('Nova solicitação:', this.form.value);
-    this.notificationService.success('Sucesso', 'Solicitação registrada com sucesso!');
-    this.router.navigate(['/requests/list']);
+    const { equipmentDescription, equipmentCategoryId, defectDescription } =
+      this.form.getRawValue();
+    const category = this.equipmentCategories.find((c) => c.id === equipmentCategoryId);
+    const customerName = this.sessionService.currentUser()?.name ?? '';
+
+    this.maintenanceRequestApiClient
+      .insert(
+        equipmentDescription!,
+        equipmentCategoryId!,
+        category?.name ?? '',
+        defectDescription!,
+        customerName,
+      )
+      .subscribe(() => {
+        this.notificationService.success('Sucesso', 'Solicitação registrada com sucesso!');
+        this.router.navigate(['/requests/list']);
+      });
   }
 
   cancel(): void {

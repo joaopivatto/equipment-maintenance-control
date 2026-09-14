@@ -28,6 +28,8 @@ export interface MaintenanceRequest {
   id: number;
   createdAt: string;
   equipmentDescription: string;
+  equipmentCategoryId?: number;
+  equipmentCategoryName?: string;
   defectDescription: string;
   status: RequestStatus;
   budget?: Budget;

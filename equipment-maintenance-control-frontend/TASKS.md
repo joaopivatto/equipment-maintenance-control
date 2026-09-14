@@ -75,11 +75,11 @@
 
 ## P0 - Fluxo de solicitações do cliente
 
-**Responsável: Pessoa 2**
+**Responsável: João Guilherme Pivatto**
 
 > Depende de P0-04 e P0-05.
 
-- [ ] **P0-10 - Criar solicitação de manutenção (RF004)**
+- [x] **P0-10 - Criar solicitação de manutenção (RF004)**
   - Descrição do equipamento, categoria e defeito.
   - Criar data/hora e estado `ABERTA`.
   - Gravar no serviço mockado e retornar à lista.

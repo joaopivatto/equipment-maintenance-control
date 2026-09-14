@@ -6,6 +6,14 @@ export abstract class MaintenanceRequestApiClient {
 
   abstract findById(id: number): Observable<MaintenanceRequest | undefined>;
 
+  abstract insert(
+    equipmentDescription: string,
+    equipmentCategoryId: number,
+    equipmentCategoryName: string,
+    defectDescription: string,
+    customerName: string,
+  ): Observable<MaintenanceRequest>;
+
   abstract approve(id: number): Observable<MaintenanceRequest | undefined>;
 
   abstract reject(id: number, reason: string): Observable<MaintenanceRequest | undefined>;
