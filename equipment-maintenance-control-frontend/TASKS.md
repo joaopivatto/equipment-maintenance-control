@@ -62,12 +62,12 @@
   - Mensagem para credenciais inválidas.
   - Link para autocadastro.
 
-- [/] **P0-08 - Implementar Autocadastro de cliente (RF001)**
+- [X] **P0-08 - Implementar Autocadastro de cliente (RF001)**
   - CPF, nome, e-mail, telefone e endereço completo.
   - Validações e mensagens de erro.
   - Confirmação visual de cadastro realizado.
 
-- [/] **P0-09 - Preenchimento de endereço por CEP**
+- [X] **P0-09 - Preenchimento de endereço por CEP**
   - Preencher endereço ao informar CEP válido.
   - Definir fallback mockado se a ViaCEP estiver indisponível.
 

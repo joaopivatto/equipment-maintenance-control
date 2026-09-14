@@ -30,8 +30,8 @@ export class SessionService {
     );
   }
 
-  logout(): void {
-    this.authApiClient.logout().subscribe(() => this.setCurrentUser(null));
+  logout(): Observable<void> {
+    return this.authApiClient.logout().pipe(tap(() => this.setCurrentUser(null)));
   }
 
   private setCurrentUser(user: SessionUser | null): void {
