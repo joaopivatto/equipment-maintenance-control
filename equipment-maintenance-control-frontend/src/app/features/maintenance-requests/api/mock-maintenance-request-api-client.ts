@@ -12,12 +12,41 @@ export class MockMaintenanceRequestApiClient extends MaintenanceRequestApiClient
     this.requestFactory.generate(),
   );
 
+  private nextId = this.requests.length + 1;
+
   listAll(): Observable<MaintenanceRequest[]> {
     return of(this.requests);
   }
 
   findById(id: number): Observable<MaintenanceRequest | undefined> {
     return of(this.requests.find((request) => request.id === id));
+  }
+
+  // RF004 - Criar solicitação de manutenção: nova solicitação em estado ABERTA
+  insert(
+    equipmentDescription: string,
+    equipmentCategoryId: number,
+    equipmentCategoryName: string,
+    defectDescription: string,
+    customerName: string,
+  ): Observable<MaintenanceRequest> {
+    const now = new Date().toISOString();
+
+    const request: MaintenanceRequest = {
+      id: this.nextId++,
+      createdAt: now,
+      equipmentDescription,
+      equipmentCategoryId,
+      equipmentCategoryName,
+      defectDescription,
+      status: RequestStatus.OPEN,
+      customerName,
+      history: [{ status: RequestStatus.OPEN, dateTime: now }],
+    };
+
+    this.requests.push(request);
+
+    return of(request);
   }
 
   // RF006 - Aprovar serviço: ORÇADA -> APROVADA
