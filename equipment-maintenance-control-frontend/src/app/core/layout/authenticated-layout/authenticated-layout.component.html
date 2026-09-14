@@ -1,6 +1,6 @@
 <p-sidebar-layout class="h-full relative!">
   @if (isMobile()) {
-  <p-sidebar-backdrop class="absolute!" />
+    <p-sidebar-backdrop class="absolute!" />
   }
   <p-sidebar
     id="mobile-nav"
@@ -34,18 +34,18 @@
             <p-sidebar-group-content>
               <p-sidebar-menu>
                 @for (navItem of navItems(); track navItem.label) {
-                <p-sidebar-menu-item>
-                  <button
-                    pSidebarMenuButton
-                    [routerLink]="navItem.link"
-                    routerLinkActive
-                    #rla="routerLinkActive"
-                    [isActive]="rla.isActive"
-                  >
-                    <i [class]="navItem.icon"></i>
-                    <span>{{ navItem.label }}</span>
-                  </button>
-                </p-sidebar-menu-item>
+                  <p-sidebar-menu-item>
+                    <button
+                      pSidebarMenuButton
+                      [routerLink]="navItem.link"
+                      routerLinkActive
+                      #rla="routerLinkActive"
+                      [isActive]="rla.isActive"
+                    >
+                      <i [class]="navItem.icon"></i>
+                      <span>{{ navItem.label }}</span>
+                    </button>
+                  </p-sidebar-menu-item>
                 }
               </p-sidebar-menu>
             </p-sidebar-group-content>
@@ -63,12 +63,7 @@
                 <span>{{ sessionService.currentUser()?.name }}</span>
               </button>
               <p-popover #p>
-                <button
-                  pButton
-                  type="button"
-                  class="p-button-text"
-                  (click)="sessionService.logout(); router.navigate(['/login'])"
-                >
+                <button pButton type="button" class="p-button-text" (click)="logout()">
                   <svg data-p-icon="sign-out"></svg> Sair
                 </button>
               </p-popover>
