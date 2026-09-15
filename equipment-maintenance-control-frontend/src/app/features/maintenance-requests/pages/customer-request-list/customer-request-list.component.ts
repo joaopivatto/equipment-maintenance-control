@@ -238,8 +238,9 @@ export class CustomerRequestListComponent implements OnInit {
     this.router.navigate(['/requests', id, 'budget']);
   }
 
+  // RF008 - Visualizar solicitação e histórico
   viewDetails(id: number): void {
-    alert(`Visualizando dados e histórico da solicitação #${id} (RF008)`);
+    this.router.navigate(['/requests', id, 'details']);
   }
 
   // RF009 - Resgatar serviço: REJEITADA -> APROVADA
