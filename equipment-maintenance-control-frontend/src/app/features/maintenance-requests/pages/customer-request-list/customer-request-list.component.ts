@@ -238,7 +238,6 @@ export class CustomerRequestListComponent implements OnInit {
     this.router.navigate(['/requests', id, 'budget']);
   }
 
-  // RF008 - Visualizar solicitação e histórico
   viewDetails(id: number): void {
     this.router.navigate(['/requests', id, 'details']);
   }
@@ -377,6 +376,14 @@ export class CustomerRequestListComponent implements OnInit {
           });
       },
     });
+  }
+
+  equipmentLabel(description: string): string {
+    if (!description || description.length <= 30) {
+      return description;
+    }
+
+    return `${description.slice(0, 30)}…`;
   }
 
   statusSeverity(status: RequestStatus) {

@@ -140,8 +140,8 @@
           </td>
           }
 
-          <td>
-            {{ request.equipmentDescription }}
+          <td [title]="request.equipmentDescription">
+            {{ equipmentLabel(request.equipmentDescription) }}
           </td>
 
           <td>
