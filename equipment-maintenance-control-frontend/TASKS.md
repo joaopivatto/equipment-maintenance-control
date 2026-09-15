@@ -89,7 +89,7 @@
   - Equipamento limitado a 30 caracteres.
   - Cores e ações corretas por status.
 
-- [ ] **P0-12 - Visualizar solicitação e histórico (RF008)**
+- [x] **P0-12 - Visualizar solicitação e histórico (RF008)**
   - Dados completos de solicitação, cliente, equipamento e categoria.
   - Linha do tempo com status, data/hora e responsável.
   - Ações disponíveis conforme o status atual.

@@ -1,0 +1,170 @@
+<p-confirmdialog />
+
+<div class="app-page" *ngIf="request as maintenanceRequest">
+  <div class="page__head">
+    <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Voltar
+    </button>
+
+    <div class="page__head-row">
+      <h2 class="page__title">Detalhes da Solicitação #{{ maintenanceRequest.id }}</h2>
+
+      @if (hasActions()) {
+      <div class="details-actions">
+        @if (maintenanceRequest.status === RequestStatus.QUOTED) {
+        <button type="button" pButton (click)="reviewBudget()">
+          <i class="pi pi-dollar"></i>
+          Ver orçamento
+        </button>
+        }
+
+        @if (maintenanceRequest.status === RequestStatus.REJECTED) {
+        <button type="button" pButton severity="warn" (click)="recoverService()">
+          <i class="pi pi-refresh"></i>
+          Resgatar serviço
+        </button>
+        }
+
+        @if (maintenanceRequest.status === RequestStatus.REPAIRED) {
+        <button type="button" pButton severity="success" (click)="payForService()">
+          <i class="pi pi-credit-card"></i>
+          Pagar
+        </button>
+        }
+      </div>
+      }
+    </div>
+  </div>
+
+  <p-card header="Dados da solicitação">
+    <div class="details">
+      <div class="details__row">
+        <span class="details__label">Cliente</span>
+        <span>{{ maintenanceRequest.customerName || '-' }}</span>
+      </div>
+
+      <div class="details__row">
+        <span class="details__label">Equipamento</span>
+        <span>{{ maintenanceRequest.equipmentDescription }}</span>
+      </div>
+
+      <div class="details__row">
+        <span class="details__label">Categoria</span>
+        <span>{{ maintenanceRequest.equipmentCategoryName || '-' }}</span>
+      </div>
+
+      <div class="details__row">
+        <span class="details__label">Defeito relatado</span>
+        <span>{{ maintenanceRequest.defectDescription }}</span>
+      </div>
+
+      <div class="details__row">
+        <span class="details__label">Data/Hora da solicitação</span>
+        <span>{{ maintenanceRequest.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+
+      <div class="details__row">
+        <span class="details__label">Status atual</span>
+        @if (isEmployee()) {
+        <span
+          class="status-badge"
+          [style.background-color]="statusColor(maintenanceRequest.status)"
+        >
+          {{ maintenanceRequest.status }}
+        </span>
+        } @else {
+        <p-tag [value]="maintenanceRequest.status" [severity]="statusSeverity(maintenanceRequest.status)" />
+        }
+      </div>
+
+      @if (maintenanceRequest.budget) {
+      <div class="details__row">
+        <span class="details__label">Valor do orçamento</span>
+        <span>{{ maintenanceRequest.budget.value | currency: 'BRL' }}</span>
+      </div>
+      }
+
+      @if (maintenanceRequest.status === RequestStatus.REJECTED && maintenanceRequest.rejectionReason) {
+      <div class="details__row">
+        <span class="details__label">Motivo da rejeição</span>
+        <span>{{ maintenanceRequest.rejectionReason }}</span>
+      </div>
+      }
+
+      @if (maintenanceRequest.assignedEmployeeName) {
+      <div class="details__row">
+        <span class="details__label">Funcionário responsável</span>
+        <span>{{ maintenanceRequest.assignedEmployeeName }}</span>
+      </div>
+      }
+
+      @if (maintenanceRequest.maintenanceDescription) {
+      <div class="details__row">
+        <span class="details__label">Descrição da manutenção</span>
+        <span>{{ maintenanceRequest.maintenanceDescription }}</span>
+      </div>
+      }
+
+      @if (maintenanceRequest.maintenanceInstructions) {
+      <div class="details__row">
+        <span class="details__label">Orientações</span>
+        <span>{{ maintenanceRequest.maintenanceInstructions }}</span>
+      </div>
+      }
+
+      @if (maintenanceRequest.paidAt) {
+      <div class="details__row">
+        <span class="details__label">Data do pagamento</span>
+        <span>{{ maintenanceRequest.paidAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      }
+
+      @if (maintenanceRequest.finalizedAt) {
+      <div class="details__row">
+        <span class="details__label">Data de finalização</span>
+        <span>{{ maintenanceRequest.finalizedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+
+      <div class="details__row">
+        <span class="details__label">Finalizado por</span>
+        <span>{{ maintenanceRequest.finalizedByEmployeeName || '-' }}</span>
+      </div>
+      }
+    </div>
+  </p-card>
+
+  <p-card header="Linha do tempo" class="timeline-card">
+    <p-timeline [value]="timelineEvents" layout="horizontal" align="top">
+      <ng-template #content let-event>
+        <div class="timeline-event">
+          @if (isEmployee()) {
+          <span
+            class="status-badge"
+            [style.background-color]="statusColor(event.status)"
+          >
+            {{ event.status }}
+          </span>
+          } @else {
+          <p-tag [value]="event.status" [severity]="statusSeverity(event.status)" />
+          }
+          <span class="timeline-event__date">{{ event.dateTime | date: 'dd/MM/yyyy HH:mm' }}</span>
+
+          @if (event.responsible) {
+          <span class="timeline-event__detail">Responsável: {{ event.responsible }}</span>
+          }
+
+          @if (event.fromEmployee && event.toEmployee) {
+          <span class="timeline-event__detail">
+            De {{ event.fromEmployee }} para {{ event.toEmployee }}
+          </span>
+          }
+
+          @if (event.reason) {
+          <span class="timeline-event__detail">Motivo: {{ event.reason }}</span>
+          }
+        </div>
+      </ng-template>
+    </p-timeline>
+  </p-card>
+</div>

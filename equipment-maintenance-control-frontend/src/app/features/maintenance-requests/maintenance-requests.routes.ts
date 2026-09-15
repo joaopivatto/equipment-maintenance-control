@@ -15,6 +15,13 @@ export const MAINTENANCE_REQUESTS_ROUTES: Routes = [
       import('./pages/new-request/new-request.component').then((m) => m.NewRequestComponent),
   },
   {
+    path: ':id/details',
+    loadComponent: () =>
+      import('./pages/request-details/request-details.component').then(
+        (m) => m.RequestDetailsComponent,
+      ),
+  },
+  {
     path: ':id/budget',
     loadComponent: () => import('./pages/budget/budget.component').then((m) => m.BudgetComponent),
   },
