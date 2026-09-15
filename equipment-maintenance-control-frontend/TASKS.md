@@ -84,7 +84,7 @@
   - Criar data/hora e estado `ABERTA`.
   - Gravar no serviço mockado e retornar à lista.
 
-- [ ] **P0-11 - Página inicial do cliente (RF003)**
+- [x] **P0-11 - Página inicial do cliente (RF003)**
   - Lista ordenada por data/hora crescente.
   - Equipamento limitado a 30 caracteres.
   - Cores e ações corretas por status.
