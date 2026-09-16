@@ -1,14 +1,31 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { MessageService } from 'primeng/api';
 
+import { EquipmentCategoryApiClient } from './features/equipment-categories/api/equipment-category-api-client';
+import { MockEquipmentCategoryApiClient } from './features/equipment-categories/api/mock-equipment-category-api-client';
+import { MaintenanceRequestApiClient } from './features/maintenance-requests/api/maintenance-request-api-client';
+import { MockMaintenanceRequestApiClient } from './features/maintenance-requests/api/mock-maintenance-request-api-client';
+import { EmployeeApiClient } from './features/employees/api/employee-api-client';
+import { MockEmployeeApiClient } from './features/employees/api/mock-employee-api-client';
+import { AuthApiClient } from './core/api/auth-api-client';
+import { MockAuthApiClient } from './core/api/mock-auth-api-client';
 import { routes } from './app.routes';
+
+registerLocaleData(localePt);
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: EquipmentCategoryApiClient, useClass: MockEquipmentCategoryApiClient },
+    { provide: MaintenanceRequestApiClient, useClass: MockMaintenanceRequestApiClient },
+    { provide: EmployeeApiClient, useClass: MockEmployeeApiClient },
+    { provide: AuthApiClient, useClass: MockAuthApiClient },
     MessageService,
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),

@@ -6,7 +6,7 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
-import { EquipmentCategoryService } from '../../services/equipment-category.service';
+import { EquipmentCategoryApiClient } from '../../api/equipment-category-api-client';
 import { EquipmentCategory } from '../../models/equipment-category.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 
@@ -23,38 +23,40 @@ import { NotificationService } from '../../../../core/notifications/notification
     MessageModule,
   ],
   templateUrl: './category-form.component.html',
-  styleUrl: './category-form.component.scss'
+  styleUrl: './category-form.component.scss',
 })
 export class CategoryFormComponent implements OnInit {
   // Obtém a referência do formulário HTML para validações
-  @ViewChild('formCategory') formCategory!: NgForm;
+  @ViewChild('categoryForm') categoryForm!: NgForm;
 
-  private categoryService = inject(EquipmentCategoryService);
+  private categoryApiClient = inject(EquipmentCategoryApiClient);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private location = inject(Location);
   private notificationService = inject(NotificationService);
 
   // Instancia um modelo de categoria vazio
-  public category: EquipmentCategory = { id: 0, name: '', active: true };
-  public isNew: boolean = true; // Flag para saber se é criação ou edição
+  category: EquipmentCategory = { id: 0, name: '', active: true };
+  isEditing = false;
 
   ngOnInit(): void {
     // Captura o parâmetro ":id" da URL (se existir)
     const id = this.route.snapshot.params['id'];
 
     if (id) {
-      this.isNew = false;
+      this.isEditing = true;
       // Busca a categoria para edição de dentro da lista ativa do serviço
-      const found = this.categoryService.listAll().find(c => c.id === +id);
+      this.categoryApiClient.listAll().subscribe((categories) => {
+        const found = categories.find((c) => c.id === +id);
 
-      if (found) {
-        // Clona o objeto para não alterar o serviço antes de clicar em "Salvar"
-        this.category = { ...found };
-      } else {
-        this.notificationService.error('Erro', 'Categoria não encontrada!');
-        this.router.navigate(['/categories/list']); // Volta para a listagem se der erro
-      }
+        if (found) {
+          // Clona o objeto para não alterar o serviço antes de clicar em "Salvar"
+          this.category = { ...found };
+        } else {
+          this.notificationService.error('Erro', 'Categoria não encontrada!');
+          this.router.navigate(['/categories/list']); // Volta para a listagem se der erro
+        }
+      });
     }
   }
 
@@ -63,24 +65,31 @@ export class CategoryFormComponent implements OnInit {
   }
 
   save(): void {
-    if (this.formCategory.form.valid) {
-      try {
-        if (this.isNew) {
-          // Chama o método de inserção do serviço passando apenas o nome (conforme criado pelo seu grupo)
-          this.categoryService.insert(this.category.name);
-          this.notificationService.success('Sucesso', 'Categoria cadastrada com sucesso!');
-        } else {
-          // Chama o método de atualização do serviço passando ID e novo nome
-          this.categoryService.update(this.category.id, this.category.name);
-          this.notificationService.success('Sucesso', 'Categoria atualizada com sucesso!');
+    if (this.categoryForm.form.valid) {
+      const request$ = !this.isEditing
+        ? this.categoryApiClient.insert(this.category.name)
+        : this.categoryApiClient.update(this.category.id, this.category.name);
+
+      request$.subscribe(({ error }) => {
+        if (error) {
+          this.notificationService.error('Erro', error);
+          return;
         }
-      } catch (error: any) {
-        this.notificationService.error('Erro', error.message);
-      }
-      // Redireciona de volta para a tela de listagem
-      this.router.navigate(['/categories/list']);
+
+        this.notificationService.success(
+          'Sucesso',
+          this.isEditing
+            ? 'Categoria atualizada com sucesso!'
+            : 'Categoria cadastrada com sucesso!',
+        );
+        // Redireciona de volta para a tela de listagem
+        this.router.navigate(['/categories/list']);
+      });
     } else {
-      this.notificationService.warning('Aviso', 'Por favor, corrija os erros no formulário antes de enviar.');
+      this.notificationService.warning(
+        'Aviso',
+        'Por favor, corrija os erros no formulário antes de enviar.',
+      );
     }
   }
 }

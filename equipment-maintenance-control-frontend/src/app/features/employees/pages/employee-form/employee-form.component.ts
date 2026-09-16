@@ -6,7 +6,7 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
-import { EmployeeService } from '../../services/employee.service';
+import { EmployeeApiClient } from '../../api/employee-api-client';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DateService } from '../../../../shared/services/date.service';
 import { NotificationService } from '../../../../core/notifications/notification.service';
@@ -20,27 +20,27 @@ import { NotificationService } from '../../../../core/notifications/notification
     InputTextModule,
     ButtonModule,
     MessageModule,
-    DatePickerModule
+    DatePickerModule,
   ],
   selector: 'app-employee-form',
   styleUrl: './employee-form.component.scss',
   templateUrl: './employee-form.component.html',
 })
 export class EmployeeFormComponent implements OnInit {
-  private employeeService = inject(EmployeeService);
+  private employeeApiClient = inject(EmployeeApiClient);
   private dateService = inject(DateService);
   private notificationService = inject(NotificationService);
-  private fb = inject(FormBuilder);
+  private formBuilder = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private location = inject(Location);
 
   editingId: number | null = null;
 
-  form = this.fb.group({
+  form = this.formBuilder.group({
     name: ['', [Validators.required, Validators.maxLength(100)]],
     email: ['', [Validators.required, Validators.email]],
-    birthDate: this.fb.control<Date | null>(null, Validators.required),
+    birthDate: this.formBuilder.control<Date | null>(null, Validators.required),
     password: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]],
   });
 
@@ -58,27 +58,31 @@ export class EmployeeFormComponent implements OnInit {
       return;
     }
 
-    const employee = this.employeeService.findById(Number(idParam));
-    if (!employee) {
-      this.router.navigate(['/employees/list']);
-      return;
-    }
+    this.employeeApiClient.findById(Number(idParam)).subscribe((employee) => {
+      if (!employee) {
+        this.router.navigate(['/employees/list']);
+        return;
+      }
 
-    this.editingId = employee.id;
-    // Na edição a senha não é alterada por aqui
-    this.form.get('password')?.clearValidators();
-    this.form.get('password')?.updateValueAndValidity();
-    this.form.patchValue({
-      name: employee.name,
-      email: employee.email,
-      birthDate: this.dateService.fromIsoDate(employee.birthDate),
+      this.editingId = employee.id;
+      // Na edição a senha não é alterada por aqui
+      this.form.get('password')?.clearValidators();
+      this.form.get('password')?.updateValueAndValidity();
+      this.form.patchValue({
+        name: employee.name,
+        email: employee.email,
+        birthDate: this.dateService.fromIsoDate(employee.birthDate),
+      });
     });
   }
 
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      this.notificationService.warning('Aviso', 'Por favor, corrija os erros no formulário antes de enviar.');
+      this.notificationService.warning(
+        'Aviso',
+        'Por favor, corrija os erros no formulário antes de enviar.',
+      );
       return;
     }
 
@@ -86,14 +90,19 @@ export class EmployeeFormComponent implements OnInit {
 
     const birthDateIso = this.dateService.toIsoDate(birthDate!);
 
-    if (this.editingId !== null) {
-      this.employeeService.update(this.editingId, name!, email!, birthDateIso);
-      this.notificationService.success('Sucesso', 'Funcionário atualizado com sucesso.');
-    } else {
-      this.employeeService.insert(name!, email!, birthDateIso, password!);
-      this.notificationService.success('Sucesso', 'Funcionário cadastrado com sucesso.');
-    }
+    const request$ =
+      this.editingId !== null
+        ? this.employeeApiClient.update(this.editingId, name!, email!, birthDateIso)
+        : this.employeeApiClient.insert(name!, email!, birthDateIso, password!);
 
-    this.router.navigate(['/employees/list']);
+    request$.subscribe(() => {
+      this.notificationService.success(
+        'Sucesso',
+        this.editingId !== null
+          ? 'Funcionário atualizado com sucesso.'
+          : 'Funcionário cadastrado com sucesso.',
+      );
+      this.router.navigate(['/employees/list']);
+    });
   }
 }

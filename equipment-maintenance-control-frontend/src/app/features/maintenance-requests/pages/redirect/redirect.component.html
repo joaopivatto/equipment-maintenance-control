@@ -1,0 +1,53 @@
+<p-confirmdialog />
+
+<div class="app-page" *ngIf="request as maintenanceRequest">
+  <div class="page__head">
+    <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Voltar
+    </button>
+    <h2 class="page__title">Redirecionar Solicitação #{{ maintenanceRequest.id }}</h2>
+  </div>
+
+  <p-card>
+    <div class="redirect-details">
+      <div class="redirect-details__row">
+        <span class="redirect-details__label">Equipamento</span>
+        <span>{{ maintenanceRequest.equipmentDescription }}</span>
+      </div>
+      <div class="redirect-details__row">
+        <span class="redirect-details__label">Status atual</span>
+        <p-tag [value]="maintenanceRequest.status" severity="info" />
+      </div>
+      <div class="redirect-details__row">
+        <span class="redirect-details__label">Origem (funcionário atual)</span>
+        <span>{{ fromEmployeeName }}</span>
+      </div>
+    </div>
+
+    <div class="redirect-form">
+      <label for="toEmployee">Redirecionar para</label>
+      <p-select
+        inputId="toEmployee"
+        [(ngModel)]="selectedEmployeeId"
+        [options]="availableEmployees()"
+        optionValue="id"
+        optionLabel="name"
+        [fluid]="true"
+        placeholder="Selecione o funcionário de destino"
+      />
+      @if (errorMessage()) {
+      <p-message severity="error" variant="simple" size="small">
+        {{ errorMessage() }}
+      </p-message>
+      }
+    </div>
+
+    <div class="redirect-actions">
+      <button pButton severity="secondary" (click)="confirmRedirect()">
+        <i class="pi pi-directions"></i>
+        Redirecionar
+      </button>
+    </div>
+  </p-card>
+</div>

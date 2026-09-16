@@ -3,6 +3,7 @@
 html,
 body {
   margin: 0;
+  height: 100%;
   min-height: 100%;
 }
 
@@ -78,14 +79,4 @@ a:focus {
   text-align: center;
   color: var(--p-text-muted-color);
   padding: 1.5rem 0;
-}
-
-.form-actions {
-  display: flex;
-  gap: 0.5rem;
-  padding-top: 0.5rem;
-}
-
-.text-end {
-  text-align: end;
 }

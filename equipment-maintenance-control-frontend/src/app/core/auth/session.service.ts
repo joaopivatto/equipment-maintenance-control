@@ -1,58 +1,59 @@
-import { Service, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
+import { map, Observable, tap } from 'rxjs';
 import { ProfileType } from '../../shared';
+import { AuthApiClient } from '../api/auth-api-client';
 import { SessionUser } from './models/session-user.model';
 
-interface MockAccount extends SessionUser {
-  password: string;
-}
+const STORAGE_KEY = 'session-user';
 
-@Service()
+@Injectable({
+  providedIn: 'root',
+})
 export class SessionService {
-  private readonly mockAccounts: MockAccount[] = [
-    {
-      id: 1,
-      name: 'João da Silva',
-      email: 'joao@cliente.com',
-      password: '1234',
-      profileType: ProfileType.CUSTOMER,
-    },
-    {
-      id: 2,
-      name: 'Maria da Costa',
-      email: 'maria@empresa.com',
-      password: '1234',
-      profileType: ProfileType.EMPLOYEE,
-    },
-  ];
-  private readonly currentUserState = signal<SessionUser | null>(null);
+  private readonly authApiClient = inject(AuthApiClient);
+  private readonly currentUserState = signal<SessionUser | null>(this.readStoredUser());
 
   readonly currentUser = this.currentUserState.asReadonly();
 
-  readonly isAuthenticated = computed(
-    () => this.currentUser() !== null,
-  );
+  readonly isAuthenticated = computed(() => this.currentUser() !== null);
 
-  readonly profileType = computed(
-    () => this.currentUser()?.profileType ?? null,
-  );
+  readonly profileType = computed(() => this.currentUser()?.profileType ?? null);
 
-  login(email: string, password: string): ProfileType | null {
-    const account = this.mockAccounts.find(
-      (acc) => acc.email === email && acc.password === password,
+  readonly isEmployee = computed(() => this.profileType() === ProfileType.EMPLOYEE);
+
+  readonly isCustomer = computed(() => this.profileType() === ProfileType.CUSTOMER);
+
+  login(email: string, password: string): Observable<ProfileType | null> {
+    return this.authApiClient.login(email, password).pipe(
+      tap((user) => this.setCurrentUser(user)),
+      map((user) => user?.profileType ?? null),
     );
-    if (account) {
-      this.currentUserState.set({
-        id: account.id,
-        name: account.name,
-        email: account.email,
-        profileType: account.profileType,
-      });
-      return account.profileType;
-    }
-    return null;
   }
 
-  logout(): void {
-    this.currentUserState.set(null);
+  logout(): Observable<void> {
+    return this.authApiClient.logout().pipe(tap(() => this.setCurrentUser(null)));
+  }
+
+  private setCurrentUser(user: SessionUser | null): void {
+    this.currentUserState.set(user);
+    if (user) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }
+
+  private readStoredUser(): SessionUser | null {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(raw) as SessionUser;
+    } catch {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
   }
 }

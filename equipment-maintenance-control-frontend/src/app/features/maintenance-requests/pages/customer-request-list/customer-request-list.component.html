@@ -1,0 +1,277 @@
+<p-confirmdialog />
+
+<div class="app-page">
+  <div class="page__head">
+    <button
+      type="button"
+      pButton
+      [text]="true"
+      class="page__back"
+      (click)="goBack()"
+    >
+      <i class="pi pi-arrow-left"></i>
+      Voltar
+    </button>
+
+    <div class="page__head-row">
+      <h2 class="page__title">
+        {{
+        isEmployee()
+        ? 'Solicitações de Manutenção'
+        : 'Minhas Solicitações de Manutenção'
+        }}
+      </h2>
+
+      @if (!isEmployee()) {
+      <a pButton routerLink="/requests/new">
+        <i class="pi pi-plus"></i>
+        Nova Solicitação
+      </a>
+      }
+    </div>
+
+  </div>
+
+  <p-card>
+    @if (isEmployee()) {
+    <div class="filters">
+      <p-selectbutton
+        [options]="filterOptions"
+        [(ngModel)]="filterMode"
+        optionLabel="label"
+        optionValue="value"
+        (onChange)="onFilterModeChange()"
+      />
+
+      @if (filterMode === 'period') {
+      <div class="filters__period">
+        <div class="field">
+          <label for="periodStart">Data inicial</label>
+
+          <p-datepicker
+            inputId="periodStart"
+            [(ngModel)]="periodStart"
+            dateFormat="dd/mm/yy"
+            [showIcon]="true"
+            [iconDisplay]="'input'"
+            [showClear]="true"
+            (ngModelChange)="onPeriodChange()"
+          />
+        </div>
+
+        <div class="field">
+          <label for="periodEnd">Data final</label>
+
+          <p-datepicker
+            inputId="periodEnd"
+            [(ngModel)]="periodEnd"
+            dateFormat="dd/mm/yy"
+            [showIcon]="true"
+            [iconDisplay]="'input'"
+            [showClear]="true"
+            (ngModelChange)="onPeriodChange()"
+          />
+        </div>
+      </div>
+      }
+    </div>
+    }
+
+    @if (isLoading()) {
+    <p-table [value]="skeletonRows">
+      <ng-template #header>
+        <tr>
+          <th>Data/Hora</th>
+
+          @if (isEmployee()) {
+          <th>Cliente</th>
+          }
+
+          <th>Equipamento</th>
+          <th>Estado</th>
+          <th>Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body>
+        <tr>
+          <td><p-skeleton /></td>
+
+          @if (isEmployee()) {
+          <td><p-skeleton /></td>
+          }
+
+          <td><p-skeleton /></td>
+          <td><p-skeleton /></td>
+          <td><p-skeleton /></td>
+        </tr>
+      </ng-template>
+    </p-table>
+    } @else {
+    <p-table
+      [value]="requests"
+      [paginator]="true"
+      [rows]="20"
+      [rowsPerPageOptions]="[5, 10, 20]"
+    >
+      <ng-template #header>
+        <tr>
+          <th>Data/Hora</th>
+
+          @if (isEmployee()) {
+          <th>Cliente</th>
+          }
+
+          <th>Equipamento</th>
+          <th>Estado</th>
+          <th>Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-request>
+        <tr>
+          <td>
+            {{ request.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+          </td>
+
+          @if (isEmployee()) {
+          <td>
+            {{ request.customerName || '-' }}
+          </td>
+          }
+
+          <td [title]="request.equipmentDescription">
+            {{ equipmentLabel(request.equipmentDescription) }}
+          </td>
+
+          <td>
+            @if (isEmployee()) {
+            <span
+              class="status-badge"
+              [style.background-color]="statusColor(request.status)"
+            >
+              {{ request.status }}
+            </span>
+            } @else {
+            <p-tag
+              [value]="request.status"
+              [severity]="statusSeverity(request.status)"
+            />
+            }
+          </td>
+
+          <td>
+            <div class="actions">
+              @if (isEmployee()) {
+              @if (request.status === RequestStatus.OPEN) {
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="reviewBudget(request.id)"
+              >
+                <i class="pi pi-dollar"></i>
+                Orçar
+              </button>
+              }
+
+              @if (
+              request.status === RequestStatus.APPROVED ||
+              request.status === RequestStatus.REDIRECTED
+              ) {
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="performMaintenance(request.id)"
+              >
+                <i class="pi pi-wrench"></i>
+                Manutenção
+              </button>
+
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="redirectService(request.id)"
+              >
+                <i class="pi pi-arrow-right"></i>
+                Redirecionar
+              </button>
+              }
+
+              @if (request.status === RequestStatus.PAID) {
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="finalizeService(request.id)"
+              >
+                <i class="pi pi-check"></i>
+                Finalizar
+              </button>
+              }
+              } @else {
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="viewDetails(request.id)"
+              >
+                <i class="pi pi-eye"></i>
+                Detalhes
+              </button>
+
+              @if (request.status === RequestStatus.QUOTED) {
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="reviewBudget(request.id)"
+              >
+                <i class="pi pi-dollar"></i>
+                Ver orçamento
+              </button>
+              }
+
+              @if (request.status === RequestStatus.REJECTED) {
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="recoverService(request.id)"
+              >
+                <i class="pi pi-refresh"></i>
+                Recuperar
+              </button>
+              }
+
+              @if (request.status === RequestStatus.REPAIRED) {
+              <button
+                type="button"
+                pButton
+                [text]="true"
+                (click)="payForService(request.id)"
+              >
+                <i class="pi pi-credit-card"></i>
+                Pagar
+              </button>
+              }
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template #emptymessage>
+        <tr>
+          <td [attr.colspan]="isEmployee() ? 5 : 4">
+            Nenhuma solicitação encontrada.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    }
+
+  </p-card>
+</div>

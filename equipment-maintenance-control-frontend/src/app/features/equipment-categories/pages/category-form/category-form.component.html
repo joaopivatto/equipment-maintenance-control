@@ -5,19 +5,19 @@
       Voltar
     </button>
     <h2 class="page__title">
-      {{ isNew ? 'Nova Categoria' : 'Editar Categoria #' + category.id }}
+      {{ isEditing ? 'Editar Categoria #' + category.id : 'Nova Categoria' }}
     </h2>
     <p class="page__subtitle">
       {{
-        isNew
-          ? 'Preencha os dados para cadastrar uma nova categoria.'
-          : 'Atualize os dados da categoria.'
+        isEditing
+          ? 'Atualize os dados da categoria.'
+          : 'Preencha os dados para cadastrar uma nova categoria.'
       }}
     </p>
   </div>
 
   <p-card header="Dados da categoria">
-    <form #formCategory="ngForm" (ngSubmit)="save()">
+    <form #categoryForm="ngForm" (ngSubmit)="save()">
       <div class="field">
         <label for="name">Nome da Categoria</label>
         <input
@@ -46,9 +46,9 @@
       </div>
 
       <div class="form-actions">
-        <button pButton type="submit" [disabled]="!formCategory.form.valid">
+        <button pButton type="submit" [disabled]="!categoryForm.form.valid">
           <i class="pi pi-check"></i>
-          {{ isNew ? 'Adicionar' : 'Salvar' }}
+          {{ isEditing ? 'Salvar' : 'Adicionar' }}
         </button>
         <a pButton severity="secondary" [outlined]="true" routerLink="/categories/list">
           <i class="pi pi-times"></i>

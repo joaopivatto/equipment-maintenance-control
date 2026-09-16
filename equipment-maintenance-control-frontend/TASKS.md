@@ -27,7 +27,7 @@
 
 ## P0 - Fundação e autenticação
 
-**Responsável: João Victor Dourado**
+**Responsável: João Victor Dourado + Matheus Alves** 
 
 - [x] **P0-01 - Validar o projeto atual**
   - Rodar build e testes.
@@ -47,27 +47,27 @@
   - Solicitação, histórico, orçamento, manutenção e redirecionamento.
   - Cliente, endereço, funcionário e categoria.
 
-- [/] **P0-05 - Criar massa de dados mockada**
+- [X] **P0-05 - Criar massa de dados mockada**
   - 2 funcionários: Maria e Mário.
   - 4 clientes: João, José, Joana e Joaquina.
   - 5 categorias: Notebook, Desktop, Impressora, Mouse e Teclado.
   - Pelo menos 20 solicitações com datas, estados e históricos variados.
 
-- [/] **P0-06 - Criar sessão mockada**
+- [X] **P0-06 - Criar sessão mockada**
   - Usuário atual, tipo de perfil e logout.
   - Login redireciona cliente e funcionário para áreas distintas.
 
-- [/] **P0-07 - Implementar Login (RF002)**
+- [X] **P0-07 - Implementar Login (RF002)**
   - Campos de e-mail e senha com validação.
   - Mensagem para credenciais inválidas.
   - Link para autocadastro.
 
-- [/] **P0-08 - Implementar Autocadastro de cliente (RF001)**
+- [X] **P0-08 - Implementar Autocadastro de cliente (RF001)**
   - CPF, nome, e-mail, telefone e endereço completo.
   - Validações e mensagens de erro.
   - Confirmação visual de cadastro realizado.
 
-- [/] **P0-09 - Preenchimento de endereço por CEP**
+- [X] **P0-09 - Preenchimento de endereço por CEP**
   - Preencher endereço ao informar CEP válido.
   - Definir fallback mockado se a ViaCEP estiver indisponível.
 
@@ -75,21 +75,21 @@
 
 ## P0 - Fluxo de solicitações do cliente
 
-**Responsável: Pessoa 2**
+**Responsável: João Guilherme Pivatto**
 
 > Depende de P0-04 e P0-05.
 
-- [ ] **P0-10 - Criar solicitação de manutenção (RF004)**
+- [x] **P0-10 - Criar solicitação de manutenção (RF004)**
   - Descrição do equipamento, categoria e defeito.
   - Criar data/hora e estado `ABERTA`.
   - Gravar no serviço mockado e retornar à lista.
 
-- [ ] **P0-11 - Página inicial do cliente (RF003)**
+- [x] **P0-11 - Página inicial do cliente (RF003)**
   - Lista ordenada por data/hora crescente.
   - Equipamento limitado a 30 caracteres.
   - Cores e ações corretas por status.
 
-- [ ] **P0-12 - Visualizar solicitação e histórico (RF008)**
+- [x] **P0-12 - Visualizar solicitação e histórico (RF008)**
   - Dados completos de solicitação, cliente, equipamento e categoria.
   - Linha do tempo com status, data/hora e responsável.
   - Ações disponíveis conforme o status atual.
@@ -157,22 +157,22 @@
 
 > Iniciar somente após os itens P0 estarem navegáveis.
 
-- [ ] **P1-01 - Resgatar serviço (RF009)** - Pessoa 3
+- [X] **P1-01 - Resgatar serviço (RF009)** - Pessoa 3
   - `REJEITADA` para `APROVADA`, com evento no histórico.
 
-- [ ] **P1-02 - Pagar serviço (RF010)** - Pessoa 3
+- [X] **P1-02 - Pagar serviço (RF010)** - Pessoa 3
   - Exibir valor, confirmar pagamento, registrar data/hora e mudar para `PAGA`.
 
-- [ ] **P1-03 - Efetuar manutenção (RF014)** - Pessoa 4
+- [X] **P1-03 - Efetuar manutenção (RF014)** - Pessoa 4
   - Descrição da manutenção, orientações, funcionário responsável e estado `ARRUMADA`.
 
-- [ ] **P1-04 - Redirecionar manutenção (RF015)** - Pessoa 4
+- [X] **P1-04 - Redirecionar manutenção (RF015)** - Pessoa 4
   - Escolher destino, impedir redirecionamento para si mesmo e registrar origem/destino.
 
-- [ ] **P1-05 - Finalizar solicitação (RF016)** - Pessoa 4
+- [X] **P1-05 - Finalizar solicitação (RF016)** - Pessoa 4
   - Estado `FINALIZADA`, data/hora e funcionário responsável.
 
-- [ ] **P1-06 - Lista avançada do funcionário (RF013)** - Pessoa 4
+- [X] **P1-06 - Lista avançada do funcionário (RF013)** - Pessoa 4
   - Filtros Hoje, Período e Todas.
   - Todos os estados com cores oficiais.
   - Regra de visibilidade das solicitações redirecionadas.

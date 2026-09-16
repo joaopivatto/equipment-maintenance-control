@@ -5,7 +5,9 @@ export const MAINTENANCE_REQUESTS_ROUTES: Routes = [
   {
     path: 'list',
     loadComponent: () =>
-      import('./pages/cliente-home/cliente-home.component').then((m) => m.ClienteHomeComponent),
+      import('./pages/customer-request-list/customer-request-list.component').then(
+        (m) => m.CustomerRequestListComponent,
+      ),
   },
   {
     path: 'employee-home',
@@ -18,7 +20,24 @@ export const MAINTENANCE_REQUESTS_ROUTES: Routes = [
       import('./pages/new-request/new-request.component').then((m) => m.NewRequestComponent),
   },
   {
+    path: ':id/details',
+    loadComponent: () =>
+      import('./pages/request-details/request-details.component').then(
+        (m) => m.RequestDetailsComponent,
+      ),
+  },
+  {
     path: ':id/budget',
     loadComponent: () => import('./pages/budget/budget.component').then((m) => m.BudgetComponent),
+  },
+  {
+    path: ':id/maintenance',
+    loadComponent: () =>
+      import('./pages/maintenance/maintenance.component').then((m) => m.MaintenanceComponent),
+  },
+  {
+    path: ':id/redirect',
+    loadComponent: () =>
+      import('./pages/redirect/redirect.component').then((m) => m.RedirectComponent),
   },
 ];

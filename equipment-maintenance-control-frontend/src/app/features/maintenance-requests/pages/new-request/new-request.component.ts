@@ -8,9 +8,11 @@ import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
-import { MaintenanceRequestService } from '../../services/maintenance-request.service';
+import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
 import { NotificationService } from '../../../../core/notifications/notification.service';
-import { EquipmentCategoryService } from '../../../equipment-categories/services/equipment-category.service';
+import { SessionService } from '../../../../core/auth/session.service';
+import { EquipmentCategoryApiClient } from '../../../equipment-categories/api/equipment-category-api-client';
+import { EquipmentCategory } from '../../../equipment-categories/models/equipment-category.model';
 
 @Component({
   imports: [
@@ -28,21 +30,27 @@ import { EquipmentCategoryService } from '../../../equipment-categories/services
   templateUrl: './new-request.component.html',
 })
 export class NewRequestComponent {
-  private fb = inject(FormBuilder);
-  private maintenanceRequestService = inject(MaintenanceRequestService);
+  private formBuilder = inject(FormBuilder);
+  private maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
   private router = inject(Router);
   private location = inject(Location);
   private notificationService = inject(NotificationService);
+  private sessionService = inject(SessionService);
 
-  private equipmentCategoriesService = inject(EquipmentCategoryService)
+  private equipmentCategoryApiClient = inject(EquipmentCategoryApiClient);
 
-  // Categorias mockadas por enquanto (backend ainda não implementado)
-  equipmentCategories = this.equipmentCategoriesService.listAll();
+  equipmentCategories: EquipmentCategory[] = [];
 
-  form = this.fb.group({
-    descricaoEquipamento: ['', [Validators.required, Validators.maxLength(100)]],
-    categoria: ['', Validators.required],
-    descricaoDefeito: ['', [Validators.required, Validators.maxLength(500)]],
+  constructor() {
+    this.equipmentCategoryApiClient.listAll().subscribe((categories) => {
+      this.equipmentCategories = categories;
+    });
+  }
+
+  form = this.formBuilder.group({
+    equipmentDescription: ['', [Validators.required, Validators.maxLength(100)]],
+    equipmentCategoryId: this.formBuilder.control<number | null>(null, Validators.required),
+    defectDescription: ['', [Validators.required, Validators.maxLength(500)]],
   });
 
   submit(): void {
@@ -55,10 +63,23 @@ export class NewRequestComponent {
       return;
     }
 
-    // TODO: substituir por chamada real à API REST quando o backend estiver pronto
-    console.log('Nova solicitação:', this.form.value);
-    this.notificationService.success('Sucesso', 'Solicitação registrada com sucesso!');
-    this.router.navigate(['/requests/list']);
+    const { equipmentDescription, equipmentCategoryId, defectDescription } =
+      this.form.getRawValue();
+    const category = this.equipmentCategories.find((c) => c.id === equipmentCategoryId);
+    const customerName = this.sessionService.currentUser()?.name ?? '';
+
+    this.maintenanceRequestApiClient
+      .insert(
+        equipmentDescription!,
+        equipmentCategoryId!,
+        category?.name ?? '',
+        defectDescription!,
+        customerName,
+      )
+      .subscribe(() => {
+        this.notificationService.success('Sucesso', 'Solicitação registrada com sucesso!');
+        this.router.navigate(['/requests/list']);
+      });
   }
 
   cancel(): void {

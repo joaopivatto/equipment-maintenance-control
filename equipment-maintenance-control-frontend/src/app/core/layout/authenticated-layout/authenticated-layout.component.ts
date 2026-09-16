@@ -1,4 +1,5 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, computed } from '@angular/core';
+import { SlicePipe } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { SessionService } from '../../auth/session.service';
 import { SidebarModule } from 'primeng/sidebar';
@@ -20,7 +21,8 @@ import { SignOut } from '@primeicons/angular/sign-out';
     CardModule,
     Wrench,
     PopoverModule,
-    SignOut
+    SignOut,
+    SlicePipe,
   ],
   selector: 'app-authenticated-layout',
   styleUrl: './authenticated-layout.component.scss',
@@ -38,9 +40,20 @@ export class AuthenticatedLayoutComponent {
     mql.addEventListener('change', (e) => this.isMobile.set(e.matches));
   }
 
-  protected readonly navItems = [
-    { label: 'Solicitações', icon: 'pi pi-list', link: '/requests/list' },
-    { label: 'Funcionários', icon: 'pi pi-users', link: '/employees/list' },
-    { label: 'Categorias', icon: 'pi pi-tags', link: '/categories/list' },
+  private readonly allNavItems = [
+    { label: 'Solicitações', icon: 'pi pi-list', link: '/requests/list', employeeOnly: false },
+    { label: 'Funcionários', icon: 'pi pi-users', link: '/employees/list', employeeOnly: true },
+    { label: 'Categorias', icon: 'pi pi-tags', link: '/categories/list', employeeOnly: true },
   ];
+
+  // RF001/RF002 - Apenas funcionários podem ver os cadastros de funcionários e categorias
+  protected readonly navItems = computed(() =>
+    this.allNavItems.filter((item) => !item.employeeOnly || this.sessionService.isEmployee()),
+  );
+
+  logout(): void {
+    this.sessionService.logout().subscribe(() => {
+      this.router.navigate(['/login']);
+    });
+  }
 }

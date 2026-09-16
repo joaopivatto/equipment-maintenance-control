@@ -1,0 +1,59 @@
+<p-confirmdialog />
+
+<div class="app-page" *ngIf="request as maintenanceRequest">
+  <div class="page__head">
+    <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Voltar
+    </button>
+    <h2 class="page__title">Efetuar Manutenção da Solicitação #{{ maintenanceRequest.id }}</h2>
+  </div>
+
+  <p-card>
+    <div class="maintenance-details">
+      <div class="maintenance-details__row">
+        <span class="maintenance-details__label">Equipamento</span>
+        <span>{{ maintenanceRequest.equipmentDescription }}</span>
+      </div>
+      <div class="maintenance-details__row">
+        <span class="maintenance-details__label">Defeito relatado</span>
+        <span>{{ maintenanceRequest.defectDescription }}</span>
+      </div>
+      <div class="maintenance-details__row">
+        <span class="maintenance-details__label">Status</span>
+        <p-tag value="APROVADA" severity="success" />
+      </div>
+      <div class="maintenance-details__row">
+        <span class="maintenance-details__label">Funcionário responsável</span>
+        <span>{{ responsibleEmployeeName }}</span>
+      </div>
+    </div>
+
+    <div class="maintenance-form">
+      <label for="maintenanceDescription">Descrição da manutenção</label>
+      <textarea
+        pTextarea
+        id="maintenanceDescription"
+        rows="3"
+        [(ngModel)]="maintenanceDescription"
+        placeholder="Descreva o que foi feito no equipamento"
+      ></textarea>
+
+      <label for="maintenanceInstructions">Orientações ao cliente</label>
+      <textarea
+        pTextarea
+        id="maintenanceInstructions"
+        rows="3"
+        [(ngModel)]="maintenanceInstructions"
+        placeholder="Descreva orientações de uso ou cuidados após a manutenção"
+      ></textarea>
+    </div>
+
+    <div class="maintenance-actions">
+      <button pButton severity="success" (click)="confirmMaintenance()">
+        <i class="pi pi-check"></i>
+        Concluir manutenção
+      </button>
+    </div>
+  </p-card>
+</div>

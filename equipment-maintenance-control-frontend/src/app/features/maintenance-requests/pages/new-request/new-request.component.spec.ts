@@ -1,4 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { EquipmentCategoryApiClient } from '../../../equipment-categories/api/equipment-category-api-client';
+import { MockEquipmentCategoryApiClient } from '../../../equipment-categories/api/mock-equipment-category-api-client';
+import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
+import { MockMaintenanceRequestApiClient } from '../../api/mock-maintenance-request-api-client';
+import { AuthApiClient } from '../../../../core/api/auth-api-client';
+import { MockAuthApiClient } from '../../../../core/api/mock-auth-api-client';
 import { NewRequestComponent } from './new-request.component';
 
 describe('NewRequestComponent', () => {
@@ -8,6 +16,13 @@ describe('NewRequestComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NewRequestComponent],
+      providers: [
+        MessageService,
+        provideRouter([]),
+        { provide: EquipmentCategoryApiClient, useClass: MockEquipmentCategoryApiClient },
+        { provide: MaintenanceRequestApiClient, useClass: MockMaintenanceRequestApiClient },
+        { provide: AuthApiClient, useClass: MockAuthApiClient },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NewRequestComponent);
