@@ -1,0 +1,63 @@
+<div class="app-page">
+  <div class="page__head">
+    <h2 class="page__title">Solicitações Abertas</h2>
+    <p class="page__subtitle">Solicitações aguardando orçamento.</p>
+  </div>
+
+  <p-card>
+    @if (isLoading()) {
+      <p-table [value]="skeletonRows">
+        <ng-template #header>
+          <tr>
+            <th>Data/Hora</th>
+            <th>Cliente</th>
+            <th>Equipamento</th>
+            <th>Ações</th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body>
+          <tr>
+            <td><p-skeleton /></td>
+            <td><p-skeleton /></td>
+            <td><p-skeleton /></td>
+            <td><p-skeleton /></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    } @else {
+      <p-table [value]="requests" [paginator]="true" [rows]="20" [rowsPerPageOptions]="[5, 10, 20]">
+        <ng-template #header>
+          <tr>
+            <th>Data/Hora</th>
+            <th>Cliente</th>
+            <th>Equipamento</th>
+            <th>Ações</th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-request>
+          <tr>
+            <td>{{ request.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ request.customerName || '-' }}</td>
+            <td [title]="request.equipmentDescription">
+              {{ equipmentLabel(request.equipmentDescription) }}
+            </td>
+            <td>
+              <button type="button" pButton [text]="true" (click)="performBudget(request.id)">
+                <i class="pi pi-dollar"></i>
+                Efetuar orçamento
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="4">Nenhuma solicitação aberta no momento.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    }
+  </p-card>
+</div>

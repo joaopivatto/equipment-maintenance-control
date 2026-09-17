@@ -41,6 +41,7 @@ export class AuthenticatedLayoutComponent {
   }
 
   private readonly allNavItems = [
+    { label: 'Início', icon: 'pi pi-home', link: '/requests/open', employeeOnly: true },
     { label: 'Solicitações', icon: 'pi pi-list', link: '/requests/list', employeeOnly: false },
     { label: 'Funcionários', icon: 'pi pi-users', link: '/employees/list', employeeOnly: true },
     { label: 'Categorias', icon: 'pi pi-tags', link: '/categories/list', employeeOnly: true },

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { employeeGuard } from '../../core/auth/guards/profile.guard';
 
 export const MAINTENANCE_REQUESTS_ROUTES: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },
@@ -8,6 +9,12 @@ export const MAINTENANCE_REQUESTS_ROUTES: Routes = [
       import('./pages/customer-request-list/customer-request-list.component').then(
         (m) => m.CustomerRequestListComponent,
       ),
+  },
+  {
+    path: 'open',
+    canActivate: [employeeGuard],
+    loadComponent: () =>
+      import('./pages/employee-home/employee-home.component').then((m) => m.EmployeeHomeComponent),
   },
   {
     path: 'new',

@@ -125,7 +125,7 @@
 
 > Depende de P0-04 e P0-05.
 
-- [ ] **P0-16 - Página inicial do funcionário (RF011)**
+- [X ] **P0-16 - Página inicial do funcionário (RF011)**
   - Mostrar solicitações `ABERTA`.
   - Exibir data/hora, cliente e equipamento.
   - Oferecer ação para efetuar orçamento.
