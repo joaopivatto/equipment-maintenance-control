@@ -58,7 +58,17 @@ export class LoginComponent {
         return;
       }
 
-      this.router.navigate(['/requests/list']);
+      // Identifica se o perfil retornado é de funcionário
+      const profileStr = String(profileType).toUpperCase();
+      const isEmployee = profileStr === 'EMPLOYEE' || profileStr === 'FUNC';
+
+      if (isEmployee) {
+        // Redireciona o funcionário para a tela de solicitações abertas (RF011)
+        this.router.navigate(['/requests/employee-home']);
+      } else {
+        // Redireciona o cliente para a sua página inicial (RF003)
+        this.router.navigate(['/requests/list']);
+      }
     });
   }
 }

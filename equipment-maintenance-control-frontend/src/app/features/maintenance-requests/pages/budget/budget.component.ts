@@ -1,7 +1,9 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+
+// PrimeNG
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -40,14 +42,22 @@ export class BudgetComponent implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private currencyPipe = inject(CurrencyPipe);
 
+  // Disponibiliza a Enum de status para uso no template HTML
+  RequestStatus = RequestStatus;
+
   request: MaintenanceRequest | undefined;
 
-  // Controla a exibição do campo de motivo antes de confirmar a rejeição (RF007)
+  // Campo para o Funcionário digitar o valor (RF012)
+  budgetValue: number | null = null;
+  submitting = false;
+
+  // Controle do motivo de rejeição pelo Cliente (RF007)
   showRejectReason = signal(false);
   rejectionReason = '';
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
+
     this.maintenanceRequestApiClient.findById(id).subscribe((request) => {
       this.request = request;
 
@@ -57,10 +67,16 @@ export class BudgetComponent implements OnInit {
         return;
       }
 
-      if (this.request.status !== RequestStatus.QUOTED) {
+      // Validação Flexível:
+      // Se a solicitação não estiver ABERTA (esperando Funcionário)
+      // e nem ORÇADA (esperando aprovação do Cliente), redireciona com aviso.
+      if (
+        this.request.status !== RequestStatus.OPEN &&
+        this.request.status !== RequestStatus.QUOTED
+      ) {
         this.notificationService.warning(
           'Aviso',
-          'Esta solicitação não está mais aguardando aprovação de orçamento.',
+          'Esta solicitação não está aguardando orçamento nem aprovação.',
         );
         this.router.navigate(['/requests/list']);
       }
@@ -71,13 +87,31 @@ export class BudgetComponent implements OnInit {
     this.location.back();
   }
 
-  // RF006 - Aprovar serviço
-  approve(): void {
-    if (!this.request) {
-      return;
+  // =========================================================================
+  // RF012 - EFETUAR ORÇAMENTO (Ação do Funcionário)
+  // =========================================================================
+  submitBudget(): void { if (!this.request || !this.budgetValue || this.budgetValue <= 0) {
+    this.notificationService.warning('Aviso', 'Informe um valor válido de orçamento.'); return; }
+
+    // Chama o método doApiClient que atualiza o registro no mock
+    (this.maintenanceRequestApiClient as any).createBudget(this.request.id, this.budgetValue).subscribe({
+      next: () => {
+        this.notificationService.success('Sucesso', 'Orçamento cadastrado com sucesso!');
+        this.router.navigate(['/requests/employee-home']); },
+        error: (err: any) => {
+          console.error('Erro ao salvar orçamento:', err); } });
     }
 
-    const formattedBudgetValue = this.currencyPipe.transform(this.request.budget?.value, 'BRL');
+  // =========================================================================
+  // RF006 - APROVAR SERVIÇO (Ação do Cliente)
+  // =========================================================================
+  approve(): void {
+    if (!this.request) { return; }
+
+    const formattedBudgetValue = this.currencyPipe.transform(
+      this.request.budget?.value,
+      'BRL'
+    );
 
     this.confirmationService.confirm({
       message: `Confirmar aprovação do orçamento de ${formattedBudgetValue}?`,
@@ -88,13 +122,11 @@ export class BudgetComponent implements OnInit {
       acceptButtonProps: { severity: 'success' },
       rejectButtonProps: { severity: 'secondary', outlined: true },
       accept: () => {
-        if (!this.request) {
-          return;
-        }
+        if (!this.request) { return; }
         this.maintenanceRequestApiClient.approve(this.request.id).subscribe(() => {
           this.notificationService.success(
             'Orçamento aprovado',
-            `Serviço aprovado com valor de ${formattedBudgetValue}.`,
+            `Serviço aprovado com valor de ${formattedBudgetValue}.`
           );
           this.router.navigate(['/requests/list']);
         });
@@ -102,7 +134,9 @@ export class BudgetComponent implements OnInit {
     });
   }
 
-  // RF007 - Rejeitar serviço (abre o campo de motivo)
+  // =========================================================================
+  // RF007 - REJEITAR SERVIÇO (Ação do Cliente)
+  // =========================================================================
   openRejectReason(): void {
     this.showRejectReason.set(true);
   }
@@ -127,9 +161,7 @@ export class BudgetComponent implements OnInit {
       acceptButtonProps: { severity: 'danger' },
       rejectButtonProps: { severity: 'secondary', outlined: true },
       accept: () => {
-        if (!this.request) {
-          return;
-        }
+        if (!this.request) { return; }
         this.maintenanceRequestApiClient
           .reject(this.request.id, this.rejectionReason.trim())
           .subscribe(() => {
@@ -140,3 +172,5 @@ export class BudgetComponent implements OnInit {
     });
   }
 }
+
+

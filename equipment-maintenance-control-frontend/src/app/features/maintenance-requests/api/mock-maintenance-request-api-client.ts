@@ -18,6 +18,24 @@ export class MockMaintenanceRequestApiClient extends MaintenanceRequestApiClient
     return of(this.requests);
   }
 
+  // RF012 - Atualiza a solicitação para o estado ORÇADA
+  createBudget(id: number, value: number): Observable<MaintenanceRequest | undefined> {
+    const request = this.requests.find((r) => r.id === id);
+    if (!request) {
+      return of(undefined);
+    }
+
+    request.status = RequestStatus.QUOTED;
+    request.budget = { id: Date.now(), value: value, createdAt: new Date().toISOString(), employeeId: 1 };
+    request.history.push({
+      status: RequestStatus.QUOTED,
+      dateTime: new Date().toISOString(),
+
+    });
+
+    return of(request);
+  }
+
   findById(id: number): Observable<MaintenanceRequest | undefined> {
     return of(this.requests.find((request) => request.id === id));
   }

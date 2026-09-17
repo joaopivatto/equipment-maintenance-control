@@ -1,41 +1,62 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
+
+// Módulos do PrimeNG
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
-import { SkeletonModule } from 'primeng/skeleton';
+import { ButtonModule } from 'primeng/button';
 
+import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
+import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
 
-interface SolicitacaoAberta {
-  id: number; createdAt: string;
-  clienteNome: string;
-  descricaoEquipamento: string; }
+@Component({
+  selector: 'app-employee-home',
+  standalone: true,
+  imports: [
+    CommonModule,
+    CardModule,
+    TableModule,
+    TagModule,
+    ButtonModule
+  ],
+  templateUrl: './employee-home.component.html'
+})
+export class EmployeeHomeComponent implements OnInit {
+  private apiClient = inject(MaintenanceRequestApiClient);
+  private router = inject(Router);
 
-  @Component({
-    selector: 'app-employee-home',
-    standalone: true,
-    imports: [CommonModule, RouterModule, CardModule, TableModule, ButtonModule, TagModule, SkeletonModule],
-    templateUrl: './employee-home.component.html',
-    styleUrl: './employee-home.component.scss' })
+  solicitacoes: MaintenanceRequest[] = [];
+  loading: boolean = true;
 
-    export class EmployeeHomeComponent implements OnInit {
-      private router = inject(Router);
-      skeletonRows = Array(5).fill({});
-      loading = false;
-      solicitacoes: SolicitacaoAberta[] = [{
-        id: 101,
-        createdAt: '2026-09-10T14:30:00',
-        clienteNome: 'João Pedro',
-        descricaoEquipamento: 'Notebook Dell com tela quebrada e fonte queimada' },
-      { id: 102,
-        createdAt: '2026-09-10T15:10:00',
-        clienteNome: 'Maria Souza',
-        descricaoEquipamento: 'Impressora HP travando papel no alimentador' }];
+  ngOnInit(): void {
+    this.carregarSolicitacoesAbertas();
+  }
 
-        ngOnInit(): void { } isLoading(): boolean {
-          return this.loading; }
+  carregarSolicitacoesAbertas(): void {
+    this.loading = true;
 
-        efetuarOrcamento(id: number): void {
-          this.router.navigate(['/requests', id, 'budget']); } }
+    this.apiClient.listAll().subscribe({
+      next: (res: any) => {
+        const lista: any[] = Array.isArray(res) ? res : (res?.content || res?.data || []);
+
+        this.solicitacoes = lista.filter((soli: any) => {
+          const statusStr = String(soli.status || '').toUpperCase();
+          return statusStr === 'ABERTA' || statusStr === 'OPEN' || soli.status === RequestStatus.OPEN;
+        });
+
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Erro ao carregar solicitações:', err);
+        this.loading = false;
+      }
+    });
+  }
+
+  efetuarOrcamento(id: number): void {
+    this.router.navigate(['/requests', id, 'budget']);
+  }
+}
+
