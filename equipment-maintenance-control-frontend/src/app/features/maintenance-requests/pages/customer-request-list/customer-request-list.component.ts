@@ -318,7 +318,7 @@ export class CustomerRequestListComponent implements OnInit {
 
   // RF012 - Efetuar orçamento
   performBudget(id: number): void {
-    alert(`Ir para Efetuar Orçamento #${id} (RF012)`);
+    this.router.navigate(['/requests', id, 'budget']);
   }
 
   // RF014 - Efetuar manutenção

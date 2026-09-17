@@ -14,6 +14,9 @@ export abstract class MaintenanceRequestApiClient {
     customerName: string,
   ): Observable<MaintenanceRequest>;
 
+  // RF012 - Efetuar orçamento: ABERTA -> ORÇADA
+  abstract createBudget(id: number, value: number): Observable<MaintenanceRequest | undefined>;
+
   abstract approve(id: number): Observable<MaintenanceRequest | undefined>;
 
   abstract reject(id: number, reason: string): Observable<MaintenanceRequest | undefined>;

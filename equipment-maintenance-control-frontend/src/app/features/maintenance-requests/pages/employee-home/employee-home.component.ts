@@ -1,12 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
-// Módulos do PrimeNG
-import { CardModule } from 'primeng/card';
-import { TableModule } from 'primeng/table';
-import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { SkeletonModule } from 'primeng/skeleton';
+import { TableModule } from 'primeng/table';
 
 import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
 import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
@@ -14,49 +12,72 @@ import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-requ
 @Component({
   selector: 'app-employee-home',
   standalone: true,
-  imports: [
-    CommonModule,
-    CardModule,
-    TableModule,
-    TagModule,
-    ButtonModule
-  ],
-  templateUrl: './employee-home.component.html'
+  imports: [CommonModule, TableModule, ButtonModule, CardModule, SkeletonModule],
+  templateUrl: './employee-home.component.html',
+  styleUrl: './employee-home.component.scss',
 })
 export class EmployeeHomeComponent implements OnInit {
-  private apiClient = inject(MaintenanceRequestApiClient);
-  private router = inject(Router);
+  private readonly maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
+  private readonly router = inject(Router);
 
-  solicitacoes: MaintenanceRequest[] = [];
-  loading: boolean = true;
+  requests: MaintenanceRequest[] = [];
+
+  isLoading = signal(true);
+
+  protected readonly skeletonRows: MaintenanceRequest[] = Array.from(
+    { length: 5 },
+    () => ({}) as MaintenanceRequest,
+  );
 
   ngOnInit(): void {
-    this.carregarSolicitacoesAbertas();
+    this.reload();
   }
 
-  carregarSolicitacoesAbertas(): void {
-    this.loading = true;
+  private reload(): void {
+    this.isLoading.set(true);
 
-    this.apiClient.listAll().subscribe({
-      next: (res: any) => {
-        const lista: any[] = Array.isArray(res) ? res : (res?.content || res?.data || []);
+    this.maintenanceRequestApiClient.listAll().subscribe((requests) => {
+      this.requests = requests
+        .filter((request) => request.status === RequestStatus.OPEN)
+        .sort(
+          (a, b) =>
+            this.parseRequestDate(a.createdAt).getTime() -
+            this.parseRequestDate(b.createdAt).getTime(),
+        );
 
-        this.solicitacoes = lista.filter((soli: any) => {
-          const statusStr = String(soli.status || '').toUpperCase();
-          return statusStr === 'ABERTA' || statusStr === 'OPEN' || soli.status === RequestStatus.OPEN;
-        });
-
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Erro ao carregar solicitações:', err);
-        this.loading = false;
-      }
+      this.isLoading.set(false);
     });
   }
 
-  efetuarOrcamento(id: number): void {
+  // RF012 - Efetuar orçamento
+  performBudget(id: number): void {
     this.router.navigate(['/requests', id, 'budget']);
   }
-}
 
+  equipmentLabel(description: string): string {
+    if (!description || description.length <= 30) {
+      return description;
+    }
+
+    return `${description.slice(0, 30)}…`;
+  }
+
+  /**
+   * Converte a data da solicitação para Date.
+   *
+   * As solicitações antigas estão no formato:
+   * YYYY-MM-DD HH:mm
+   *
+   * Enquanto algumas datas são geradas com:
+   * YYYY-MM-DDTHH:mm:ss.sssZ
+   *
+   * O método trata os dois formatos.
+   */
+  private parseRequestDate(value: string): Date {
+    if (value.includes('T')) {
+      return new Date(value);
+    }
+
+    return new Date(value.replace(' ', 'T'));
+  }
+}

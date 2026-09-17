@@ -1,126 +1,107 @@
-<div class="container my-4" *ngIf="request">
-  <p-card [header]="'Solicitação #' + request.id">
+<p-confirmdialog />
 
-    <!-- Detalhes do Equipamento e Defeito -->
-    <div class="row g-3 mb-4">
-      <div class="col-md-6">
-        <p class="mb-1"><strong>Cliente:</strong> {{ request.customerName || 'N/A' }}</p>
-        <p class="mb-1"><strong>Data de Abertura:</strong> {{ request.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
-        <p class="mb-1"><strong>Equipamento:</strong> {{ request.equipmentDescription }}</p>
-        <p class="mb-1"><strong>Defeito:</strong> {{ request.defectDescription }}</p>
+<div class="app-page" *ngIf="request as maintenanceRequest">
+  <div class="page__head">
+    <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Voltar
+    </button>
+    <h2 class="page__title">Solicitação #{{ maintenanceRequest.id }}</h2>
+  </div>
+
+  <p-card>
+    <div class="budget-details">
+      <div class="budget-details__row">
+        <span class="budget-details__label">Cliente</span>
+        <span>{{ maintenanceRequest.customerName || '-' }}</span>
       </div>
-      <div class="col-md-6 text-end">
+      <div class="budget-details__row">
+        <span class="budget-details__label">Data de abertura</span>
+        <span>{{ maintenanceRequest.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div class="budget-details__row">
+        <span class="budget-details__label">Equipamento</span>
+        <span>{{ maintenanceRequest.equipmentDescription }}</span>
+      </div>
+      <div class="budget-details__row">
+        <span class="budget-details__label">Defeito relatado</span>
+        <span>{{ maintenanceRequest.defectDescription }}</span>
+      </div>
+      <div class="budget-details__row">
+        <span class="budget-details__label">Estado</span>
         <p-tag
-          [value]="request.status"
-          [severity]="request.status === RequestStatus.OPEN ? 'warn' : 'info'">
-        </p-tag>
+          [value]="maintenanceRequest.status"
+          [severity]="maintenanceRequest.status === RequestStatus.OPEN ? 'warn' : 'info'"
+        />
       </div>
     </div>
 
-    <!-- =================================================================== -->
-    <!-- VISÃO 1: FUNCIONÁRIO (RF012) — Quando a solicitação está ABERTA -->
-    <!-- =================================================================== -->
-    <div *ngIf="request.status === RequestStatus.OPEN" class="p-3 bg-light rounded border mb-3">
-      <h5 class="text-primary mb-3">Efetuar Orçamento (Perfil Funcionário)</h5>
-
-      <div class="mb-3">
-        <label for="budgetValue" class="form-label fw-semibold">Valor do Orçamento (R$):</label>
-        <input
-          type="number"
-          id="budgetValue"
-          name="budgetValue"
-          class="form-control form-control-lg"
-          placeholder="0,00"
-          step="0.01"
-          min="0.01"
+    <!-- RF012 - Funcionário efetua o orçamento -->
+    <ng-container *ngIf="maintenanceRequest.status === RequestStatus.OPEN">
+      <div class="field">
+        <label for="budgetValue">Valor do orçamento</label>
+        <p-inputnumber
+          inputId="budgetValue"
           [(ngModel)]="budgetValue"
-          required>
+          mode="currency"
+          currency="BRL"
+          locale="pt-BR"
+        />
       </div>
 
-      <div class="d-flex gap-2">
+      <div class="form-actions">
         <button
-          pButton
           type="button"
-          label="Salvar e Enviar Orçamento"
-          title="Salvar e Enviar Orçamento"
-          icon="pi pi-check"
-          class="p-button-primary"
+          pButton
           [disabled]="!budgetValue || budgetValue <= 0 || submitting"
-          (click)="submitBudget()">
-        </button>
-        <button
-          pButton
-          type="button"
-          label="Voltar"
-          title="Voltar"
-          icon="pi pi-arrow-left"
-          class="p-button-secondary p-button-outlined"
-          (click)="goBack()">
+          (click)="submitBudget()"
+        >
+          <i class="pi pi-check"></i>
+          Salvar orçamento
         </button>
       </div>
-    </div>
+    </ng-container>
 
-    <!-- =================================================================== -->
-    <!-- VISÃO 2: CLIENTE (RF005/006/007) — Quando a solicitação está ORÇADA -->
-    <!-- =================================================================== -->
-    <div *ngIf="request.status === RequestStatus.QUOTED" class="p-3 bg-light rounded border mb-3">
-      <h5 class="text-success mb-3">Orçamento Apresentado (Perfil Cliente)</h5>
-      <p class="fs-4 fw-bold text-dark">
-        Valor: {{ request.budget?.value | currency:'BRL' }}
-      </p>
+    <!-- RF005/RF006/RF007 - Cliente aprova ou rejeita o orçamento -->
+    <ng-container *ngIf="maintenanceRequest.status === RequestStatus.QUOTED">
+      <div class="budget-value">
+        <span class="budget-value__label">Valor do orçamento</span>
+        <span class="budget-value__amount">
+          {{ maintenanceRequest.budget?.value | currency: 'BRL' }}
+        </span>
+      </div>
 
-      <!-- Botões de Aprovar e Rejeitar -->
-      <div *ngIf="!showRejectReason()" class="d-flex gap-2 mt-3">
-        <button
-          pButton
-          type="button"
-          label="Aprovar Serviço"
-          title="Aprovar Serviço"
-          icon="pi pi-check"
-          class="p-button-success"
-          (click)="approve()">
+      <div class="budget-actions" *ngIf="!showRejectReason()">
+        <button type="button" pButton severity="success" (click)="approve()">
+          <i class="pi pi-check"></i>
+          Aprovar serviço
         </button>
-        <button
-          pButton
-          type="button"
-          label="Rejeitar Serviço"
-          title="Rejeitar Serviço"
-          icon="pi pi-times"
-          class="p-button-danger"
-          (click)="openRejectReason()">
+        <button type="button" pButton severity="danger" (click)="openRejectReason()">
+          <i class="pi pi-times"></i>
+          Rejeitar serviço
         </button>
       </div>
 
-      <!-- Campo de Motivo da Rejeição -->
-      <div *ngIf="showRejectReason()" class="mt-3">
-        <label class="form-label fw-bold text-danger">Motivo da Rejeição:</label>
-        <textarea
-          pInputTextarea
-          rows="3"
-          class="w-100 mb-2"
-          [(ngModel)]="rejectionReason"
-          placeholder="Escreva aqui o motivo...">
-        </textarea>
-        <div class="d-flex gap-2">
-          <button
-            pButton
-            type="button"
-            label="Confirmar Rejeição"
-            title="Confirmar Rejeição"
-            class="p-button-danger"
-            (click)="confirmReject()">
+      <div class="budget-reject" *ngIf="showRejectReason()">
+        <div class="field">
+          <label for="rejectionReason">Motivo da rejeição</label>
+          <textarea
+            pTextarea
+            id="rejectionReason"
+            rows="3"
+            [(ngModel)]="rejectionReason"
+            placeholder="Descreva o motivo da rejeição"
+          ></textarea>
+        </div>
+
+        <div class="budget-reject__actions">
+          <button type="button" pButton severity="danger" (click)="confirmReject()">
+            <i class="pi pi-check"></i>
+            Confirmar rejeição
           </button>
-          <button
-            pButton
-            type="button"
-            label="Cancelar"
-            title="Cancelar"
-            class="p-button-secondary p-button-outlined"
-            (click)="cancelReject()">
-          </button>
+          <button type="button" pButton [text]="true" (click)="cancelReject()">Cancelar</button>
         </div>
       </div>
-    </div>
-
+    </ng-container>
   </p-card>
 </div>
