@@ -1,12 +1,13 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
-import { MessageModule } from 'primeng/message';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
@@ -24,7 +25,7 @@ import { NotificationService } from '../../../../core/notifications/notification
     ButtonModule,
     TagModule,
     TextareaModule,
-    MessageModule,
+    InputNumberModule,
     ConfirmDialogModule,
   ],
   providers: [ConfirmationService, CurrencyPipe],
@@ -40,14 +41,22 @@ export class BudgetComponent implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private currencyPipe = inject(CurrencyPipe);
 
+  // Disponibiliza a enum de status para uso no template
+  readonly RequestStatus = RequestStatus;
+
   request: MaintenanceRequest | undefined;
 
-  // Controla a exibição do campo de motivo antes de confirmar a rejeição (RF007)
+  // RF012 - valor digitado pelo funcionário
+  budgetValue: number | null = null;
+  submitting = false;
+
+  // RF007 - motivo de rejeição preenchido pelo cliente
   showRejectReason = signal(false);
   rejectionReason = '';
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
+
     this.maintenanceRequestApiClient.findById(id).subscribe((request) => {
       this.request = request;
 
@@ -57,10 +66,15 @@ export class BudgetComponent implements OnInit {
         return;
       }
 
-      if (this.request.status !== RequestStatus.QUOTED) {
+      // A tela atende dois momentos do fluxo: o funcionário efetuando o orçamento
+      // (ABERTA) e o cliente decidindo sobre o orçamento já feito (ORÇADA).
+      if (
+        this.request.status !== RequestStatus.OPEN &&
+        this.request.status !== RequestStatus.QUOTED
+      ) {
         this.notificationService.warning(
           'Aviso',
-          'Esta solicitação não está mais aguardando aprovação de orçamento.',
+          'Esta solicitação não está aguardando orçamento nem aprovação.',
         );
         this.router.navigate(['/requests/list']);
       }
@@ -69,6 +83,30 @@ export class BudgetComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  // RF012 - Efetuar orçamento: ABERTA -> ORÇADA
+  submitBudget(): void {
+    if (!this.request || !this.budgetValue || this.budgetValue <= 0) {
+      this.notificationService.warning('Aviso', 'Informe um valor válido de orçamento.');
+      return;
+    }
+
+    this.submitting = true;
+
+    this.maintenanceRequestApiClient
+      .createBudget(this.request.id, this.budgetValue)
+      .subscribe((updated) => {
+        this.submitting = false;
+
+        if (!updated) {
+          this.notificationService.error('Erro', 'Não foi possível registrar o orçamento.');
+          return;
+        }
+
+        this.notificationService.success('Sucesso', 'Orçamento cadastrado com sucesso!');
+        this.router.navigate(['/requests/employee-home']);
+      });
   }
 
   // RF006 - Aprovar serviço

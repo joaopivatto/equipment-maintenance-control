@@ -10,6 +10,11 @@ export const MAINTENANCE_REQUESTS_ROUTES: Routes = [
       ),
   },
   {
+    path: 'employee-home',
+    loadComponent: () =>
+      import('./pages/employee-home/employee-home.component').then((m) => m.EmployeeHomeComponent),
+  },
+  {
     path: 'new',
     loadComponent: () =>
       import('./pages/new-request/new-request.component').then((m) => m.NewRequestComponent),
