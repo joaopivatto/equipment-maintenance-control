@@ -1,9 +1,5 @@
 <div class="app-page">
   <div class="page__head">
-    <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
-      <i class="pi pi-arrow-left"></i>
-      Voltar
-    </button>
     <div class="page__head-row">
       <h2 class="page__title">Categorias de Equipamento</h2>
       <a pButton routerLink="/categories/new">
@@ -14,7 +10,7 @@
   </div>
 
   <p-card>
-    <p-table [value]="isLoading() ? skeletonRows : categories" size="large" [paginator]="true" [rows]="20" [rowsPerPageOptions]="[5, 10, 20]">
+    <p-table [value]="isLoading() ? skeletonRows : categories" size="large" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">
       <ng-template #header>
         <tr>
           <th>Nome</th>

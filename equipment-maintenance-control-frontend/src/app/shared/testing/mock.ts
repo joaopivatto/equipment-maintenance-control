@@ -20,6 +20,11 @@ export abstract class BaseMockFactory<T> implements MockFactory<T> {
     return { ...value, ...override };
   }
 
+  generateMany(count = this.length): T[] {
+    this.reset();
+    return Array.from({ length: count }, () => this.generate());
+ }
+
   reset(): void {
     this.seq = 0;
   }

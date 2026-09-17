@@ -6,13 +6,13 @@
 
 ## Visão geral
 
-| Pessoa | Área principal | Prioridade inicial |
-|---|---|---|
-| 1 | Fundação e autenticação | Rotas, layouts, models, mocks, login e cadastro |
-| 2 | Área do cliente | Solicitações, detalhes e histórico |
-| 3 | Orçamento e ações do cliente | Orçar, aprovar, rejeitar, resgatar e pagar |
-| 4 | Área do funcionário | Atendimento, manutenção, redirecionamento e filtros |
-| 5 | Administração e qualidade | Categorias, funcionários, relatórios e acabamento |
+| Pessoa | Área principal               | Prioridade inicial                                  |
+| ------ | ---------------------------- | --------------------------------------------------- |
+| 1      | Fundação e autenticação      | Rotas, layouts, models, mocks, login e cadastro     |
+| 2      | Área do cliente              | Solicitações, detalhes e histórico                  |
+| 3      | Orçamento e ações do cliente | Orçar, aprovar, rejeitar, resgatar e pagar          |
+| 4      | Área do funcionário          | Atendimento, manutenção, redirecionamento e filtros |
+| 5      | Administração e qualidade    | Categorias, funcionários, relatórios e acabamento   |
 
 ## Acordos do grupo
 
@@ -27,7 +27,7 @@
 
 ## P0 - Fundação e autenticação
 
-**Responsável: João Victor Dourado + Matheus Alves** 
+**Responsável: João Victor Dourado + Matheus Alves**
 
 - [x] **P0-01 - Validar o projeto atual**
   - Rodar build e testes.
@@ -37,37 +37,37 @@
   - Login e autocadastro sem sidebar.
   - Cliente e funcionário com sidebar, perfil mockado e ação de logout.
 
-- [X] **P0-03 - Consolidar rotas globais**
+- [x] **P0-03 - Consolidar rotas globais**
   - `/` redireciona para `/login`.
   - Criar rota curinga para URLs inexistentes.
   - Manter áreas de autenticação, cliente, funcionário e administração separadas.
 
-- [X] **P0-04 - Consolidar models e enums compartilhados**
+- [x] **P0-04 - Consolidar models e enums compartilhados**
   - Status de solicitação.
   - Solicitação, histórico, orçamento, manutenção e redirecionamento.
   - Cliente, endereço, funcionário e categoria.
 
-- [X] **P0-05 - Criar massa de dados mockada**
+- [x] **P0-05 - Criar massa de dados mockada**
   - 2 funcionários: Maria e Mário.
   - 4 clientes: João, José, Joana e Joaquina.
   - 5 categorias: Notebook, Desktop, Impressora, Mouse e Teclado.
   - Pelo menos 20 solicitações com datas, estados e históricos variados.
 
-- [X] **P0-06 - Criar sessão mockada**
+- [x] **P0-06 - Criar sessão mockada**
   - Usuário atual, tipo de perfil e logout.
   - Login redireciona cliente e funcionário para áreas distintas.
 
-- [X] **P0-07 - Implementar Login (RF002)**
+- [x] **P0-07 - Implementar Login (RF002)**
   - Campos de e-mail e senha com validação.
   - Mensagem para credenciais inválidas.
   - Link para autocadastro.
 
-- [X] **P0-08 - Implementar Autocadastro de cliente (RF001)**
+- [x] **P0-08 - Implementar Autocadastro de cliente (RF001)**
   - CPF, nome, e-mail, telefone e endereço completo.
   - Validações e mensagens de erro.
   - Confirmação visual de cadastro realizado.
 
-- [X] **P0-09 - Preenchimento de endereço por CEP**
+- [x] **P0-09 - Preenchimento de endereço por CEP**
   - Preencher endereço ao informar CEP válido.
   - Definir fallback mockado se a ViaCEP estiver indisponível.
 
@@ -157,30 +157,30 @@
 
 > Iniciar somente após os itens P0 estarem navegáveis.
 
-- [X] **P1-01 - Resgatar serviço (RF009)** - Pessoa 3
+- [x] **P1-01 - Resgatar serviço (RF009)** - Pessoa 3
   - `REJEITADA` para `APROVADA`, com evento no histórico.
 
-- [X] **P1-02 - Pagar serviço (RF010)** - Pessoa 3
+- [x] **P1-02 - Pagar serviço (RF010)** - Pessoa 3
   - Exibir valor, confirmar pagamento, registrar data/hora e mudar para `PAGA`.
 
-- [X] **P1-03 - Efetuar manutenção (RF014)** - Pessoa 4
+- [x] **P1-03 - Efetuar manutenção (RF014)** - Pessoa 4
   - Descrição da manutenção, orientações, funcionário responsável e estado `ARRUMADA`.
 
-- [X] **P1-04 - Redirecionar manutenção (RF015)** - Pessoa 4
+- [x] **P1-04 - Redirecionar manutenção (RF015)** - Pessoa 4
   - Escolher destino, impedir redirecionamento para si mesmo e registrar origem/destino.
 
-- [X] **P1-05 - Finalizar solicitação (RF016)** - Pessoa 4
+- [x] **P1-05 - Finalizar solicitação (RF016)** - Pessoa 4
   - Estado `FINALIZADA`, data/hora e funcionário responsável.
 
-- [X] **P1-06 - Lista avançada do funcionário (RF013)** - Pessoa 4
+- [x] **P1-06 - Lista avançada do funcionário (RF013)** - Pessoa 4
   - Filtros Hoje, Período e Todas.
   - Todos os estados com cores oficiais.
   - Regra de visibilidade das solicitações redirecionadas.
 
-- [ ] **P1-07 - Relatório de receita por período (RF019)** - Pessoa 5
+- [x] **P1-07 - Relatório de receita por período (RF019)** - Pessoa 5
   - Filtro de datas e agrupamento por dia.
 
-- [ ] **P1-08 - Receita por categoria (RF020)** - Pessoa 5
+- [x] **P1-08 - Receita por categoria (RF020)** - Pessoa 5
   - Agrupar receitas desde sempre por categoria.
 
 ---
@@ -209,15 +209,15 @@
 
 ## Cronograma de 10 dias
 
-| Dia | Meta |
-|---|---|
-| 1 | P0-01 a P0-05: base técnica, contratos e massa mockada definidos. |
-| 2 | P0-02, P0-03, P0-06: layouts, rotas e sessão mockada. |
-| 3 a 5 | Login, cadastro, solicitação do cliente, detalhes e orçamento. |
-| 6 e 7 | Dashboard do funcionário, orçamento, categorias e funcionários. |
-| 8 | Estados avançados e relatórios, se os itens P0 estiverem concluídos. |
-| 9 | Integração entre fluxos, feedbacks, responsividade e correções. |
-| 10 | Firefox, testes finais e ensaio de apresentação. |
+| Dia   | Meta                                                                 |
+| ----- | -------------------------------------------------------------------- |
+| 1     | P0-01 a P0-05: base técnica, contratos e massa mockada definidos.    |
+| 2     | P0-02, P0-03, P0-06: layouts, rotas e sessão mockada.                |
+| 3 a 5 | Login, cadastro, solicitação do cliente, detalhes e orçamento.       |
+| 6 e 7 | Dashboard do funcionário, orçamento, categorias e funcionários.      |
+| 8     | Estados avançados e relatórios, se os itens P0 estiverem concluídos. |
+| 9     | Integração entre fluxos, feedbacks, responsividade e correções.      |
+| 10    | Firefox, testes finais e ensaio de apresentação.                     |
 
 ## Checklist de entrega
 

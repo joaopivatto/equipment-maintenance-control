@@ -45,6 +45,7 @@ export class AuthenticatedLayoutComponent {
     { label: 'Solicitações', icon: 'pi pi-list', link: '/requests/list', employeeOnly: false },
     { label: 'Funcionários', icon: 'pi pi-users', link: '/employees/list', employeeOnly: true },
     { label: 'Categorias', icon: 'pi pi-tags', link: '/categories/list', employeeOnly: true },
+    { label: 'Relatórios', icon: 'pi pi-chart-bar', link: '/reports', employeeOnly: true },
   ];
 
   // RF001/RF002 - Apenas funcionários podem ver os cadastros de funcionários e categorias

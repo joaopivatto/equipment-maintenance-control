@@ -26,6 +26,7 @@
           [integerOnly]="true"
           [mask]="true"
           [invalid]="!!(form.get('password')?.invalid && form.get('password')?.touched)"
+          (keydown.enter)="submitFromOtp($event)"
         />
         @if (form.get('password')?.invalid && form.get('password')?.touched) {
           <p-message severity="error" variant="simple" size="small">

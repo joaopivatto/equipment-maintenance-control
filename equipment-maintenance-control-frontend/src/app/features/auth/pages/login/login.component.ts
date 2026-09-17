@@ -65,4 +65,9 @@ export class LoginComponent {
       this.router.navigate([destination]);
     });
   }
+
+  submitFromOtp(event: Event): void {
+    event.preventDefault();
+    this.submit();
+  }
 }

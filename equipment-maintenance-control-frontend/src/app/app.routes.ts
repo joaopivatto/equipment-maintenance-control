@@ -42,6 +42,16 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/employees/employees.routes').then((m) => m.EMPLOYEES_ROUTES),
   },
+  {
+    path: 'reports',
+    canActivate: [employeeGuard],
+    loadComponent: () =>
+      import('./core/layout/authenticated-layout/authenticated-layout.component').then(
+        (m) => m.AuthenticatedLayoutComponent,
+      ),
+    loadChildren: () =>
+      import('./features/reports/reports.routes').then((m) => m.REPORTS_ROUTES),
+  },
   // sempre deixar por último, para que seja a última rota a ser verificada
   {
     path: '**',

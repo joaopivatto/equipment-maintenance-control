@@ -13,9 +13,13 @@ export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRe
     RequestStatus.QUOTED,
     RequestStatus.APPROVED,
     RequestStatus.REJECTED,
+    RequestStatus.REDIRECTED,
     RequestStatus.REPAIRED,
     RequestStatus.PAID,
+    RequestStatus.FINALIZED,
   ];
+
+  private readonly equipmentCategories = ['Notebook', 'Desktop', 'Impressora', 'Mouse', 'Teclado'];
 
   private readonly equipmentDescriptions = [
     'Computador',
@@ -56,12 +60,16 @@ export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRe
   protected build(index: number): MaintenanceRequest {
     const status = this.statuses[index % this.statuses.length];
     const isBudgeted = status !== RequestStatus.OPEN;
-    const createdAt = new Date(Date.UTC(2026, 0, 1 + index, 8, 0, 0)).toISOString();
+    const createdAt = new Date(
+      Date.now() - (this.length - index) * 7 * 24 * 60 * 60 * 1000,
+    ).toISOString();
 
     const request: MaintenanceRequest = {
       id: index + 1,
       createdAt,
       equipmentDescription: this.equipmentDescriptions[index % this.equipmentDescriptions.length],
+      equipmentCategoryId: (index % this.equipmentCategories.length) + 1,
+      equipmentCategoryName: this.equipmentCategories[index % this.equipmentCategories.length],
       defectDescription: this.defectDescriptions[index % this.defectDescriptions.length],
       status,
       customerName: this.customerNames[index % this.customerNames.length],
@@ -69,15 +77,35 @@ export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRe
     };
 
     if (isBudgeted) {
-      request.budget = this.budgetFactory.generate();
+      request.budget = {
+        ...this.budgetFactory.generate(),
+        createdAt: new Date(new Date(createdAt).getTime() + 2 * 60 * 60 * 1000).toISOString(),
+      };
     }
 
     if (status === RequestStatus.REJECTED) {
       request.rejectionReason = this.rejectionReasons[index % this.rejectionReasons.length];
     }
 
-    if (status === RequestStatus.REPAIRED || status === RequestStatus.PAID) {
+    if (
+      status === RequestStatus.REDIRECTED ||
+      status === RequestStatus.REPAIRED ||
+      status === RequestStatus.PAID ||
+      status === RequestStatus.FINALIZED
+    ) {
+      request.assignedEmployeeId = (index % this.employeeNames.length) + 1;
       request.assignedEmployeeName = this.employeeNames[index % this.employeeNames.length];
+    }
+
+    if (status === RequestStatus.PAID || status === RequestStatus.FINALIZED) {
+      request.paidAt = new Date(new Date(createdAt).getTime() + 74 * 60 * 60 * 1000).toISOString();
+    }
+
+    if (status === RequestStatus.FINALIZED) {
+      request.finalizedAt = new Date(
+        new Date(createdAt).getTime() + 98 * 60 * 60 * 1000,
+      ).toISOString();
+      request.finalizedByEmployeeName = request.assignedEmployeeName;
     }
 
     return request;
@@ -89,8 +117,7 @@ export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRe
   private buildHistory(status: RequestStatus, createdAt: string, index: number): HistoryEntry[] {
     const responsible = this.employeeNames[index % this.employeeNames.length];
     const baseTime = new Date(createdAt).getTime();
-    const hoursAfter = (hours: number) =>
-      new Date(baseTime + hours * 60 * 60 * 1000).toISOString();
+    const hoursAfter = (hours: number) => new Date(baseTime + hours * 60 * 60 * 1000).toISOString();
 
     const history: HistoryEntry[] = [{ status: RequestStatus.OPEN, dateTime: createdAt }];
 
@@ -119,6 +146,15 @@ export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRe
       return history;
     }
 
+    if (status === RequestStatus.REDIRECTED) {
+      history.push({
+        status: RequestStatus.REDIRECTED,
+        dateTime: hoursAfter(34),
+        responsible,
+      });
+      return history;
+    }
+
     history.push({ status: RequestStatus.REPAIRED, dateTime: hoursAfter(50), responsible });
 
     if (status === RequestStatus.REPAIRED) {
@@ -126,6 +162,14 @@ export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRe
     }
 
     history.push({ status: RequestStatus.PAID, dateTime: hoursAfter(74) });
+
+    if (status === RequestStatus.FINALIZED) {
+      history.push({
+        status: RequestStatus.FINALIZED,
+        dateTime: hoursAfter(98),
+        responsible,
+      });
+    }
 
     return history;
   }

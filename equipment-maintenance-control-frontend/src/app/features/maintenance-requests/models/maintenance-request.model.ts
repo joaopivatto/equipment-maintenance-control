@@ -13,15 +13,15 @@ export enum RequestStatus {
 }
 
 // Escala de cores oficiais definida no RF013 (mesmos valores usados no backend/MaintenanceRequestStatus)
-export const STATUS_COLORS: Record<RequestStatus, string> = {
-  [RequestStatus.OPEN]: '#808080', // Cinza
-  [RequestStatus.QUOTED]: '#8B4513', // Marrom
-  [RequestStatus.REJECTED]: '#DC3545', // Vermelho
-  [RequestStatus.APPROVED]: '#FFC107', // Amarelo
-  [RequestStatus.REDIRECTED]: '#6F42C1', // Roxo
-  [RequestStatus.REPAIRED]: '#007BFF', // Azul
-  [RequestStatus.PAID]: '#FD7E14', // Alaranjado
-  [RequestStatus.FINALIZED]: '#28A745', // Verde
+export const STATUS_CLASSES: Record<RequestStatus, string> = {
+  [RequestStatus.OPEN]: 'bg-gray-200 text-gray-800',
+  [RequestStatus.QUOTED]: 'bg-taupe-300 text-taupe-800',
+  [RequestStatus.APPROVED]: 'bg-yellow-100 text-yellow-800',
+  [RequestStatus.REJECTED]: 'bg-red-100 text-red-800',
+  [RequestStatus.REDIRECTED]: 'bg-violet-100 text-violet-800',
+  [RequestStatus.REPAIRED]: 'bg-blue-100 text-blue-800',
+  [RequestStatus.PAID]: 'bg-amber-100 text-amber-800',
+  [RequestStatus.FINALIZED]: 'bg-green-100 text-green-800',
 };
 
 export interface MaintenanceRequest {
