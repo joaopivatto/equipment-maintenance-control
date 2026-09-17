@@ -16,7 +16,7 @@ import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-c
 import {
   MaintenanceRequest,
   RequestStatus,
-  STATUS_COLORS,
+  STATUS_CLASSES,
 } from '../../models/maintenance-request.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 import { SessionService } from '../../../../core/auth/session.service';
@@ -391,7 +391,7 @@ export class CustomerRequestListComponent implements OnInit {
   }
 
   statusColor(status: RequestStatus): string {
-    return STATUS_COLORS[status];
+    return STATUS_CLASSES[status];
   }
 
   goBack(): void {

@@ -1,0 +1,248 @@
+<div class="app-page reports-page">
+  <div class="page__head">
+    <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Voltar
+    </button>
+
+    <div class="page__head-row">
+      <div>
+        <h1 class="page__title">Relatórios e indicadores</h1>
+        <p class="page__subtitle">Desempenho financeiro e operacional da manutenção</p>
+      </div>
+    </div>
+  </div>
+
+  <p-card styleClass="filters-card">
+    <div class="report-filters">
+      <div class="field period-field">
+        <label for="reportPeriod">Período</label>
+        <p-select
+          inputId="reportPeriod"
+          [(ngModel)]="selectedPeriod"
+          [options]="periodOptions"
+          optionLabel="label"
+          optionValue="value"
+          (ngModelChange)="onPeriodChange()"
+        />
+      </div>
+
+      @if (selectedPeriod === 'custom') {
+        <div class="field">
+          <label for="reportStartDate">Data inicial</label>
+          <p-datepicker
+            inputId="reportStartDate"
+            [(ngModel)]="startDate"
+            dateFormat="dd/mm/yy"
+            [showIcon]="true"
+            [iconDisplay]="'input'"
+            [showClear]="false"
+          />
+        </div>
+
+        <div class="field">
+          <label for="reportEndDate">Data final</label>
+          <p-datepicker
+            inputId="reportEndDate"
+            [(ngModel)]="endDate"
+            dateFormat="dd/mm/yy"
+            [showIcon]="true"
+            [iconDisplay]="'input'"
+            [showClear]="false"
+          />
+        </div>
+      }
+
+      <button
+        type="button"
+        pButton
+        class="generate-report-button"
+        [disabled]="isLoading()"
+        (click)="loadReports()"
+      >
+        @if (isLoading()) {
+          <i class="pi pi-spinner pi-spin"></i>
+        } @else {
+          <i class="pi pi-chart-line"></i>
+        }
+        <span>Gerar relatório</span>
+      </button>
+    </div>
+  </p-card>
+
+  @if (isLoading()) {
+    <div class="metrics-grid" aria-label="Carregando indicadores">
+      @for (item of [1, 2, 3, 4]; track item) {
+        <p-card><p-skeleton width="100%" height="7rem" /></p-card>
+      }
+    </div>
+  } @else if (dashboard(); as report) {
+    <div class="metrics-grid" aria-label="Indicadores do período">
+      <p-card>
+        <div class="metric metric--revenue">
+          <div>
+            <span class="metric__label">Receita confirmada</span>
+            <strong>{{ report.revenueReport.totalRevenue | currency: 'BRL' }}</strong>
+            <small>{{ report.revenueReport.paidRequestsCount }} pagamentos no período</small>
+          </div>
+          <i class="pi pi-wallet metric__icon"></i>
+        </div>
+      </p-card>
+
+      <p-card>
+        <div class="metric metric--quoted">
+          <div>
+            <span class="metric__label">Total orçado</span>
+            <strong>{{ report.revenueReport.totalQuoted | currency: 'BRL' }}</strong>
+            <small>Orçamentos emitidos no período</small>
+          </div>
+          <i class="pi pi-chart-line metric__icon"></i>
+        </div>
+      </p-card>
+
+      <p-card>
+        <div class="metric metric--ticket">
+          <div>
+            <span class="metric__label">Ticket médio</span>
+            <strong>{{ report.revenueReport.averageTicket | currency: 'BRL' }}</strong>
+            <small>Valor médio por pagamento</small>
+          </div>
+          <i class="pi pi-money-bill metric__icon"></i>
+        </div>
+      </p-card>
+
+      <p-card>
+        <div class="metric metric--approval">
+          <div>
+            <span class="metric__label">Taxa de aprovação</span>
+            <strong>{{ report.revenueReport.approvalRate | number: '1.0-0' }}%</strong>
+            <small>Orçamentos aceitos no período</small>
+          </div>
+          <i class="pi pi-check-circle metric__icon"></i>
+        </div>
+      </p-card>
+    </div>
+
+    <div class="charts-grid">
+      <p-card
+        class="chart-card chart-card--wide"
+        header="Receita por dia"
+        subheader="Pagamentos confirmados no período selecionado"
+      >
+        <div class="chart-wrapper">
+          @if (report.revenueReport.dailyRevenue.length) {
+            <canvas
+              baseChart
+              [type]="'line'"
+              [data]="dailyRevenueData"
+              [options]="dailyRevenueOptions"
+              aria-label="Gráfico de receita diária"
+            ></canvas>
+          } @else {
+            <div class="chart-empty">
+              <i class="pi pi-chart-line"></i><span>Nenhuma receita no período.</span>
+            </div>
+          }
+        </div>
+      </p-card>
+
+      <p-card
+        class="chart-card"
+        header="Status das ordens"
+        subheader="Solicitações abertas no período"
+      >
+        <div class="chart-wrapper chart-wrapper--doughnut">
+          <canvas
+            baseChart
+            [type]="'doughnut'"
+            [data]="statusData"
+            [options]="statusOptions"
+            aria-label="Gráfico de distribuição dos status"
+          ></canvas>
+        </div>
+      </p-card>
+    </div>
+
+    <p-card
+      class="chart-card category-card"
+      header="Chamados e receita por categoria"
+      subheader="Receita acumulada em todo o histórico"
+    >
+      <div class="chart-wrapper chart-wrapper--category">
+        <canvas
+          baseChart
+          [type]="'bar'"
+          [data]="categoryRevenueData"
+          [options]="categoryRevenueOptions"
+          aria-label="Gráfico de receita histórica por categoria"
+        ></canvas>
+      </div>
+    </p-card>
+
+    <p-card
+      class="table-card"
+      header="Receita agrupada por dia"
+      subheader="Resumo do período selecionado"
+    >
+      <p-table [value]="report.revenueReport.dailyRevenue" [rowHover]="true">
+        <ng-template #header>
+          <tr>
+            <th>Data</th>
+            <th class="numeric-column">Pagamentos</th>
+            <th class="numeric-column">Receita</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-day>
+          <tr>
+            <td>{{ day.date | date: 'dd/MM/yyyy' : 'UTC' }}</td>
+            <td class="numeric-column">{{ day.paidRequestsCount }}</td>
+            <td class="numeric-column table-value">{{ day.totalRevenue | currency: 'BRL' }}</td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="3" class="page__empty">Nenhum pagamento encontrado no período.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+
+    <p-card
+      class="table-card"
+      header="Pagamentos do período"
+      subheader="Solicitações que compõem a receita confirmada"
+    >
+      <p-table
+        [value]="report.revenueReport.items"
+        [paginator]="report.revenueReport.items.length > 10"
+        [rows]="10"
+        [rowHover]="true"
+        responsiveLayout="scroll"
+      >
+        <ng-template #header>
+          <tr>
+            <th>Pagamento</th>
+            <th>Solicitação</th>
+            <th>Cliente</th>
+            <th>Equipamento</th>
+            <th class="numeric-column">Valor</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-item>
+          <tr>
+            <td>{{ item.paymentDate | date: 'dd/MM/yyyy' }}</td>
+            <td>#{{ item.maintenanceRequestId }}</td>
+            <td>{{ item.customerName }}</td>
+            <td>{{ item.equipmentDescription }}</td>
+            <td class="numeric-column table-value">{{ item.amount | currency: 'BRL' }}</td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="5" class="page__empty">Nenhum pagamento encontrado no período.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  }
+</div>

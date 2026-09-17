@@ -19,4 +19,11 @@ export class DateService {
 
     return `${year}-${month}-${day}`;
   }
+
+  isDateInRange(date: string, startDate: Date, endDate: Date): boolean {
+    const dateTime = this.fromIsoDate(date).getTime();
+    const startDateTime = startDate.getTime();
+    const endDateTime = endDate.getTime();
+    return dateTime >= startDateTime && dateTime <= endDateTime;
+  }
 }

@@ -9,7 +9,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
 import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import { MaintenanceRequest, RequestStatus, STATUS_COLORS } from '../../models/maintenance-request.model';
+import { MaintenanceRequest, RequestStatus, STATUS_CLASSES } from '../../models/maintenance-request.model';
 import { HistoryEntry } from '../../models/history-entry.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 import { SessionService } from '../../../../core/auth/session.service';
@@ -89,7 +89,7 @@ export class RequestDetailsComponent implements OnInit {
   }
 
   statusColor(status: string): string {
-    return STATUS_COLORS[status as RequestStatus] ?? '#808080';
+    return STATUS_CLASSES[status as RequestStatus] ?? 'bg-gray-200 text-gray-800';
   }
 
   statusSeverity(status: string) {
