@@ -2,7 +2,7 @@ import { Employee, ProfileType } from '../models';
 import { BaseMockFactory } from './mock';
 
 export class EmployeeMockFactory extends BaseMockFactory<Employee> {
-  protected readonly length = 8;
+  protected readonly length = 9;
 
   private readonly names = [
     'Mario Rossi',
@@ -13,6 +13,7 @@ export class EmployeeMockFactory extends BaseMockFactory<Employee> {
     'Samuel Brown',
     'João Davis',
     'Saulo Miller',
+    'Maria da Costa'
   ];
 
   private readonly emails = [
@@ -24,6 +25,7 @@ export class EmployeeMockFactory extends BaseMockFactory<Employee> {
     'samuel.brown@example.com',
     'joao.davis@example.com',
     'saulo.miller@example.com',
+    'maria@empresa.com',
   ];
 
   private readonly birthDates = [
@@ -35,6 +37,7 @@ export class EmployeeMockFactory extends BaseMockFactory<Employee> {
     new Date('1988-12-10'),
     new Date('1995-07-20'),
     new Date('1993-03-25'),
+    new Date('1987-08-22'),
   ];
 
   protected build(index: number): Employee {

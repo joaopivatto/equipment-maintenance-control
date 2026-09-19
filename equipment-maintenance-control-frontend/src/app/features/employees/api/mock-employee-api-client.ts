@@ -10,7 +10,7 @@ export class MockEmployeeApiClient extends EmployeeApiClient {
   private readonly dateService = inject(DateService);
   private readonly employeeFactory = new EmployeeMockFactory();
 
-  private readonly employees: Employee[] = Array.from({ length: 8 }, (_, index) => {
+  private readonly employees: Employee[] = Array.from({ length: 9 }, (_, index) => {
     const mock = this.employeeFactory.generate();
     return new Employee(
       index + 1,
@@ -31,6 +31,7 @@ export class MockEmployeeApiClient extends EmployeeApiClient {
   }
 
   findByEmail(email: string): Observable<Employee | undefined> {
+    console.log(this.employees)
     return of(this.employees.find((e) => e.email === email && e.active));
   }
 
