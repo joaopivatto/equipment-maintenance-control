@@ -31,7 +31,6 @@ export class MockEmployeeApiClient extends EmployeeApiClient {
   }
 
   findByEmail(email: string): Observable<Employee | undefined> {
-    console.log(this.employees)
     return of(this.employees.find((e) => e.email === email && e.active));
   }
 
