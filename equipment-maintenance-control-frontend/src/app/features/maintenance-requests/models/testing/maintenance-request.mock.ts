@@ -55,6 +55,7 @@ export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRe
     'João Davis',
     'Saulo Miller',
     'Razer Doe',
+    'Maria da Costa'
   ];
 
   protected build(index: number): MaintenanceRequest {

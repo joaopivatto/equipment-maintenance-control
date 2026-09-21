@@ -46,6 +46,9 @@ export class MaintenanceComponent implements OnInit {
 
   readonly currentEmployee = this.currentEmployeeService.currentEmployee;
 
+  get responsibleEmployeeId(): number {
+    return <number>this.currentEmployee()?.id ?? 'Funcionário não identificado';
+  }
   get responsibleEmployeeName(): string {
     return this.currentEmployee()?.name ?? 'Funcionário não identificado';
   }
@@ -89,8 +92,7 @@ export class MaintenanceComponent implements OnInit {
       return;
     }
 
-    const employee = this.currentEmployee();
-    if (!employee) {
+    if (!this.currentEmployee()) {
       this.notificationService.error(
         'Erro',
         'Não foi possível identificar o funcionário logado no cadastro de funcionários.',
@@ -115,8 +117,8 @@ export class MaintenanceComponent implements OnInit {
             this.request.id,
             this.maintenanceDescription.trim(),
             this.maintenanceInstructions.trim(),
-            employee.id,
-            employee.name,
+            this.responsibleEmployeeId,
+            this.responsibleEmployeeName,
           )
           .subscribe(() => {
             this.notificationService.success(
