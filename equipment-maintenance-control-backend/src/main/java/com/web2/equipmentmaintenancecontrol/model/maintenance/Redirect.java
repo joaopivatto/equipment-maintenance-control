@@ -1,5 +1,6 @@
-package com.web2.equipmentmaintenancecontrol.model;
+package com.web2.equipmentmaintenancecontrol.model.maintenance;
 
+import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
