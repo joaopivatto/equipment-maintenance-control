@@ -1,4 +1,4 @@
-package com.web2.equipmentmaintenancecontrol.model;
+package com.web2.equipmentmaintenancecontrol.model.profile;
 
 import jakarta.persistence.*;
 

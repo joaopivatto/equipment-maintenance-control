@@ -1,6 +1,5 @@
-package com.web2.equipmentmaintenancecontrol.model;
+package com.web2.equipmentmaintenancecontrol.model.profile;
 
-import com.web2.equipmentmaintenancecontrol.enums.ProfileType;
 import jakarta.persistence.*;
 
 @Entity

@@ -1,12 +1,9 @@
-package com.web2.equipmentmaintenancecontrol.model;
+package com.web2.equipmentmaintenancecontrol.model.equipment;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
-public class EquipmentType {
+public class Equipment {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,11 +11,16 @@ public class EquipmentType {
 
   private String description;
 
-  public EquipmentType() {}
+  @ManyToOne
+  @JoinColumn(name = "type_id")
+  private EquipmentType type;
 
-  public EquipmentType(Integer id, String description) {
+  public Equipment() {}
+
+  public Equipment(Integer id, String description, EquipmentType type) {
     this.id = id;
     this.description = description;
+    this.type = type;
   }
 
   public Integer getId() {
@@ -35,5 +37,13 @@ public class EquipmentType {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public EquipmentType getType() {
+    return type;
+  }
+
+  public void setType(EquipmentType type) {
+    this.type = type;
   }
 }
