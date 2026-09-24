@@ -13,6 +13,7 @@ import { TableModule } from 'primeng/table';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 import { ReportsDashboard } from '../../models';
 import { ReportsService } from '../../services/reports.service';
+import { ReportsPdfService } from '../../services/reports-pdf.service';
 
 type PeriodPreset = 'last-month' | 'last-three-months' | 'last-six-months' | 'last-year' | 'custom';
 
@@ -38,7 +39,9 @@ export class ReportsComponent implements OnInit {
   private readonly location = inject(Location);
   private readonly reportsService = inject(ReportsService);
   private readonly notificationService = inject(NotificationService);
+  private readonly reportsPdfService = inject(ReportsPdfService);
 
+  protected readonly isGeneratingPdf = signal(false);
   protected readonly isLoading = signal(true);
   protected readonly dashboard = signal<ReportsDashboard | null>(null);
 
@@ -82,6 +85,7 @@ export class ReportsComponent implements OnInit {
 
     this.startDate = this.subtractMonths(endDate, monthsByPeriod[this.selectedPeriod]);
     this.endDate = endDate;
+    this.loadReports();
   }
 
   protected loadReports(): void {
@@ -117,6 +121,33 @@ export class ReportsComponent implements OnInit {
         );
       },
     });
+  }
+
+  protected downloadPdf(): void {
+    const reportDashboard = this.dashboard();
+
+    if (!reportDashboard) {
+      this.notificationService.warning(
+        'Relatório indisponível',
+        'Gere o relatório antes de baixar o PDF.',
+      );
+      return;
+    }
+
+    this.isGeneratingPdf.set(true);
+
+    try {
+      this.reportsPdfService.downloadRevenueReportsPdf(reportDashboard);
+
+      this.notificationService.success('PDF gerado', 'O relatório foi baixado com sucesso.');
+    } catch {
+      this.notificationService.error(
+        'Erro ao gerar PDF',
+        'Não foi possível gerar o arquivo do relatório.',
+      );
+    } finally {
+      this.isGeneratingPdf.set(false);
+    }
   }
 
   protected goBack(): void {
