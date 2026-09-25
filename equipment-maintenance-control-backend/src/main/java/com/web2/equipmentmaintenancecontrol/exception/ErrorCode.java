@@ -7,7 +7,8 @@ public enum ErrorCode {
   EQUIPMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Equipment not found"),
   VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "Validation error"),
   INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected internal error"),
-  INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+  INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Invalid credentials"),
+  MAINTENANCE_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "Maintenance request not found");
 
   private final HttpStatus status;
   private final String message;
