@@ -23,6 +23,10 @@ public class MaintenanceRequest {
 
   private LocalDate paymentDate;
 
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private MaintenanceRequestStatus status = MaintenanceRequestStatus.ABERTA;
+
   @ManyToOne
   @JoinColumn(name = "customer_id", nullable = false)
   private Customer customer;
@@ -31,9 +35,9 @@ public class MaintenanceRequest {
   @JoinColumn(name = "employee_id", nullable = false)
   private Employee employee;
 
-  // @OneToOne
-  // @JoinColumn(name = "budget_id")
-  // private Budget budget;
+  @OneToOne
+  @JoinColumn(name = "budget_id")
+  private Budget budget;
 
   @OneToOne
   @JoinColumn(name = "maintenance_id")
@@ -85,6 +89,14 @@ public class MaintenanceRequest {
     this.paymentDate = paymentDate;
   }
 
+  public MaintenanceRequestStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(MaintenanceRequestStatus status) {
+    this.status = status;
+  }
+
   public Customer getCustomer() {
     return customer;
   }
@@ -99,6 +111,14 @@ public class MaintenanceRequest {
 
   public void setEmployee(Employee employee) {
     this.employee = employee;
+  }
+
+  public Budget getBudget() {
+    return budget;
+  }
+
+  public void setBudget(Budget budget) {
+    this.budget = budget;
   }
 
   public Maintenance getMaintenance() {
@@ -116,6 +136,9 @@ public class MaintenanceRequest {
   public void addHistory(MaintenanceRequestHistory historyEntry) {
     history.add(historyEntry);
     historyEntry.setMaintenanceRequest(this);
+    if (historyEntry.getStatus() != null) {
+      this.status = historyEntry.getStatus();
+    }
   }
 
   public void removeHistory(MaintenanceRequestHistory historyEntry) {

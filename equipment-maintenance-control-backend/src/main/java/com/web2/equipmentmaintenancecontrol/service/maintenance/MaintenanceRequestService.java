@@ -21,16 +21,13 @@ public class MaintenanceRequestService {
     this.repository = repository;
   }
 
-  /** RF011 - Lista apenas as solicitações com status ABERTA */
   @Transactional(readOnly = true)
   public List<MaintenanceRequestResponseDTO> findOpenRequests() {
-    return repository.findAll().stream()
+    return repository.findByStatus(MaintenanceRequestStatus.ABERTA).stream()
         .map(this::toDTO)
-        .filter(request -> request.status() == MaintenanceRequestStatus.ABERTA)
         .collect(Collectors.toList());
   }
 
-  /** Lista todas as solicitações sem filtro de status */
   @Transactional(readOnly = true)
   public List<MaintenanceRequestResponseDTO> findAll() {
     return repository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
@@ -48,7 +45,6 @@ public class MaintenanceRequestService {
     return toDTO(entity);
   }
 
-  /** RF012 - Efetuar orçamento (será delegado para o BudgetService) */
   @Transactional
   public MaintenanceRequestResponseDTO createBudget(Integer id, CreateBudgetDTO dto) {
     // TODO: A criação do orçamento será implementada no BudgetService dedicado
@@ -56,27 +52,13 @@ public class MaintenanceRequestService {
         "Funcionalidade de orçamento será implementada no BudgetService");
   }
 
-  // Mapeia a Entidade para o Record Java
   private MaintenanceRequestResponseDTO toDTO(MaintenanceRequest entity) {
     Long idAsLong = entity.getId() != null ? entity.getId().longValue() : null;
 
-    // Obtém o status do último registro de histórico, se existir; caso contrário,
-    // ABERTA
-    MaintenanceRequestStatus status = MaintenanceRequestStatus.ABERTA;
-    if (entity.getHistory() != null && !entity.getHistory().isEmpty()) {
-      status = entity.getHistory().get(0).getStatus();
-    }
+    MaintenanceRequestStatus status =
+        entity.getStatus() != null ? entity.getStatus() : MaintenanceRequestStatus.ABERTA;
 
     return new MaintenanceRequestResponseDTO(
-        idAsLong,
-        entity.getCreatedAt(),
-        null, // customerName
-        null, // customerId
-        entity.getDefect(),
-        null, // categoryName
-        status,
-        null, // budgetValue
-        null // justification
-        );
+        idAsLong, entity.getCreatedAt(), null, null, entity.getDefect(), null, status, null, null);
   }
 }
