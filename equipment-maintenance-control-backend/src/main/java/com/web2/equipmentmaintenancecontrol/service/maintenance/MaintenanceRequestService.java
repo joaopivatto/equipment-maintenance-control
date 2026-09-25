@@ -59,13 +59,13 @@ public class MaintenanceRequestService {
         return new MaintenanceRequestResponseDTO(
                 idAsLong,
                 entity.getCreatedAt(),
-                null, // customerName
-                null, // customerId
-                entity.getDefect(), // campo correto da sua entidade
-                null, // categoryName
-                MaintenanceRequestStatus.ABERTA, // enum correto do seu projeto
-                null, // budgetValue
-                null // justification
+                null, 
+                null, 
+                entity.getDefect(), 
+                null, 
+                MaintenanceRequestStatus.ABERTA, 
+                null, 
+                null 
         );
     }
 }
