@@ -1,7 +1,8 @@
 package com.web2.equipmentmaintenancecontrol.controller.equipment;
 
 import com.web2.equipmentmaintenancecontrol.model.equipment.Equipment;
-import com.web2.equipmentmaintenancecontrol.model.equipment.dtos.EquipmentRequest;
+import com.web2.equipmentmaintenancecontrol.model.equipment.dto.CreateEquipment;
+import com.web2.equipmentmaintenancecontrol.model.equipment.dto.UpdateEquipment;
 import com.web2.equipmentmaintenancecontrol.service.equipment.EquipmentService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -41,13 +42,13 @@ public class EquipmentController {
   }
 
   @PostMapping
-  public ResponseEntity<Equipment> create(@Valid @RequestBody EquipmentRequest request) {
+  public ResponseEntity<Equipment> create(@Valid @RequestBody CreateEquipment request) {
     return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<Equipment> update(
-      @PathVariable Integer id, @Valid @RequestBody EquipmentRequest request) {
+      @PathVariable Integer id, @Valid @RequestBody UpdateEquipment request) {
     return ResponseEntity.ok(service.update(id, request));
   }
 }
