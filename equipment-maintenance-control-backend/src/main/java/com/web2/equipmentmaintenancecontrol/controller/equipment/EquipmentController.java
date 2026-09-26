@@ -1,7 +1,7 @@
 package com.web2.equipmentmaintenancecontrol.controller.equipment;
 
 import com.web2.equipmentmaintenancecontrol.model.equipment.Equipment;
-import com.web2.equipmentmaintenancecontrol.model.equipment.dtos.EquipmentRequest;
+import com.web2.equipmentmaintenancecontrol.model.equipment.dto.EquipmentRequest;
 import com.web2.equipmentmaintenancecontrol.service.equipment.EquipmentService;
 import jakarta.validation.Valid;
 import java.util.List;
