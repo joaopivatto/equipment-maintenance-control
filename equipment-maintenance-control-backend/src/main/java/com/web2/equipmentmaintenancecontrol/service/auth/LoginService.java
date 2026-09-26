@@ -4,8 +4,8 @@ import com.web2.equipmentmaintenancecontrol.domain.security.HashedSaltedPassword
 import com.web2.equipmentmaintenancecontrol.domain.security.PasswordHasherSalter;
 import com.web2.equipmentmaintenancecontrol.exception.AppException;
 import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
-import com.web2.equipmentmaintenancecontrol.model.auth.dtos.LoginRequest;
-import com.web2.equipmentmaintenancecontrol.model.auth.dtos.LoginResponse;
+import com.web2.equipmentmaintenancecontrol.model.auth.dto.LoginRequest;
+import com.web2.equipmentmaintenancecontrol.model.auth.dto.LoginResponse;
 import com.web2.equipmentmaintenancecontrol.model.profile.Profile;
 import com.web2.equipmentmaintenancecontrol.repository.profile.ProfileRepository;
 import org.springframework.stereotype.Service;
