@@ -1,5 +1,7 @@
 package com.web2.equipmentmaintenancecontrol.domain.security;
 
+import com.web2.equipmentmaintenancecontrol.exception.AppException;
+import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -33,7 +35,7 @@ public class Sha256PasswordHasherSalter implements PasswordHasherSalter {
       digest.update(salt);
       return digest.digest(password.getBytes(StandardCharsets.UTF_8));
     } catch (NoSuchAlgorithmException e) {
-      throw new IllegalStateException(e);
+      throw new AppException(ErrorCode.INTERNAL_ERROR);
     }
   }
 

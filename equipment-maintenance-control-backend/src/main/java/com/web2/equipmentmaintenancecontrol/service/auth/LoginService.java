@@ -34,6 +34,6 @@ public class LoginService {
       throw new AppException(ErrorCode.INVALID_CREDENTIALS);
     }
 
-    return new LoginResponse(profile.getType());
+    return new LoginResponse(profile.getType(), profile.getId());
   }
 }
