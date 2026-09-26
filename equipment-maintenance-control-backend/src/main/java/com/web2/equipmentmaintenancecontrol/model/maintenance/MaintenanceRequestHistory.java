@@ -1,6 +1,7 @@
 package com.web2.equipmentmaintenancecontrol.model.maintenance;
 
 import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -21,10 +22,22 @@ public class MaintenanceRequestHistory {
   private MaintenanceRequestStatus status;
 
   @ManyToOne
-  @JoinColumn(name = "employee_id", nullable = false)
+  @JoinColumn(name = "employee_id")
+  @Nullable
   private Employee employee;
 
   public MaintenanceRequestHistory() {}
+
+  public MaintenanceRequestHistory(MaintenanceRequestStatus status, LocalDateTime updatedAt) {
+    this(status, updatedAt, null);
+  }
+
+  public MaintenanceRequestHistory(
+      MaintenanceRequestStatus status, LocalDateTime updatedAt, @Nullable Employee employee) {
+    this.status = status;
+    this.updatedAt = updatedAt;
+    this.employee = employee;
+  }
 
   public Integer getId() {
     return id;

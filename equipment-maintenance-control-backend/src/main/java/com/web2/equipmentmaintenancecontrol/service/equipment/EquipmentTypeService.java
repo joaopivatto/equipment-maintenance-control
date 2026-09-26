@@ -5,11 +5,12 @@ import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
 import com.web2.equipmentmaintenancecontrol.model.equipment.EquipmentType;
 import com.web2.equipmentmaintenancecontrol.model.equipment.dto.EquipmentTypeRequest;
 import com.web2.equipmentmaintenancecontrol.repository.equipment.EquipmentTypeRepository;
+import com.web2.equipmentmaintenancecontrol.service.BaseService;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EquipmentTypeService {
+public class EquipmentTypeService extends BaseService {
 
   private final EquipmentTypeRepository repository;
 

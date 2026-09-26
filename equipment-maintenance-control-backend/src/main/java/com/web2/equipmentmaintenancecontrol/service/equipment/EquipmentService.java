@@ -6,11 +6,12 @@ import com.web2.equipmentmaintenancecontrol.model.equipment.Equipment;
 import com.web2.equipmentmaintenancecontrol.model.equipment.EquipmentType;
 import com.web2.equipmentmaintenancecontrol.model.equipment.dto.EquipmentRequest;
 import com.web2.equipmentmaintenancecontrol.repository.equipment.EquipmentRepository;
+import com.web2.equipmentmaintenancecontrol.service.BaseService;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EquipmentService {
+public class EquipmentService extends BaseService {
 
   private final EquipmentRepository repository;
   private final EquipmentTypeService equipmentTypeService;

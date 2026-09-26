@@ -4,10 +4,11 @@ import com.web2.equipmentmaintenancecontrol.exception.AppException;
 import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
 import com.web2.equipmentmaintenancecontrol.model.auth.dto.LoginRequest;
 import com.web2.equipmentmaintenancecontrol.model.auth.dto.LoginResponse;
+import com.web2.equipmentmaintenancecontrol.service.BaseService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoginService {
+public class LoginService extends BaseService {
 
   public LoginResponse execute(LoginRequest request) {
     boolean isLogged = true;

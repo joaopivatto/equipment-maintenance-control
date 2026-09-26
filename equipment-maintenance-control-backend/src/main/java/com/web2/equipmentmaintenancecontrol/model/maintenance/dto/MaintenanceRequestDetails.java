@@ -1,15 +1,20 @@
 package com.web2.equipmentmaintenancecontrol.model.maintenance.dto;
 
 import com.web2.equipmentmaintenancecontrol.model.maintenance.MaintenanceRequestStatus;
-import java.math.BigDecimal;
+import java.util.List;
 
 public record MaintenanceRequestDetails(
-    Long id,
+    Integer id,
     String createdAt,
-    String customerName,
-    Long customerId,
     String equipmentDescription,
-    String categoryName,
+    String equipmentCategoryName,
+    String defectDescription,
     MaintenanceRequestStatus status,
-    BigDecimal budgetValue,
-    String justification) {}
+    BudgetDetails budget,
+    String rejectionReason,
+    String customerName,
+    MaintenanceDetails maintenance,
+    String paidAt,
+    String finalizedAt,
+    String finalizedByEmployeeName,
+    List<HistoryEntryDetails> history) {}
