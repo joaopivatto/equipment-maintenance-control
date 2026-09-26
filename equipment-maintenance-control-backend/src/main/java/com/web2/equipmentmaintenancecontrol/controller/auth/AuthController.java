@@ -1,7 +1,7 @@
 package com.web2.equipmentmaintenancecontrol.controller.auth;
 
-import com.web2.equipmentmaintenancecontrol.model.auth.dtos.LoginRequest;
-import com.web2.equipmentmaintenancecontrol.model.auth.dtos.LoginResponse;
+import com.web2.equipmentmaintenancecontrol.model.auth.dto.LoginRequest;
+import com.web2.equipmentmaintenancecontrol.model.auth.dto.LoginResponse;
 import com.web2.equipmentmaintenancecontrol.service.auth.LoginService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

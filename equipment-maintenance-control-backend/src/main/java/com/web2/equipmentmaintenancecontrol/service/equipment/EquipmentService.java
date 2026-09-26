@@ -4,13 +4,14 @@ import com.web2.equipmentmaintenancecontrol.exception.AppException;
 import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
 import com.web2.equipmentmaintenancecontrol.model.equipment.Equipment;
 import com.web2.equipmentmaintenancecontrol.model.equipment.EquipmentType;
-import com.web2.equipmentmaintenancecontrol.model.equipment.dtos.EquipmentRequest;
+import com.web2.equipmentmaintenancecontrol.model.equipment.dto.EquipmentRequest;
 import com.web2.equipmentmaintenancecontrol.repository.equipment.EquipmentRepository;
+import com.web2.equipmentmaintenancecontrol.service.BaseService;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EquipmentService {
+public class EquipmentService extends BaseService {
 
   private final EquipmentRepository repository;
   private final EquipmentTypeService equipmentTypeService;
@@ -37,14 +38,14 @@ public class EquipmentService {
   }
 
   public Equipment create(EquipmentRequest request) {
-    EquipmentType type = equipmentTypeService.findById(request.typeId());
+    EquipmentType type = equipmentTypeService.findById(request.type());
     return repository.save(new Equipment(null, request.description(), type));
   }
 
   public Equipment update(Integer id, EquipmentRequest request) {
     Equipment equipment = findById(id);
     equipment.setDescription(request.description());
-    equipment.setType(equipmentTypeService.findById(request.typeId()));
+    equipment.setType(equipmentTypeService.findById(request.type()));
     return repository.save(equipment);
   }
 }

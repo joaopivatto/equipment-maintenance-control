@@ -1,7 +1,7 @@
 package com.web2.equipmentmaintenancecontrol.controller.equipment;
 
 import com.web2.equipmentmaintenancecontrol.model.equipment.EquipmentType;
-import com.web2.equipmentmaintenancecontrol.model.equipment.dtos.EquipmentTypeRequest;
+import com.web2.equipmentmaintenancecontrol.model.equipment.dto.EquipmentTypeRequest;
 import com.web2.equipmentmaintenancecontrol.service.equipment.EquipmentTypeService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/equipment-types")
+@RequestMapping("/equipment-type")
 public class EquipmentTypeController {
 
   private final EquipmentTypeService service;
