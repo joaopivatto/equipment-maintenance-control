@@ -33,11 +33,11 @@ public class MaintenanceRequestService extends BaseService {
   private final EmployeeRepository employeeRepository;
 
   public MaintenanceRequestService(
-          MaintenanceRequestRepository repository,
-          MaintenanceRequestMapper mapper,
-          CustomerService customerService,
-          EquipmentService equipmentService,
-          EmployeeRepository employeeRepository) {
+      MaintenanceRequestRepository repository,
+      MaintenanceRequestMapper mapper,
+      CustomerService customerService,
+      EquipmentService equipmentService,
+      EmployeeRepository employeeRepository) {
     this.repository = repository;
     this.mapper = mapper;
     this.customerService = customerService;
@@ -52,12 +52,12 @@ public class MaintenanceRequestService extends BaseService {
     Equipment equipment = equipmentService.findById(request.equipmentId());
 
     MaintenanceRequest entity =
-            MaintenanceRequest.builder()
-                    .customer(customer)
-                    .equipment(equipment)
-                    .defect(request.defectDescription())
-                    .createdAt(now())
-                    .build();
+        MaintenanceRequest.builder()
+            .customer(customer)
+            .equipment(equipment)
+            .defect(request.defectDescription())
+            .createdAt(now())
+            .build();
 
     return mapper.toDetails(repository.save(entity));
   }
@@ -84,13 +84,14 @@ public class MaintenanceRequestService extends BaseService {
     requireStatus(entity, MaintenanceRequestStatus.ABERTA);
 
     Employee employee =
-            employeeRepository
-                    .findById(request.employeeId())
-                    .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
+        employeeRepository
+            .findById(request.employeeId())
+            .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
 
     Budget budget = new Budget(null, request.value(), employee, now());
     entity.setBudget(budget);
-    entity.addHistory(new MaintenanceRequestHistory(MaintenanceRequestStatus.ORCADA, now(), employee));
+    entity.addHistory(
+        new MaintenanceRequestHistory(MaintenanceRequestStatus.ORCADA, now(), employee));
 
     return mapper.toDetails(repository.save(entity));
   }
@@ -113,8 +114,8 @@ public class MaintenanceRequestService extends BaseService {
     requireStatus(entity, MaintenanceRequestStatus.ORCADA);
 
     entity.addHistory(
-            new MaintenanceRequestHistory(
-                    MaintenanceRequestStatus.REJEITADA, now(), null, request.reason()));
+        new MaintenanceRequestHistory(
+            MaintenanceRequestStatus.REJEITADA, now(), null, request.reason()));
 
     return mapper.toDetails(repository.save(entity));
   }
@@ -144,19 +145,19 @@ public class MaintenanceRequestService extends BaseService {
 
   private MaintenanceRequest findEntityById(Integer id) {
     return repository
-            .findById(id)
-            .orElseThrow(
-                    () ->
-                            new AppException(
-                                    ErrorCode.MAINTENANCE_REQUEST_NOT_FOUND,
-                                    "Solicitação de manutenção não encontrada com ID: " + id));
+        .findById(id)
+        .orElseThrow(
+            () ->
+                new AppException(
+                    ErrorCode.MAINTENANCE_REQUEST_NOT_FOUND,
+                    "Solicitação de manutenção não encontrada com ID: " + id));
   }
 
   private void requireStatus(MaintenanceRequest entity, MaintenanceRequestStatus expected) {
     if (entity.getStatus() != expected) {
       throw new AppException(
-              ErrorCode.INVALID_MAINTENANCE_REQUEST_STATUS,
-              "Ação não permitida para o estado atual: " + entity.getStatus());
+          ErrorCode.INVALID_MAINTENANCE_REQUEST_STATUS,
+          "Ação não permitida para o estado atual: " + entity.getStatus());
     }
   }
 }

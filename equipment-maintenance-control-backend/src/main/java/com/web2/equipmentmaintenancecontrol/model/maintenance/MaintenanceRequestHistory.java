@@ -35,15 +35,15 @@ public class MaintenanceRequestHistory {
   }
 
   public MaintenanceRequestHistory(
-          MaintenanceRequestStatus status, LocalDateTime updatedAt, @Nullable Employee employee) {
+      MaintenanceRequestStatus status, LocalDateTime updatedAt, @Nullable Employee employee) {
     this(status, updatedAt, employee, null);
   }
 
   public MaintenanceRequestHistory(
-          MaintenanceRequestStatus status,
-          LocalDateTime updatedAt,
-          @Nullable Employee employee,
-          @Nullable String reason) {
+      MaintenanceRequestStatus status,
+      LocalDateTime updatedAt,
+      @Nullable Employee employee,
+      @Nullable String reason) {
     this.status = status;
     this.updatedAt = updatedAt;
     this.employee = employee;

@@ -6,6 +6,7 @@ public enum ErrorCode {
   EQUIPMENT_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "Equipment type not found"),
   EQUIPMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Equipment not found"),
   CUSTOMER_NOT_FOUND(HttpStatus.NOT_FOUND, "Customer not found"),
+  EMPLOYEE_NOT_FOUND(HttpStatus.NOT_FOUND, "Employee not found"),
   VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "Validation error"),
   INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected internal error"),
   INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Invalid credentials"),

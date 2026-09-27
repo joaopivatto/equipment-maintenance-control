@@ -28,7 +28,7 @@ public class MaintenanceRequestController {
 
   @PostMapping
   public ResponseEntity<MaintenanceRequestDetails> create(
-          @Valid @RequestBody CreateMaintenanceRequest request) {
+      @Valid @RequestBody CreateMaintenanceRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
   }
 
@@ -50,7 +50,7 @@ public class MaintenanceRequestController {
   /** RF012 - Efetuar Orçamento. */
   @PostMapping("/{id}/budget")
   public ResponseEntity<MaintenanceRequestDetails> giveBudget(
-          @PathVariable Integer id, @Valid @RequestBody CreateBudget request) {
+      @PathVariable Integer id, @Valid @RequestBody CreateBudget request) {
     return ResponseEntity.ok(service.giveBudget(id, request));
   }
 
@@ -63,7 +63,7 @@ public class MaintenanceRequestController {
   /** RF007 - Rejeitar Serviço. */
   @PostMapping("/{id}/reject")
   public ResponseEntity<MaintenanceRequestDetails> reject(
-          @PathVariable Integer id, @Valid @RequestBody RejectMaintenanceRequest request) {
+      @PathVariable Integer id, @Valid @RequestBody RejectMaintenanceRequest request) {
     return ResponseEntity.ok(service.reject(id, request));
   }
 

@@ -22,12 +22,12 @@ public class MaintenanceRequestHistoryMapper extends BaseMapper {
     }
 
     return new HistoryEntryDetails(
-            entity.getStatus(),
-            formatDateTime(entity.getUpdatedAt()),
-            employeeMapper.toName(entity.getEmployee()),
-            entity.getReason(),
-            null,
-            null);
+        entity.getStatus(),
+        formatDateTime(entity.getUpdatedAt()),
+        employeeMapper.toName(entity.getEmployee()),
+        entity.getReason(),
+        null,
+        null);
   }
 
   public List<HistoryEntryDetails> toDetails(List<MaintenanceRequestHistory> entities) {
