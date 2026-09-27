@@ -71,7 +71,11 @@ public abstract class Profile {
     this.type = type;
   }
 
-  public boolean getActive() { return active; }
+  public boolean getActive() {
+    return active;
+  }
 
-  public void setActive(boolean active) { this.active = active; }
+  public void setActive(boolean active) {
+    this.active = active;
+  }
 }

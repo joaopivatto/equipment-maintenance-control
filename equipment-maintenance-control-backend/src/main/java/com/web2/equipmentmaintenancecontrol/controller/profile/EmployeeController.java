@@ -22,43 +22,41 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/employees")
 public class EmployeeController {
 
-    private final EmployeeService service;
+  private final EmployeeService service;
 
-    public EmployeeController(EmployeeService service) {
-        this.service = service;
-    }
+  public EmployeeController(EmployeeService service) {
+    this.service = service;
+  }
 
-    @GetMapping
-    public ResponseEntity<List<EmployeeResponse>> list() {
-        return ResponseEntity.ok(service.findAll());
-    }
+  @GetMapping
+  public ResponseEntity<List<EmployeeResponse>> list() {
+    return ResponseEntity.ok(service.findAll());
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<EmployeeResponse> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(service.findById(id));
-    }
+  @GetMapping("/{id}")
+  public ResponseEntity<EmployeeResponse> findById(@PathVariable Integer id) {
+    return ResponseEntity.ok(service.findById(id));
+  }
 
-    @PostMapping
-    public ResponseEntity<EmployeeResponse> create(
-            @Valid @RequestBody EmployeeCreateRequest request) {
-        EmployeeResponse employee = service.create(request);
+  @PostMapping
+  public ResponseEntity<EmployeeResponse> create(
+      @Valid @RequestBody EmployeeCreateRequest request) {
+    EmployeeResponse employee = service.create(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(employee);
-    }
+    return ResponseEntity.status(HttpStatus.CREATED).body(employee);
+  }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<EmployeeResponse> update(
-            @PathVariable Integer id,
-            @Valid @RequestBody EmployeeUpdateRequest request) {
-        return ResponseEntity.ok(service.update(id, request));
-    }
+  @PutMapping("/{id}")
+  public ResponseEntity<EmployeeResponse> update(
+      @PathVariable Integer id, @Valid @RequestBody EmployeeUpdateRequest request) {
+    return ResponseEntity.ok(service.update(id, request));
+  }
 
-    @PatchMapping("/{id}/delete")
-    public ResponseEntity<Void> delete(
-            @PathVariable Integer id,
-            @RequestParam Integer currentEmployeeId) {
-        service.delete(id, currentEmployeeId);
+  @PatchMapping("/{id}/delete")
+  public ResponseEntity<Void> delete(
+      @PathVariable Integer id, @RequestParam Integer currentEmployeeId) {
+    service.delete(id, currentEmployeeId);
 
-        return ResponseEntity.noContent().build();
-    }
+    return ResponseEntity.noContent().build();
+  }
 }
