@@ -20,11 +20,11 @@ public class MaintenanceRequestMapper extends BaseMapper {
   private final EmployeeMapper employeeMapper;
 
   public MaintenanceRequestMapper(
-      EquipmentMapper equipmentMapper,
-      BudgetMapper budgetMapper,
-      MaintenanceMapper maintenanceMapper,
-      MaintenanceRequestHistoryMapper historyMapper,
-      EmployeeMapper employeeMapper) {
+          EquipmentMapper equipmentMapper,
+          BudgetMapper budgetMapper,
+          MaintenanceMapper maintenanceMapper,
+          MaintenanceRequestHistoryMapper historyMapper,
+          EmployeeMapper employeeMapper) {
     this.equipmentMapper = equipmentMapper;
     this.budgetMapper = budgetMapper;
     this.maintenanceMapper = maintenanceMapper;
@@ -38,23 +38,25 @@ public class MaintenanceRequestMapper extends BaseMapper {
     }
 
     MaintenanceRequestHistory finalizedEntry =
-        findLastEntryByStatus(entity, MaintenanceRequestStatus.FINALIZADA);
+            findLastEntryByStatus(entity, MaintenanceRequestStatus.FINALIZADA);
+    MaintenanceRequestHistory rejectedEntry =
+            findLastEntryByStatus(entity, MaintenanceRequestStatus.REJEITADA);
 
     return new MaintenanceRequestDetails(
-        entity.getId(),
-        formatDateTime(entity.getCreatedAt()),
-        equipmentMapper.toDescription(entity.getEquipment()),
-        equipmentMapper.toCategoryName(entity.getEquipment()),
-        entity.getDefect(),
-        entity.getStatus(),
-        budgetMapper.toDetails(entity.getBudget()),
-        null,
-        entity.getCustomer().getName(),
-        maintenanceMapper.toDetails(entity.getMaintenance()),
-        formatDate(entity.getPaymentDate()),
-        finalizedEntry != null ? formatDateTime(finalizedEntry.getUpdatedAt()) : null,
-        finalizedEntry != null ? employeeMapper.toName(finalizedEntry.getEmployee()) : null,
-        historyMapper.toDetails(entity.getHistory()));
+            entity.getId(),
+            formatDateTime(entity.getCreatedAt()),
+            equipmentMapper.toDescription(entity.getEquipment()),
+            equipmentMapper.toCategoryName(entity.getEquipment()),
+            entity.getDefect(),
+            entity.getStatus(),
+            budgetMapper.toDetails(entity.getBudget()),
+            rejectedEntry != null ? rejectedEntry.getReason() : null,
+            entity.getCustomer().getName(),
+            maintenanceMapper.toDetails(entity.getMaintenance()),
+            formatDate(entity.getPaymentDate()),
+            finalizedEntry != null ? formatDateTime(finalizedEntry.getUpdatedAt()) : null,
+            finalizedEntry != null ? employeeMapper.toName(finalizedEntry.getEmployee()) : null,
+            historyMapper.toDetails(entity.getHistory()));
   }
 
   public List<MaintenanceRequestDetails> toDetails(List<MaintenanceRequest> entities) {
@@ -65,13 +67,13 @@ public class MaintenanceRequestMapper extends BaseMapper {
   }
 
   private MaintenanceRequestHistory findLastEntryByStatus(
-      MaintenanceRequest entity, MaintenanceRequestStatus status) {
+          MaintenanceRequest entity, MaintenanceRequestStatus status) {
     if (entity.getHistory() == null) {
       return null;
     }
     return entity.getHistory().stream()
-        .filter(entry -> entry.getStatus() == status)
-        .findFirst()
-        .orElse(null);
+            .filter(entry -> entry.getStatus() == status)
+            .findFirst()
+            .orElse(null);
   }
 }
