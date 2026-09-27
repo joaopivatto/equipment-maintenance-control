@@ -12,7 +12,7 @@ public enum ErrorCode {
   INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Invalid credentials"),
   MAINTENANCE_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "Maintenance request not found"),
   INVALID_MAINTENANCE_REQUEST_STATUS(
-          HttpStatus.CONFLICT, "Maintenance request is not in a valid status for this action");
+      HttpStatus.CONFLICT, "Maintenance request is not in a valid status for this action");
 
   private final HttpStatus status;
   private final String message;
