@@ -21,6 +21,8 @@ public abstract class Profile {
 
   private ProfileType type;
 
+  private boolean active = true;
+
   public Integer getId() {
     return id;
   }
@@ -67,5 +69,13 @@ public abstract class Profile {
 
   public void setType(ProfileType type) {
     this.type = type;
+  }
+
+  public boolean getActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
   }
 }
