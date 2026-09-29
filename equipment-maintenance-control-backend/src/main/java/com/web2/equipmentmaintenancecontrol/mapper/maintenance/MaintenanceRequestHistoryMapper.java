@@ -25,7 +25,7 @@ public class MaintenanceRequestHistoryMapper extends BaseMapper {
         entity.getStatus(),
         formatDateTime(entity.getUpdatedAt()),
         employeeMapper.toName(entity.getEmployee()),
-        null,
+        entity.getReason(),
         null,
         null);
   }

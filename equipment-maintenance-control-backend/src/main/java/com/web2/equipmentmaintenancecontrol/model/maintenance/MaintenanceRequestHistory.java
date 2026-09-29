@@ -26,6 +26,8 @@ public class MaintenanceRequestHistory {
   @Nullable
   private Employee employee;
 
+  @Nullable private String reason;
+
   public MaintenanceRequestHistory() {}
 
   public MaintenanceRequestHistory(MaintenanceRequestStatus status, LocalDateTime updatedAt) {
@@ -34,9 +36,18 @@ public class MaintenanceRequestHistory {
 
   public MaintenanceRequestHistory(
       MaintenanceRequestStatus status, LocalDateTime updatedAt, @Nullable Employee employee) {
+    this(status, updatedAt, employee, null);
+  }
+
+  public MaintenanceRequestHistory(
+      MaintenanceRequestStatus status,
+      LocalDateTime updatedAt,
+      @Nullable Employee employee,
+      @Nullable String reason) {
     this.status = status;
     this.updatedAt = updatedAt;
     this.employee = employee;
+    this.reason = reason;
   }
 
   public Integer getId() {
@@ -77,5 +88,13 @@ public class MaintenanceRequestHistory {
 
   public void setEmployee(Employee employee) {
     this.employee = employee;
+  }
+
+  public String getReason() {
+    return reason;
+  }
+
+  public void setReason(String reason) {
+    this.reason = reason;
   }
 }

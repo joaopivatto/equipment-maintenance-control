@@ -151,6 +151,10 @@ public class MaintenanceRequest {
     return paymentDate;
   }
 
+  public void setPaymentDate(LocalDate paymentDate) {
+    this.paymentDate = paymentDate;
+  }
+
   public MaintenanceRequestStatus getStatus() {
     return status;
   }
@@ -179,6 +183,10 @@ public class MaintenanceRequest {
     return budget;
   }
 
+  public void setBudget(Budget budget) {
+    this.budget = budget;
+  }
+
   public Maintenance getMaintenance() {
     return maintenance;
   }
@@ -202,5 +210,6 @@ public class MaintenanceRequest {
     if (historyEntry.getStatus() != null) {
       this.status = historyEntry.getStatus();
     }
+    this.updatedAt = historyEntry.getUpdatedAt();
   }
 }

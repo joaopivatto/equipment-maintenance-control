@@ -39,6 +39,8 @@ public class MaintenanceRequestMapper extends BaseMapper {
 
     MaintenanceRequestHistory finalizedEntry =
         findLastEntryByStatus(entity, MaintenanceRequestStatus.FINALIZADA);
+    MaintenanceRequestHistory rejectedEntry =
+        findLastEntryByStatus(entity, MaintenanceRequestStatus.REJEITADA);
 
     return new MaintenanceRequestDetails(
         entity.getId(),
@@ -48,7 +50,7 @@ public class MaintenanceRequestMapper extends BaseMapper {
         entity.getDefect(),
         entity.getStatus(),
         budgetMapper.toDetails(entity.getBudget()),
-        null,
+        rejectedEntry != null ? rejectedEntry.getReason() : null,
         entity.getCustomer().getName(),
         maintenanceMapper.toDetails(entity.getMaintenance()),
         formatDate(entity.getPaymentDate()),
