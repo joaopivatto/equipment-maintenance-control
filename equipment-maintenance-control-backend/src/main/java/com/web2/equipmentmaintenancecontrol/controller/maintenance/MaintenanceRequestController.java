@@ -3,6 +3,7 @@ package com.web2.equipmentmaintenancecontrol.controller.maintenance;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.CreateBudget;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.CreateMaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.MaintenanceRequestDetails;
+import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.PerformMaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.RejectMaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.service.maintenance.MaintenanceRequestService;
 import jakarta.validation.Valid;
@@ -77,5 +78,13 @@ public class MaintenanceRequestController {
   @PostMapping("/{id}/pay")
   public ResponseEntity<MaintenanceRequestDetails> pay(@PathVariable Integer id) {
     return ResponseEntity.ok(service.pay(id));
+  }
+
+  /** RF014 - Efetuar Manutenção. */
+  @PostMapping("/{id}/maintenance")
+  public ResponseEntity<MaintenanceRequestDetails> performMaintenance(
+      @PathVariable Integer id,
+      @Valid @RequestBody PerformMaintenanceRequest request) {
+    return ResponseEntity.ok(service.performMaintenance(id, request));
   }
 }

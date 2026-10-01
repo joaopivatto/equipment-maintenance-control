@@ -24,7 +24,12 @@ public class MaintenanceRequest {
 
   private String defect;
 
-  @Nullable private LocalDate paymentDate;
+  @Nullable
+  private LocalDate paymentDate;
+
+  @Nullable
+  @Column(name = "rejection_reason")
+  private String rejectionReason;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
@@ -57,7 +62,8 @@ public class MaintenanceRequest {
   @OrderBy("updatedAt DESC")
   private List<MaintenanceRequestHistory> history;
 
-  public MaintenanceRequest() {}
+  public MaintenanceRequest() {
+  }
 
   private MaintenanceRequest(Builder builder) {
     this.customer = Objects.requireNonNull(builder.customer, "customer é obrigatório");
@@ -83,7 +89,8 @@ public class MaintenanceRequest {
     private LocalDateTime createdAt;
     private Employee employee;
 
-    private Builder() {}
+    private Builder() {
+    }
 
     public Builder customer(Customer customer) {
       this.customer = customer;
@@ -202,6 +209,14 @@ public class MaintenanceRequest {
   public void createHistory(LocalDateTime createdAt, Employee employee) {
     this.history = new ArrayList<>();
     addHistory(new MaintenanceRequestHistory(MaintenanceRequestStatus.ABERTA, createdAt, employee));
+  }
+
+  public String getRejectionReason() {
+    return rejectionReason;
+  }
+
+  public void setRejectionReason(String rejectionReason) {
+    this.rejectionReason = rejectionReason;
   }
 
   public void addHistory(MaintenanceRequestHistory historyEntry) {
