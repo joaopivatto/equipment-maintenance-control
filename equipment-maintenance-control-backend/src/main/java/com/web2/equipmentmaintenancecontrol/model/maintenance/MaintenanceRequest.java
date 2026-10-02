@@ -62,6 +62,10 @@ public class MaintenanceRequest {
   @OrderBy("updatedAt DESC")
   private List<MaintenanceRequestHistory> history;
 
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "redirect_id")
+  private Redirect redirect;
+
   public MaintenanceRequest() {
   }
 
@@ -217,6 +221,14 @@ public class MaintenanceRequest {
 
   public void setRejectionReason(String rejectionReason) {
     this.rejectionReason = rejectionReason;
+  }
+
+  public Redirect getRedirect() {
+    return redirect;
+  }
+
+  public void setRedirect(Redirect redirect) {
+    this.redirect = redirect;
   }
 
   public void addHistory(MaintenanceRequestHistory historyEntry) {

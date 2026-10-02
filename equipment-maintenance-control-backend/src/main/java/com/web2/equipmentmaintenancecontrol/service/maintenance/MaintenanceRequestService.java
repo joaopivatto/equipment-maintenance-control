@@ -5,6 +5,7 @@ import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
 import com.web2.equipmentmaintenancecontrol.mapper.maintenance.MaintenanceRequestMapper;
 import com.web2.equipmentmaintenancecontrol.model.equipment.Equipment;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.Budget;
+import com.web2.equipmentmaintenancecontrol.model.maintenance.Redirect;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.MaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.MaintenanceRequestHistory;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.MaintenanceRequestStatus;
@@ -13,6 +14,7 @@ import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.CreateMaintena
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.MaintenanceRequestDetails;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.RejectMaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.PerformMaintenanceRequest;
+import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.RedirectMaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.Maintenance;
 import com.web2.equipmentmaintenancecontrol.model.profile.Customer;
 import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
@@ -144,10 +146,7 @@ public class MaintenanceRequestService extends BaseService {
     return mapper.toDetails(repository.save(entity));
   }
 
-  /**
-   * RF014 - Efetuar Manutenção. Só é permitido a partir de APROVADA ou
-   * REDIRECIONADA.
-   */
+  /* RF014 - Efetuar Manutenção. */
   @Transactional
   public MaintenanceRequestDetails performMaintenance(
       Integer id,
@@ -159,13 +158,16 @@ public class MaintenanceRequestService extends BaseService {
     // 2. Valida se o status atual permite a manutenção
     if (entity.getStatus() != MaintenanceRequestStatus.APROVADA
         && entity.getStatus() != MaintenanceRequestStatus.REDIRECIONADA) {
-      throw new IllegalArgumentException(
+      throw new AppException(
+          ErrorCode.INVALID_MAINTENANCE_REQUEST_STATUS,
           "A manutenção só pode ser efetuada para solicitações APROVADAS ou REDIRECIONADAS");
     }
 
     // 3. Busca o funcionário que executou o serviço
     Employee employee = employeeRepository.findById(request.employeeId())
-        .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado"));
+        .orElseThrow(() -> new AppException(
+            ErrorCode.EMPLOYEE_NOT_FOUND,
+            "Funcionário não encontrado"));
 
     // 4. Cria o registro da manutenção executada
     Maintenance maintenance = new Maintenance();
@@ -179,6 +181,50 @@ public class MaintenanceRequestService extends BaseService {
     entity.addHistory(new MaintenanceRequestHistory(MaintenanceRequestStatus.ARRUMADA, now()));
 
     // 6. Salva e retorna o DTO de detalhes return
+    return mapper.toDetails(repository.save(entity));
+  }
+
+  /** RF015 - Redirecionar Manutenção. Proíbe destino igual à origem. */
+  @Transactional
+  public MaintenanceRequestDetails redirectMaintenance(
+      Integer id, RedirectMaintenanceRequest request) {
+
+    // 1. Valida se a origem e o destino são iguais
+    if (request.sourceEmployeeId().equals(request.destinationEmployeeId())) {
+      throw new AppException(ErrorCode.VALIDATION_ERROR,
+          "Não é permitido redirecionar a solicitação para o mesmo funcionário");
+    }
+
+    // 2. Busca a solicitação pelo ID
+    MaintenanceRequest entity = findEntityById(id);
+
+    // 3. Busca os funcionários de origem e de destino
+    Employee sourceEmployee = employeeRepository
+        .findById(request.sourceEmployeeId())
+        .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND, "Funcionário de origem não encontrado"));
+
+    Employee destinationEmployee = employeeRepository
+        .findById(request.destinationEmployeeId())
+        .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND, "Funcionário de destino não encontrado"));
+
+    // 4. Instancia e vincula o registro de Redirect (sua entidade!)
+    Redirect redirect = new Redirect();
+    redirect.setSourceEmployee(sourceEmployee);
+    redirect.setDestinationEmployee(destinationEmployee);
+    redirect.setCreatedAt(now());
+
+    // 5. Atualiza o status para REDIRECIONADA e registra no histórico
+    entity.setRedirect(redirect);
+    String textReason = "Redirecionado de " + sourceEmployee.getName() + " para " + destinationEmployee.getName();
+
+    MaintenanceRequestHistory history = new MaintenanceRequestHistory(
+        MaintenanceRequestStatus.REDIRECIONADA,
+        now(),
+        destinationEmployee,
+        textReason);
+
+    entity.addHistory(history);
+    // 6. Salva as alterações e retorna os detalhes
     return mapper.toDetails(repository.save(entity));
   }
 
