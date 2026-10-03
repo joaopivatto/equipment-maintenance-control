@@ -17,14 +17,9 @@ public enum ErrorCode {
   EMPLOYEE_LAST_ACTIVE(HttpStatus.CONFLICT, "The last active employee cannot be deactivated"),
   VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "Validation error"),
   INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected internal error"),
-<<<<<<< Updated upstream
-  INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Invalid credentials"),
   MAINTENANCE_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "Maintenance request not found"),
   INVALID_MAINTENANCE_REQUEST_STATUS(
       HttpStatus.CONFLICT, "Maintenance request is not in a valid status for this action");
-=======
-  MAINTENANCE_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "Maintenance request not found");
->>>>>>> Stashed changes
 
   private final HttpStatus status;
   private final String message;
