@@ -53,7 +53,7 @@ public class MaintenanceRequestMapper extends BaseMapper {
         rejectedEntry != null ? rejectedEntry.getReason() : null,
         entity.getCustomer().getName(),
         maintenanceMapper.toDetails(entity.getMaintenance()),
-        formatDate(entity.getPaymentDate()),
+        formatDateTime(entity.getPaymentDate()),
         finalizedEntry != null ? formatDateTime(finalizedEntry.getUpdatedAt()) : null,
         finalizedEntry != null ? employeeMapper.toName(finalizedEntry.getEmployee()) : null,
         historyMapper.toDetails(entity.getHistory()));

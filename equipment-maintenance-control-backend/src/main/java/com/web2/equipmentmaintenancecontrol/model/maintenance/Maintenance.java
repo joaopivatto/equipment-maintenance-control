@@ -2,7 +2,7 @@ package com.web2.equipmentmaintenancecontrol.model.maintenance;
 
 import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class Maintenance {
@@ -50,13 +50,13 @@ public class Maintenance {
     this.employee = employee;
   }
 
-  public LocalDate getCreatedAt() {
+  public LocalDateTime getCreatedAt() {
     return createdAt;
   }
 
-  public void setCreatedAt(LocalDate createdAt) {
+  public void setCreatedAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
   }
 
-  private LocalDate createdAt;
+  private LocalDateTime createdAt;
 }
