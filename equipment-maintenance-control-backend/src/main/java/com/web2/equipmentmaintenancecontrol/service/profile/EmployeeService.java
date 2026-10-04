@@ -26,7 +26,7 @@ public class EmployeeService {
   }
 
   public List<EmployeeResponse> findAll() {
-    return this.repository.findAll().stream().map(this::toResponse).toList();
+    return this.repository.findByActiveTrue().stream().map(this::toResponse).toList();
   }
 
   @Transactional
@@ -79,16 +79,16 @@ public class EmployeeService {
 
   private EmployeeResponse toResponse(Employee employee) {
     return new EmployeeResponse(
-        employee.getId(),
-        employee.getName(),
-        employee.getEmail(),
-        employee.getBirthDate(),
-        employee.getActive());
+            employee.getId(),
+            employee.getName(),
+            employee.getEmail(),
+            employee.getBirthDate(),
+            employee.getActive());
   }
 
   private Employee findEntityById(Integer id) {
     return repository
-        .findById(id)
-        .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
+            .findById(id)
+            .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
   }
 }

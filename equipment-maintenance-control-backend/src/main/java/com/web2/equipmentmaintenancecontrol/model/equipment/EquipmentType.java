@@ -14,6 +14,8 @@ public class EquipmentType {
 
   private String description;
 
+  private boolean active = true;
+
   public EquipmentType() {}
 
   public EquipmentType(Integer id, String description) {
@@ -35,5 +37,13 @@ public class EquipmentType {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public boolean getActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
   }
 }

@@ -33,14 +33,14 @@ Legenda de status: `[ ]` a fazer · `[~]` em andamento · `[x]` concluído
 
 > Bloqueiam as demais fases. Idealmente feitas por 1 ou 2 pessoas antes de dividir o resto.
 
-- [ ] **B-01 — Configurar CORS**
-  Responsável: ____
+- [X] **B-01 — Configurar CORS**
+  Responsável: Samuel.
   Criar `config/WebConfig` implementando `WebMvcConfigurer`, liberando `http://localhost:4200`
   para `GET, POST, PUT, DELETE, PATCH, OPTIONS`.
   *Pronto quando:* o front-end consegue chamar `POST /auth/login` sem erro de CORS.
 
-- [ ] **B-02 — Ajustar entidades que faltam campos**
-  Responsável: ____ · Depende de: —
+- [X] **B-02 — Ajustar entidades que faltam campos**
+  Responsável: Samuel · Depende de: —
   - `MaintenanceRequest`: adicionar `rejectionReason` (String), `finalizedAt` (LocalDateTime),
     `finalizedBy` (Employee) e mudar `paymentDate` para `LocalDateTime`.
   - `Maintenance`: `createdAt` passa de `LocalDate` para `LocalDateTime`.
@@ -48,14 +48,14 @@ Legenda de status: `[ ]` a fazer · `[~]` em andamento · `[x]` concluído
   - `Profile.type`: anotar com `@Enumerated(EnumType.STRING)` (hoje grava número).
   *Pronto quando:* o projeto compila e a aplicação sobe.
 
-- [ ] **B-03 — Migration SQL das novas colunas**
-  Responsável: ____ · Depende de: B-02
+- [X] **B-03 — Migration SQL das novas colunas**
+  Responsável: Samuel · Depende de: B-02
   Criar `src/main/resources/db/migration_003_*.sql` com as colunas de B-02 +
   `active BOOLEAN NOT NULL DEFAULT TRUE` em `profile` e `equipment_type`.
   Atualizar também `schema.sql` para que uma instalação nova já venha correta.
 
-- [ ] **B-04 — Campo `active` nas entidades (remoção lógica)**
-  Responsável: ____ · Depende de: B-03
+- [X] **B-04 — Campo `active` nas entidades (remoção lógica)**
+  Responsável: Samuel · Depende de: B-03
   Adicionar `active` em `Profile` e `EquipmentType`, com default `true`.
   *Pronto quando:* listagens passam a considerar apenas registros ativos.
 

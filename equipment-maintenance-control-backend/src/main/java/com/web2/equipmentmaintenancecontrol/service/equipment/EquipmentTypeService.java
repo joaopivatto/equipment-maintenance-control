@@ -20,12 +20,12 @@ public class EquipmentTypeService extends BaseService {
 
   public EquipmentType findById(Integer id) {
     return repository
-        .findById(id)
-        .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_TYPE_NOT_FOUND));
+            .findById(id)
+            .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_TYPE_NOT_FOUND));
   }
 
   public List<EquipmentType> findAll() {
-    return repository.findAll();
+    return repository.findByActiveTrue();
   }
 
   public EquipmentType create(EquipmentTypeRequest request) {
