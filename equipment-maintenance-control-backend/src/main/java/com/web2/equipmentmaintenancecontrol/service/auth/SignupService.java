@@ -1,5 +1,7 @@
 package com.web2.equipmentmaintenancecontrol.service.auth;
 
+import com.web2.equipmentmaintenancecontrol.domain.email.EmailProvider;
+import com.web2.equipmentmaintenancecontrol.domain.security.PasswordHasherSalter;
 import com.web2.equipmentmaintenancecontrol.exception.AppException;
 import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
 import com.web2.equipmentmaintenancecontrol.model.auth.dto.SignupRequest;
@@ -10,9 +12,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class SignupService extends BaseService {
   private final CustomerRepository repository;
+  private final PasswordHasherSalter passwordHasherSalter;
+  private final EmailProvider emailProvider;
 
-  SignupService(CustomerRepository repository) {
+  SignupService(
+      CustomerRepository repository,
+      PasswordHasherSalter passwordHasherSalter,
+      EmailProvider emailProvider) {
     this.repository = repository;
+    this.passwordHasherSalter = passwordHasherSalter;
+    this.emailProvider = emailProvider;
   }
 
   public void execute(SignupRequest request) {
