@@ -19,6 +19,10 @@ public class Redirect {
   @JoinColumn(name = "destination_employee_id", nullable = false)
   private Employee destinationEmployee;
 
+  @ManyToOne
+  @JoinColumn(name = "maintenance_request_id", nullable = false)
+  private MaintenanceRequest maintenanceRequest;
+
   private LocalDateTime createdAt;
 
   public Redirect() {}
@@ -45,6 +49,14 @@ public class Redirect {
 
   public void setDestinationEmployee(Employee destinationEmployee) {
     this.destinationEmployee = destinationEmployee;
+  }
+
+  public MaintenanceRequest getMaintenanceRequest() {
+    return maintenanceRequest;
+  }
+
+  public void setMaintenanceRequest(MaintenanceRequest maintenanceRequest) {
+    this.maintenanceRequest = maintenanceRequest;
   }
 
   public LocalDateTime getCreatedAt() {

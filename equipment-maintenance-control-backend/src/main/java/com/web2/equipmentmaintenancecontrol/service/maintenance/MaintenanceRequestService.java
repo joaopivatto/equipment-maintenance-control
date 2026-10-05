@@ -19,6 +19,7 @@ import com.web2.equipmentmaintenancecontrol.repository.profile.EmployeeRepositor
 import com.web2.equipmentmaintenancecontrol.service.BaseService;
 import com.web2.equipmentmaintenancecontrol.service.equipment.EquipmentService;
 import com.web2.equipmentmaintenancecontrol.service.profile.CustomerService;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,8 +138,9 @@ public class MaintenanceRequestService extends BaseService {
     MaintenanceRequest entity = findEntityById(id);
     requireStatus(entity, MaintenanceRequestStatus.ARRUMADA);
 
-    entity.setPaymentDate(today());
-    entity.addHistory(new MaintenanceRequestHistory(MaintenanceRequestStatus.PAGA, now()));
+    LocalDateTime paidAt = now();
+    entity.setPaymentDate(paidAt);
+    entity.addHistory(new MaintenanceRequestHistory(MaintenanceRequestStatus.PAGA, paidAt));
 
     return mapper.toDetails(repository.save(entity));
   }

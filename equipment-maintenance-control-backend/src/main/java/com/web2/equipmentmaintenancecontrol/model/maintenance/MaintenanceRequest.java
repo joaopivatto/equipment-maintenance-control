@@ -5,7 +5,6 @@ import com.web2.equipmentmaintenancecontrol.model.profile.Customer;
 import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,11 @@ public class MaintenanceRequest {
 
   private String defect;
 
-  @Nullable private LocalDate paymentDate;
+  @Nullable private LocalDateTime paymentDate;
+
+  @Nullable private String rejectionReason;
+
+  @Nullable private LocalDateTime finalizedAt;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
@@ -42,6 +45,11 @@ public class MaintenanceRequest {
   @JoinColumn(name = "employee_id")
   @Nullable
   private Employee employee;
+
+  @ManyToOne
+  @JoinColumn(name = "finalized_by_id")
+  @Nullable
+  private Employee finalizedBy;
 
   @OneToOne
   @JoinColumn(name = "budget_id")
@@ -147,12 +155,36 @@ public class MaintenanceRequest {
     this.defect = defect;
   }
 
-  public LocalDate getPaymentDate() {
+  public LocalDateTime getPaymentDate() {
     return paymentDate;
   }
 
-  public void setPaymentDate(LocalDate paymentDate) {
+  public void setPaymentDate(LocalDateTime paymentDate) {
     this.paymentDate = paymentDate;
+  }
+
+  public String getRejectionReason() {
+    return rejectionReason;
+  }
+
+  public void setRejectionReason(String rejectionReason) {
+    this.rejectionReason = rejectionReason;
+  }
+
+  public LocalDateTime getFinalizedAt() {
+    return finalizedAt;
+  }
+
+  public void setFinalizedAt(LocalDateTime finalizedAt) {
+    this.finalizedAt = finalizedAt;
+  }
+
+  public Employee getFinalizedBy() {
+    return finalizedBy;
+  }
+
+  public void setFinalizedBy(Employee finalizedBy) {
+    this.finalizedBy = finalizedBy;
   }
 
   public MaintenanceRequestStatus getStatus() {
