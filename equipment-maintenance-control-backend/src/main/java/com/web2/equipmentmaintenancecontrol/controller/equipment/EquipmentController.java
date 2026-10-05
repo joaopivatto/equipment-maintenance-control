@@ -1,7 +1,7 @@
 package com.web2.equipmentmaintenancecontrol.controller.equipment;
 
-import com.web2.equipmentmaintenancecontrol.model.equipment.Equipment;
 import com.web2.equipmentmaintenancecontrol.model.equipment.dto.EquipmentRequest;
+import com.web2.equipmentmaintenancecontrol.model.equipment.dto.EquipmentResponse;
 import com.web2.equipmentmaintenancecontrol.service.equipment.EquipmentService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -26,27 +26,27 @@ public class EquipmentController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Equipment> getEquipmentById(@PathVariable Integer id) {
+  public ResponseEntity<EquipmentResponse> getEquipmentById(@PathVariable Integer id) {
     return ResponseEntity.ok(service.findById(id));
   }
 
   @GetMapping
-  public ResponseEntity<List<Equipment>> list() {
+  public ResponseEntity<List<EquipmentResponse>> list() {
     return ResponseEntity.ok(service.findAll());
   }
 
   @GetMapping("/{typeId}/type")
-  public ResponseEntity<List<Equipment>> listByTypeId(@PathVariable Integer typeId) {
+  public ResponseEntity<List<EquipmentResponse>> listByTypeId(@PathVariable Integer typeId) {
     return ResponseEntity.ok(service.findByTypeId(typeId));
   }
 
   @PostMapping
-  public ResponseEntity<Equipment> create(@Valid @RequestBody EquipmentRequest request) {
+  public ResponseEntity<EquipmentResponse> create(@Valid @RequestBody EquipmentRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Equipment> update(
+  public ResponseEntity<EquipmentResponse> update(
       @PathVariable Integer id, @Valid @RequestBody EquipmentRequest request) {
     return ResponseEntity.ok(service.update(id, request));
   }

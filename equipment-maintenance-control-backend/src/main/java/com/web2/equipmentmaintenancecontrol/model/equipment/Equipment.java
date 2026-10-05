@@ -1,9 +1,10 @@
 package com.web2.equipmentmaintenancecontrol.model.equipment;
 
+import com.web2.equipmentmaintenancecontrol.model.ActivatableEntity;
 import jakarta.persistence.*;
 
 @Entity
-public class Equipment {
+public class Equipment extends ActivatableEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,20 +1,19 @@
 package com.web2.equipmentmaintenancecontrol.model.equipment;
 
+import com.web2.equipmentmaintenancecontrol.model.ActivatableEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class EquipmentType {
+public class EquipmentType extends ActivatableEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
   private String description;
-
-  private boolean active = true;
 
   public EquipmentType() {}
 
@@ -37,13 +36,5 @@ public class EquipmentType {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public boolean getActive() {
-    return active;
-  }
-
-  public void setActive(boolean active) {
-    this.active = active;
   }
 }

@@ -1,10 +1,11 @@
 package com.web2.equipmentmaintenancecontrol.model.profile;
 
+import com.web2.equipmentmaintenancecontrol.model.ActivatableEntity;
 import jakarta.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Profile {
+public abstract class Profile extends ActivatableEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +22,6 @@ public abstract class Profile {
 
   @Enumerated(EnumType.STRING)
   private ProfileType type;
-
-  private boolean active = true;
 
   public Integer getId() {
     return id;
@@ -70,13 +69,5 @@ public abstract class Profile {
 
   public void setType(ProfileType type) {
     this.type = type;
-  }
-
-  public boolean getActive() {
-    return active;
-  }
-
-  public void setActive(boolean active) {
-    this.active = active;
   }
 }
