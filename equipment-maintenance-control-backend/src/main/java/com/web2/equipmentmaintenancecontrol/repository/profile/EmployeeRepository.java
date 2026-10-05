@@ -1,12 +1,9 @@
 package com.web2.equipmentmaintenancecontrol.repository.profile;
 
 import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
-import java.util.List;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.web2.equipmentmaintenancecontrol.repository.ActiveRepository;
 
-public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-
-  List<Employee> findByActiveTrue();
+public interface EmployeeRepository extends ActiveRepository<Employee, Integer> {
 
   long countByActiveTrue();
 }

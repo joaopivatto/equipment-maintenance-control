@@ -50,7 +50,7 @@ public class MaintenanceRequestService extends BaseService {
   public MaintenanceRequestDetails create(CreateMaintenanceRequest request) {
 
     Customer customer = customerService.findById(request.customerId());
-    Equipment equipment = equipmentService.findById(request.equipmentId());
+    Equipment equipment = equipmentService.findEntityById(request.equipmentId());
 
     MaintenanceRequest entity =
         MaintenanceRequest.builder()

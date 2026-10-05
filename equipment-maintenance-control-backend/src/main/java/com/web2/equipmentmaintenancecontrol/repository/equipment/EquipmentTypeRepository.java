@@ -1,10 +1,6 @@
 package com.web2.equipmentmaintenancecontrol.repository.equipment;
 
 import com.web2.equipmentmaintenancecontrol.model.equipment.EquipmentType;
-import java.util.List;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.web2.equipmentmaintenancecontrol.repository.ActiveRepository;
 
-public interface EquipmentTypeRepository extends JpaRepository<EquipmentType, Integer> {
-
-  List<EquipmentType> findByActiveTrue();
-}
+public interface EquipmentTypeRepository extends ActiveRepository<EquipmentType, Integer> {}
