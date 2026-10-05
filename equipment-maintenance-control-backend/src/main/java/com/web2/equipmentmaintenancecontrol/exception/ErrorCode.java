@@ -19,7 +19,9 @@ public enum ErrorCode {
   INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected internal error"),
   MAINTENANCE_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "Maintenance request not found"),
   INVALID_MAINTENANCE_REQUEST_STATUS(
-      HttpStatus.CONFLICT, "Maintenance request is not in a valid status for this action");
+      HttpStatus.CONFLICT, "Maintenance request is not in a valid status for this action"),
+  EMAIL_PROVIDER_INTEGRATION_ERROR(
+      HttpStatus.INTERNAL_SERVER_ERROR, "Error while integrating with email provider (Resend)");
 
   private final HttpStatus status;
   private final String message;
