@@ -25,7 +25,7 @@ public class EquipmentTypeService extends BaseService {
   }
 
   public List<EquipmentType> findAll() {
-    return repository.findAll();
+    return repository.findByActiveTrue();
   }
 
   public EquipmentType create(EquipmentTypeRequest request) {

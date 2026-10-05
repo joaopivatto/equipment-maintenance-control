@@ -19,6 +19,7 @@ public abstract class Profile {
 
   private String passwordSalt;
 
+  @Enumerated(EnumType.STRING)
   private ProfileType type;
 
   private boolean active = true;
