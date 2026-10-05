@@ -1,7 +1,7 @@
 package com.web2.equipmentmaintenancecontrol.controller.equipment;
 
-import com.web2.equipmentmaintenancecontrol.model.equipment.EquipmentType;
 import com.web2.equipmentmaintenancecontrol.model.equipment.dto.EquipmentTypeRequest;
+import com.web2.equipmentmaintenancecontrol.model.equipment.dto.EquipmentTypeResponse;
 import com.web2.equipmentmaintenancecontrol.service.equipment.EquipmentTypeService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -26,22 +26,23 @@ public class EquipmentTypeController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<EquipmentType> getById(@PathVariable Integer id) {
+  public ResponseEntity<EquipmentTypeResponse> getById(@PathVariable Integer id) {
     return ResponseEntity.ok(service.findById(id));
   }
 
   @GetMapping
-  public ResponseEntity<List<EquipmentType>> list() {
+  public ResponseEntity<List<EquipmentTypeResponse>> list() {
     return ResponseEntity.ok(service.findAll());
   }
 
   @PostMapping
-  public ResponseEntity<EquipmentType> create(@Valid @RequestBody EquipmentTypeRequest request) {
+  public ResponseEntity<EquipmentTypeResponse> create(
+      @Valid @RequestBody EquipmentTypeRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<EquipmentType> update(
+  public ResponseEntity<EquipmentTypeResponse> update(
       @PathVariable Integer id, @Valid @RequestBody EquipmentTypeRequest request) {
     return ResponseEntity.ok(service.update(id, request));
   }

@@ -26,7 +26,7 @@ public class EmployeeService {
   }
 
   public List<EmployeeResponse> findAll() {
-    return this.repository.findByActiveTrue().stream().map(this::toResponse).toList();
+    return this.repository.findAll().stream().map(this::toResponse).toList();
   }
 
   @Transactional
