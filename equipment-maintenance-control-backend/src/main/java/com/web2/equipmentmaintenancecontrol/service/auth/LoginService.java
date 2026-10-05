@@ -8,10 +8,11 @@ import com.web2.equipmentmaintenancecontrol.model.auth.dto.LoginRequest;
 import com.web2.equipmentmaintenancecontrol.model.auth.dto.LoginResponse;
 import com.web2.equipmentmaintenancecontrol.model.profile.Profile;
 import com.web2.equipmentmaintenancecontrol.repository.profile.ProfileRepository;
+import com.web2.equipmentmaintenancecontrol.service.BaseService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoginService {
+public class LoginService extends BaseService {
 
   private final ProfileRepository repository;
   private final PasswordHasherSalter passwordHasherSalter;
