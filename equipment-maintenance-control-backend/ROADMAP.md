@@ -87,11 +87,11 @@ Legenda de status: `[ ]` a fazer · `[~]` em andamento · `[x]` concluído
 > RF001, RF002, RF003, RF004, RF005, RF006, RF011, RF012, RF017, RF018.
 > Prioridade máxima: sem eles a equipe não vai para a defesa.
 
-- [ ] **B-08 — Gerador de senha aleatória de 4 dígitos**
+- [X] **B-08 — Gerador de senha aleatória de 4 dígitos**
   Responsável: Matheus · Depende de: —
   Classe em `domain/security` que gera 4 números aleatórios (`SecureRandom`) para o autocadastro.
 
-- [ ] **B-09 — Serviço de envio de e-mail**
+- [X] **B-09 — Serviço de envio de e-mail**
   Responsável: Matheus· Depende de: —
   Adicionar `spring-boot-starter-mail`, criar interface `EmailSender` e duas implementações:
   uma real (SMTP) e uma de desenvolvimento que só escreve no log.
@@ -101,7 +101,7 @@ Legenda de status: `[ ]` a fazer · `[~]` em andamento · `[x]` concluído
   `ViaCepClient` usando `RestClient` para `https://viacep.com.br/ws/{cep}/json/`,
   devolvendo logradouro, bairro, cidade e UF. CEP inexistente → `ZIP_CODE_NOT_FOUND`.
 
-- [ ] **B-11 — RF001: endpoint de autocadastro**
+- [X] **B-11 — RF001: endpoint de autocadastro**
   Responsável: Matheus · Depende de: B-08, B-09, B-10
   `POST /customers` com `{cpf, nome, email, telefone, cep, numero, complemento}`.
   Valida CPF e e-mail únicos, completa o endereço pelo ViaCEP (salvando tudo no banco),
