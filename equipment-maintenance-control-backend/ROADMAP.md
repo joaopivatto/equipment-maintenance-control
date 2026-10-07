@@ -148,7 +148,7 @@ Legenda de status: `[ ]` a fazer · `[~]` em andamento · `[x]` concluído
   `POST /employees` com `{nome, email, dataNascimento, senha}` — e-mail único, senha com
   hash SHA-256 + salt, perfil `FUNCIONARIO`.
 
-- [ ] **B-19 — RF018: atualizar e remover funcionário**
+- [x] **B-19 — RF018: atualizar e remover funcionário**
   Responsável: JOAO VICTOR · Depende de: B-18
   `PUT /employees/{id}` (senha só é alterada se enviada) e `DELETE /employees/{id}`
   com desativação lógica. Regras: não pode remover a si mesmo; não pode remover se for

@@ -42,8 +42,7 @@ public class EquipmentTypeController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(
-          @PathVariable Integer id) {
+  public ResponseEntity<Void> delete(@PathVariable Integer id) {
 
     service.delete(id);
 
