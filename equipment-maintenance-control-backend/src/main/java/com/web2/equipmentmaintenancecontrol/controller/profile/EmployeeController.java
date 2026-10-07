@@ -52,7 +52,7 @@ public class EmployeeController {
     return ResponseEntity.ok(service.update(id, request));
   }
 
-  @PatchMapping("/{id}/delete")
+  @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(
       @PathVariable Integer id, @RequestParam Integer currentEmployeeId) {
     service.delete(id, currentEmployeeId);

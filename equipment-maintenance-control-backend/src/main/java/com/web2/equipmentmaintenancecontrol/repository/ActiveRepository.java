@@ -12,4 +12,8 @@ public interface ActiveRepository<T extends ActivatableEntity, ID> extends JpaRe
   @Override
   @Query("select e from #{#entityName} e where e.active = true")
   List<T> findAll();
+
+  @Override
+  @Query("update from #{#entityName} e set e.active = false where e = ?1")
+  void delete(T entity);
 }

@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {
   EQUIPMENT_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "Equipment type not found"),
+  EQUIPMENT_TYPE_ALREADY_INACTIVE(HttpStatus.CONFLICT, "Equipment type is already inactive"),
   EQUIPMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Equipment not found"),
   CUSTOMER_NOT_FOUND(HttpStatus.NOT_FOUND, "Customer not found"),
   INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Invalid credentials"),
