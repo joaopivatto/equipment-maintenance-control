@@ -1,8 +1,12 @@
 package com.web2.equipmentmaintenancecontrol.controller.maintenance;
 
+import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.ApproveMaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.CreateBudget;
+import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.CreateMaintenance;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.CreateMaintenanceRequest;
+import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.FinishMaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.MaintenanceRequestDetails;
+import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.RedirectMaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.RejectMaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.service.maintenance.MaintenanceRequestService;
 import jakarta.validation.Valid;
@@ -47,35 +51,44 @@ public class MaintenanceRequestController {
     return ResponseEntity.ok(service.findOpenRequests());
   }
 
-  /** RF012 - Efetuar Orçamento. */
   @PostMapping("/{id}/budget")
   public ResponseEntity<MaintenanceRequestDetails> giveBudget(
       @PathVariable Integer id, @Valid @RequestBody CreateBudget request) {
     return ResponseEntity.ok(service.giveBudget(id, request));
   }
 
-  /** RF006 - Aprovar Serviço. */
   @PostMapping("/{id}/approve")
-  public ResponseEntity<MaintenanceRequestDetails> approve(@PathVariable Integer id) {
-    return ResponseEntity.ok(service.approve(id));
+  public ResponseEntity<MaintenanceRequestDetails> approve(
+      @PathVariable Integer id, @Valid @RequestBody ApproveMaintenanceRequest request) {
+    return ResponseEntity.ok(service.approve(id, request));
   }
 
-  /** RF007 - Rejeitar Serviço. */
   @PostMapping("/{id}/reject")
   public ResponseEntity<MaintenanceRequestDetails> reject(
       @PathVariable Integer id, @Valid @RequestBody RejectMaintenanceRequest request) {
     return ResponseEntity.ok(service.reject(id, request));
   }
 
-  /** RF009 - Resgatar Serviço. */
-  @PostMapping("/{id}/rescue")
-  public ResponseEntity<MaintenanceRequestDetails> rescue(@PathVariable Integer id) {
-    return ResponseEntity.ok(service.rescue(id));
+  @PostMapping("/{id}/maintenance")
+  public ResponseEntity<MaintenanceRequestDetails> performMaintenance(
+      @PathVariable Integer id, @Valid @RequestBody CreateMaintenance request) {
+    return ResponseEntity.ok(service.performMaintenance(id, request));
   }
 
-  /** RF010 - Pagar Serviço. */
+  @PostMapping("/{id}/redirect")
+  public ResponseEntity<MaintenanceRequestDetails> redirect(
+      @PathVariable Integer id, @Valid @RequestBody RedirectMaintenanceRequest request) {
+    return ResponseEntity.ok(service.redirect(id, request));
+  }
+
   @PostMapping("/{id}/pay")
   public ResponseEntity<MaintenanceRequestDetails> pay(@PathVariable Integer id) {
     return ResponseEntity.ok(service.pay(id));
+  }
+
+  @PostMapping("/{id}/finish")
+  public ResponseEntity<MaintenanceRequestDetails> finish(
+      @PathVariable Integer id, @Valid @RequestBody FinishMaintenanceRequest request) {
+    return ResponseEntity.ok(service.finish(id, request));
   }
 }

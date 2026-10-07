@@ -18,6 +18,21 @@ public class Maintenance {
   @JoinColumn(name = "employee_id")
   private Employee employee;
 
+  public Maintenance() {}
+
+  public Maintenance(
+      Integer id,
+      String description,
+      String customerInstructions,
+      Employee employee,
+      LocalDateTime createdAt) {
+    this.id = id;
+    this.description = description;
+    this.customerInstructions = customerInstructions;
+    this.employee = employee;
+    this.createdAt = createdAt;
+  }
+
   public Integer getId() {
     return id;
   }
