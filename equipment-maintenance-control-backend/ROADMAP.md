@@ -136,12 +136,12 @@ Legenda de status: `[ ]` a fazer · `[~]` em andamento · `[x]` concluído
   `POST /maintenance-request/{id}/approve` com o cliente dono da solicitação.
   ORCADA → APROVADA, com histórico. Resposta traz o valor aprovado.
 
-- [/] **B-17 — RF017: remover categoria (desativação)**
+- [x] **B-17 — RF017: remover categoria (desativação)**
   Responsável: JOAO VICTOR · Depende de: B-04
   `DELETE /equipment-type/{id}` marcando `active = false`;
   `GET /equipment-type` passa a listar só ativos. Validar descrição não vazia e única.
 
-- [ ] **B-18 — RF018: CRUD de funcionários (leitura e criação)**
+- [x] **B-18 — RF018: CRUD de funcionários (leitura e criação)**
   Responsável: JOAO VICTOR · Depende de: B-04, B-06
   Criar `EmployeeService` + `EmployeeController`:
   `GET /employees` (só ativos), `GET /employees/{id}` e
