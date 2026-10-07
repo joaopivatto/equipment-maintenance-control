@@ -5,20 +5,28 @@ import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
 import com.web2.equipmentmaintenancecontrol.mapper.maintenance.MaintenanceRequestMapper;
 import com.web2.equipmentmaintenancecontrol.model.equipment.Equipment;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.Budget;
+import com.web2.equipmentmaintenancecontrol.model.maintenance.Maintenance;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.MaintenanceRequest;
-import com.web2.equipmentmaintenancecontrol.model.maintenance.MaintenanceRequestHistory;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.MaintenanceRequestStatus;
+import com.web2.equipmentmaintenancecontrol.model.maintenance.Redirect;
+import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.ApproveMaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.CreateBudget;
+import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.CreateMaintenance;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.CreateMaintenanceRequest;
+import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.FinishMaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.MaintenanceRequestDetails;
+import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.RedirectMaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.RejectMaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.model.profile.Customer;
 import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
+import com.web2.equipmentmaintenancecontrol.repository.maintenance.BudgetRepository;
+import com.web2.equipmentmaintenancecontrol.repository.maintenance.MaintenanceRepository;
 import com.web2.equipmentmaintenancecontrol.repository.maintenance.MaintenanceRequestRepository;
-import com.web2.equipmentmaintenancecontrol.repository.profile.EmployeeRepository;
+import com.web2.equipmentmaintenancecontrol.repository.maintenance.RedirectRepository;
 import com.web2.equipmentmaintenancecontrol.service.BaseService;
 import com.web2.equipmentmaintenancecontrol.service.equipment.EquipmentService;
 import com.web2.equipmentmaintenancecontrol.service.profile.CustomerService;
+import com.web2.equipmentmaintenancecontrol.service.profile.EmployeeService;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -28,29 +36,39 @@ import org.springframework.transaction.annotation.Transactional;
 public class MaintenanceRequestService extends BaseService {
 
   private final MaintenanceRequestRepository repository;
+  private final BudgetRepository budgetRepository;
+  private final MaintenanceRepository maintenanceRepository;
+  private final RedirectRepository redirectRepository;
   private final MaintenanceRequestMapper mapper;
   private final CustomerService customerService;
   private final EquipmentService equipmentService;
-  private final EmployeeRepository employeeRepository;
+  private final EmployeeService employeeService;
 
   public MaintenanceRequestService(
       MaintenanceRequestRepository repository,
+      BudgetRepository budgetRepository,
+      MaintenanceRepository maintenanceRepository,
+      RedirectRepository redirectRepository,
       MaintenanceRequestMapper mapper,
       CustomerService customerService,
       EquipmentService equipmentService,
-      EmployeeRepository employeeRepository) {
+      EmployeeService employeeService) {
     this.repository = repository;
+    this.budgetRepository = budgetRepository;
+    this.maintenanceRepository = maintenanceRepository;
+    this.redirectRepository = redirectRepository;
     this.mapper = mapper;
     this.customerService = customerService;
     this.equipmentService = equipmentService;
-    this.employeeRepository = employeeRepository;
+    this.employeeService = employeeService;
   }
 
   @Transactional
   public MaintenanceRequestDetails create(CreateMaintenanceRequest request) {
 
     Customer customer = customerService.findById(request.customerId());
-    Equipment equipment = equipmentService.findEntityById(request.equipmentId());
+    Equipment equipment =
+        equipmentService.createEntity(request.equipmentDescription(), request.equipmentTypeId());
 
     MaintenanceRequest entity =
         MaintenanceRequest.builder()
@@ -69,6 +87,12 @@ public class MaintenanceRequestService extends BaseService {
   }
 
   @Transactional(readOnly = true)
+  public List<MaintenanceRequestDetails> findByCustomerId(Integer customerId) {
+    customerService.findById(customerId);
+    return mapper.toDetails(repository.findByCustomerIdOrderByCreatedAtAsc(customerId));
+  }
+
+  @Transactional(readOnly = true)
   public List<MaintenanceRequestDetails> findOpenRequests() {
     return mapper.toDetails(repository.findByStatus(MaintenanceRequestStatus.ABERTA));
   }
@@ -78,69 +102,88 @@ public class MaintenanceRequestService extends BaseService {
     return mapper.toDetails(repository.findAll());
   }
 
-  /** RF012 - Efetuar Orçamento. Só é permitido a partir do estado ABERTA. */
   @Transactional
   public MaintenanceRequestDetails giveBudget(Integer id, CreateBudget request) {
     MaintenanceRequest entity = findEntityById(id);
-    requireStatus(entity, MaintenanceRequestStatus.ABERTA);
+    entity.requireNoBudget();
+    Employee employee = findEmployeeById(request.employeeId());
 
-    Employee employee =
-        employeeRepository
-            .findById(request.employeeId())
-            .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
+    LocalDateTime budgetedAt = now();
+    Budget budget = budgetRepository.save(new Budget(null, request.value(), employee, budgetedAt));
 
-    Budget budget = new Budget(null, request.value(), employee, now());
-    entity.setBudget(budget);
-    entity.addHistory(
-        new MaintenanceRequestHistory(MaintenanceRequestStatus.ORCADA, now(), employee));
+    entity.giveBudget(budget, budgetedAt);
 
     return mapper.toDetails(repository.save(entity));
   }
 
-  /** RF006 - Aprovar Serviço. Só é permitido a partir do estado ORCADA. */
   @Transactional
-  public MaintenanceRequestDetails approve(Integer id) {
+  public MaintenanceRequestDetails approve(Integer id, ApproveMaintenanceRequest request) {
     MaintenanceRequest entity = findEntityById(id);
-    requireStatus(entity, MaintenanceRequestStatus.ORCADA);
 
-    entity.addHistory(new MaintenanceRequestHistory(MaintenanceRequestStatus.APROVADA, now()));
+    entity.approve(now(), request.customerId());
 
     return mapper.toDetails(repository.save(entity));
   }
 
-  /** RF007 - Rejeitar Serviço. Só é permitido a partir do estado ORCADA. */
   @Transactional
   public MaintenanceRequestDetails reject(Integer id, RejectMaintenanceRequest request) {
     MaintenanceRequest entity = findEntityById(id);
-    requireStatus(entity, MaintenanceRequestStatus.ORCADA);
 
-    entity.addHistory(
-        new MaintenanceRequestHistory(
-            MaintenanceRequestStatus.REJEITADA, now(), null, request.reason()));
+    entity.reject(request.reason(), now(), request.customerId());
 
     return mapper.toDetails(repository.save(entity));
   }
 
-  /** RF009 - Resgatar Serviço. Só é permitido a partir do estado REJEITADA. */
   @Transactional
-  public MaintenanceRequestDetails rescue(Integer id) {
+  public MaintenanceRequestDetails performMaintenance(Integer id, CreateMaintenance request) {
     MaintenanceRequest entity = findEntityById(id);
-    requireStatus(entity, MaintenanceRequestStatus.REJEITADA);
+    entity.requireNoMaintenance();
+    Employee employee = findEmployeeById(request.employeeId());
 
-    entity.addHistory(new MaintenanceRequestHistory(MaintenanceRequestStatus.APROVADA, now()));
+    LocalDateTime performedAt = now();
+    Maintenance maintenance =
+        maintenanceRepository.save(
+            new Maintenance(
+                null,
+                request.description(),
+                request.customerInstructions(),
+                employee,
+                performedAt));
+
+    entity.performMaintenance(maintenance, performedAt);
 
     return mapper.toDetails(repository.save(entity));
   }
 
-  /** RF010 - Pagar Serviço. Só é permitido a partir do estado ARRUMADA. */
+  @Transactional
+  public MaintenanceRequestDetails redirect(Integer id, RedirectMaintenanceRequest request) {
+    MaintenanceRequest entity = findEntityById(id);
+    Employee sourceEmployee = findEmployeeById(request.sourceEmployeeId());
+    Employee destinationEmployee = findEmployeeById(request.destinationEmployeeId());
+
+    LocalDateTime redirectedAt = now();
+    entity.redirectTo(destinationEmployee, redirectedAt);
+    redirectRepository.save(
+        new Redirect(null, sourceEmployee, destinationEmployee, entity, redirectedAt));
+
+    return mapper.toDetails(repository.save(entity));
+  }
+
   @Transactional
   public MaintenanceRequestDetails pay(Integer id) {
     MaintenanceRequest entity = findEntityById(id);
-    requireStatus(entity, MaintenanceRequestStatus.ARRUMADA);
 
-    LocalDateTime paidAt = now();
-    entity.setPaymentDate(paidAt);
-    entity.addHistory(new MaintenanceRequestHistory(MaintenanceRequestStatus.PAGA, paidAt));
+    entity.pay(now());
+
+    return mapper.toDetails(repository.save(entity));
+  }
+
+  @Transactional
+  public MaintenanceRequestDetails finish(Integer id, FinishMaintenanceRequest request) {
+    MaintenanceRequest entity = findEntityById(id);
+    Employee employee = findEmployeeById(request.employeeId());
+
+    entity.finish(employee, now());
 
     return mapper.toDetails(repository.save(entity));
   }
@@ -155,11 +198,7 @@ public class MaintenanceRequestService extends BaseService {
                     "Solicitação de manutenção não encontrada com ID: " + id));
   }
 
-  private void requireStatus(MaintenanceRequest entity, MaintenanceRequestStatus expected) {
-    if (entity.getStatus() != expected) {
-      throw new AppException(
-          ErrorCode.INVALID_MAINTENANCE_REQUEST_STATUS,
-          "Ação não permitida para o estado atual: " + entity.getStatus());
-    }
+  private Employee findEmployeeById(Integer id) {
+    return employeeService.findEntityById(id);
   }
 }

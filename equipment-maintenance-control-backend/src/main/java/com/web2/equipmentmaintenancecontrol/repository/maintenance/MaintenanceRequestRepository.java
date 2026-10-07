@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface MaintenanceRequestRepository extends JpaRepository<MaintenanceRequest, Integer> {
 
   List<MaintenanceRequest> findByStatus(MaintenanceRequestStatus status);
+
+  List<MaintenanceRequest> findByCustomerIdOrderByCreatedAtAsc(Integer customerId);
 }

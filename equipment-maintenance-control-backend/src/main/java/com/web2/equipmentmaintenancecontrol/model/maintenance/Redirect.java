@@ -27,6 +27,19 @@ public class Redirect {
 
   public Redirect() {}
 
+  public Redirect(
+      Integer id,
+      Employee sourceEmployee,
+      Employee destinationEmployee,
+      MaintenanceRequest maintenanceRequest,
+      LocalDateTime createdAt) {
+    this.id = id;
+    this.sourceEmployee = sourceEmployee;
+    this.destinationEmployee = destinationEmployee;
+    this.maintenanceRequest = maintenanceRequest;
+    this.createdAt = createdAt;
+  }
+
   public Integer getId() {
     return id;
   }

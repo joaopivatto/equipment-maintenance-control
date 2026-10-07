@@ -1,5 +1,7 @@
 package com.web2.equipmentmaintenancecontrol.model.maintenance;
 
+import com.web2.equipmentmaintenancecontrol.exception.AppException;
+import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
 import com.web2.equipmentmaintenancecontrol.model.equipment.Equipment;
 import com.web2.equipmentmaintenancecontrol.model.profile.Customer;
 import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
@@ -123,6 +125,136 @@ public class MaintenanceRequest {
     }
   }
 
+  public void giveBudget(Budget budget, LocalDateTime dateTime) {
+    Objects.requireNonNull(budget, "Orçamento é obrigatório");
+    requireNoBudget();
+    Employee responsible =
+        Objects.requireNonNull(budget.getEmployee(), "Funcionário do orçamento é obrigatório");
+
+    transitionTo(MaintenanceRequestStatus.ORCADA, responsible, dateTime);
+    this.budget = budget;
+    this.employee = responsible;
+  }
+
+  public void approve(LocalDateTime dateTime, Integer customerId) {
+    requireOwner(customerId);
+
+    transitionTo(MaintenanceRequestStatus.APROVADA, null, dateTime);
+  }
+
+  public void reject(String reason, LocalDateTime dateTime, Integer customerId) {
+    requireOwner(customerId);
+    if (reason == null || reason.isBlank()) {
+      throw new AppException(ErrorCode.VALIDATION_ERROR, "O motivo da rejeição é obrigatório.");
+    }
+
+    transitionTo(MaintenanceRequestStatus.REJEITADA, null, dateTime, reason);
+    this.rejectionReason = reason;
+  }
+
+  public void performMaintenance(Maintenance maintenance, LocalDateTime dateTime) {
+    Objects.requireNonNull(maintenance, "Manutenção é obrigatória");
+    requireNoMaintenance();
+    Employee responsible =
+        Objects.requireNonNull(
+            maintenance.getEmployee(), "Funcionário da manutenção é obrigatório");
+
+    transitionTo(MaintenanceRequestStatus.ARRUMADA, responsible, dateTime);
+    this.maintenance = maintenance;
+    this.employee = responsible;
+  }
+
+  public void requireNoBudget() {
+    if (budget != null) {
+      throw new AppException(
+          ErrorCode.BUDGET_ALREADY_GIVEN,
+          "A solicitação %d já possui o orçamento %d".formatted(id, budget.getId()));
+    }
+  }
+
+  public void requireNoMaintenance() {
+    if (maintenance != null) {
+      throw new AppException(
+          ErrorCode.MAINTENANCE_ALREADY_PERFORMED,
+          "A solicitação %d já possui a manutenção %d".formatted(id, maintenance.getId()));
+    }
+  }
+
+  public void redirectTo(Employee destinationEmployee, LocalDateTime dateTime) {
+    Objects.requireNonNull(destinationEmployee, "Funcionário de destino é obrigatório");
+    if (employee != null && employee.getId().equals(destinationEmployee.getId())) {
+      throw new AppException(
+          ErrorCode.SELF_REDIRECT_NOT_ALLOWED,
+          "A solicitação %d já é do funcionário %d".formatted(id, destinationEmployee.getId()));
+    }
+
+    transitionTo(MaintenanceRequestStatus.REDIRECIONADA, destinationEmployee, dateTime);
+    this.employee = destinationEmployee;
+  }
+
+  public void pay(LocalDateTime dateTime) {
+    transitionTo(MaintenanceRequestStatus.PAGA, null, dateTime);
+    this.paymentDate = dateTime;
+  }
+
+  public void finish(Employee employee, LocalDateTime dateTime) {
+    Objects.requireNonNull(employee, "Funcionário que finaliza é obrigatório");
+
+    transitionTo(MaintenanceRequestStatus.FINALIZADA, employee, dateTime);
+    this.finalizedBy = employee;
+    this.finalizedAt = dateTime;
+  }
+
+  private void transitionTo(
+      MaintenanceRequestStatus target, @Nullable Employee employee, LocalDateTime dateTime) {
+    transitionTo(target, employee, dateTime, null);
+  }
+
+  private void transitionTo(
+      MaintenanceRequestStatus target,
+      @Nullable Employee employee,
+      LocalDateTime dateTime,
+      @Nullable String reason) {
+    Objects.requireNonNull(target, "Status de destino é obrigatório");
+    Objects.requireNonNull(dateTime, "Data/hora da transição é obrigatória");
+
+    if (!status.canTransitionTo(target)) {
+      throw new AppException(
+          ErrorCode.INVALID_STATUS_TRANSITION,
+          "Transição inválida de %s para %s. A partir de %s só é possível ir para %s."
+              .formatted(status, target, status, status.allowedTransitions()));
+    }
+
+    MaintenanceRequestHistory entry =
+        new MaintenanceRequestHistory(target, dateTime, employee, reason);
+    addHistory(entry);
+  }
+
+  private void requireOwner(Integer customerId) {
+    if (!customer.getId().equals(customerId)) {
+      throw new AppException(
+          ErrorCode.MAINTENANCE_REQUEST_NOT_OWNED,
+          "A solicitação %d não pertence ao cliente %d".formatted(id, customerId));
+    }
+  }
+
+  private void createHistory(LocalDateTime createdAt, @Nullable Employee employee) {
+    this.history = new ArrayList<>();
+    addHistory(new MaintenanceRequestHistory(MaintenanceRequestStatus.ABERTA, createdAt, employee));
+  }
+
+  private void addHistory(MaintenanceRequestHistory historyEntry) {
+    if (history == null) {
+      history = new ArrayList<>();
+    }
+    history.add(historyEntry);
+    historyEntry.setMaintenanceRequest(this);
+    if (historyEntry.getStatus() != null) {
+      this.status = historyEntry.getStatus();
+    }
+    this.updatedAt = historyEntry.getUpdatedAt();
+  }
+
   public Integer getId() {
     return id;
   }
@@ -135,16 +267,8 @@ public class MaintenanceRequest {
     return createdAt;
   }
 
-  public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
-  }
-
   public LocalDateTime getUpdatedAt() {
     return updatedAt;
-  }
-
-  public void setUpdatedAt(LocalDateTime updatedAt) {
-    this.updatedAt = updatedAt;
   }
 
   public String getDefect() {
@@ -155,36 +279,24 @@ public class MaintenanceRequest {
     this.defect = defect;
   }
 
+  @Nullable
   public LocalDateTime getPaymentDate() {
     return paymentDate;
   }
 
-  public void setPaymentDate(LocalDateTime paymentDate) {
-    this.paymentDate = paymentDate;
-  }
-
+  @Nullable
   public String getRejectionReason() {
     return rejectionReason;
   }
 
-  public void setRejectionReason(String rejectionReason) {
-    this.rejectionReason = rejectionReason;
-  }
-
+  @Nullable
   public LocalDateTime getFinalizedAt() {
     return finalizedAt;
   }
 
-  public void setFinalizedAt(LocalDateTime finalizedAt) {
-    this.finalizedAt = finalizedAt;
-  }
-
+  @Nullable
   public Employee getFinalizedBy() {
     return finalizedBy;
-  }
-
-  public void setFinalizedBy(Employee finalizedBy) {
-    this.finalizedBy = finalizedBy;
   }
 
   public MaintenanceRequestStatus getStatus() {
@@ -195,53 +307,26 @@ public class MaintenanceRequest {
     return equipment;
   }
 
-  public void setEquipment(Equipment equipment) {
-    this.equipment = equipment;
-  }
-
   public Customer getCustomer() {
     return customer;
   }
 
+  @Nullable
   public Employee getEmployee() {
     return employee;
   }
 
-  public void setEmployee(Employee employee) {
-    this.employee = employee;
-  }
-
+  @Nullable
   public Budget getBudget() {
     return budget;
   }
 
-  public void setBudget(Budget budget) {
-    this.budget = budget;
-  }
-
+  @Nullable
   public Maintenance getMaintenance() {
     return maintenance;
   }
 
-  public void setMaintenance(Maintenance maintenance) {
-    this.maintenance = maintenance;
-  }
-
   public List<MaintenanceRequestHistory> getHistory() {
     return history;
-  }
-
-  public void createHistory(LocalDateTime createdAt, Employee employee) {
-    this.history = new ArrayList<>();
-    addHistory(new MaintenanceRequestHistory(MaintenanceRequestStatus.ABERTA, createdAt, employee));
-  }
-
-  public void addHistory(MaintenanceRequestHistory historyEntry) {
-    history.add(historyEntry);
-    historyEntry.setMaintenanceRequest(this);
-    if (historyEntry.getStatus() != null) {
-      this.status = historyEntry.getStatus();
-    }
-    this.updatedAt = historyEntry.getUpdatedAt();
   }
 }

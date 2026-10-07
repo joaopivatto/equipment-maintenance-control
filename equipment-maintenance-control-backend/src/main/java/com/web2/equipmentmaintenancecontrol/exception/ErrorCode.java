@@ -18,8 +18,14 @@ public enum ErrorCode {
   VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "Validation error"),
   INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected internal error"),
   MAINTENANCE_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "Maintenance request not found"),
-  INVALID_MAINTENANCE_REQUEST_STATUS(
-      HttpStatus.CONFLICT, "Maintenance request is not in a valid status for this action");
+  MAINTENANCE_REQUEST_NOT_OWNED(
+      HttpStatus.FORBIDDEN, "Maintenance request does not belong to this customer"),
+  INVALID_STATUS_TRANSITION(HttpStatus.CONFLICT, "Invalid maintenance request status transition"),
+  BUDGET_ALREADY_GIVEN(HttpStatus.CONFLICT, "Maintenance request already has a budget"),
+  MAINTENANCE_ALREADY_PERFORMED(
+      HttpStatus.CONFLICT, "Maintenance request already has a maintenance"),
+  SELF_REDIRECT_NOT_ALLOWED(
+      HttpStatus.CONFLICT, "Maintenance request cannot be redirected to its current employee");
 
   private final HttpStatus status;
   private final String message;
