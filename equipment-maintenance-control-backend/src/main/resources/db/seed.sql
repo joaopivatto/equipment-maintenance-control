@@ -11,7 +11,7 @@
 -- A versao completa (20+ solicitacoes) fica para o B-32.
 -- =====================================================================
 
-USE `equipment-maintenance-control`;
+USE `equipment_maintenance_control`;
 
 INSERT INTO address (id, zip_code, street, number, complement, neighborhood, city, state) VALUES
                                                                                               (1, '80010000', 'Rua XV de Novembro', 100, 'Apto 11', 'Centro', 'Curitiba', 'PR'),
