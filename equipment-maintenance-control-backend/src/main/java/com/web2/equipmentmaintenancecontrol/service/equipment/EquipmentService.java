@@ -42,8 +42,12 @@ public class EquipmentService extends BaseService {
   }
 
   public EquipmentResponse create(EquipmentRequest request) {
-    EquipmentType type = equipmentTypeService.findEntityById(request.type());
-    return mapper.toResponse(repository.save(new Equipment(null, request.description(), type)));
+    return mapper.toResponse(createEntity(request.description(), request.type()));
+  }
+
+  public Equipment createEntity(String description, Integer typeId) {
+    EquipmentType type = equipmentTypeService.findEntityById(typeId);
+    return repository.save(new Equipment(null, description, type));
   }
 
   public EquipmentResponse update(Integer id, EquipmentRequest request) {

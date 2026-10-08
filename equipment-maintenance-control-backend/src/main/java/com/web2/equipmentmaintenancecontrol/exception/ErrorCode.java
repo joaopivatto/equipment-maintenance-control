@@ -8,7 +8,6 @@ public enum ErrorCode {
   EQUIPMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Equipment not found"),
   CUSTOMER_NOT_FOUND(HttpStatus.NOT_FOUND, "Customer not found"),
   INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Invalid credentials"),
-  INVALID_CPF(HttpStatus.BAD_REQUEST, "Invalid CPF"),
   CUSTOMER_EMAIL_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Customer email already exists"),
   CUSTOMER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Customer already exists"),
   EMPLOYEE_NOT_FOUND(HttpStatus.NOT_FOUND, "Employee not found"),
@@ -20,7 +19,17 @@ public enum ErrorCode {
   INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected internal error"),
   MAINTENANCE_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "Maintenance request not found"),
   INVALID_MAINTENANCE_REQUEST_STATUS(
-      HttpStatus.CONFLICT, "Maintenance request is not in a valid status for this action");
+      HttpStatus.CONFLICT, "Maintenance request is not in a valid status for this action"),
+  EMAIL_PROVIDER_INTEGRATION_ERROR(
+      HttpStatus.INTERNAL_SERVER_ERROR, "Error while integrating with email provider (Resend)"),
+  MAINTENANCE_REQUEST_NOT_OWNED(
+      HttpStatus.FORBIDDEN, "Maintenance request does not belong to this customer"),
+  INVALID_STATUS_TRANSITION(HttpStatus.CONFLICT, "Invalid maintenance request status transition"),
+  BUDGET_ALREADY_GIVEN(HttpStatus.CONFLICT, "Maintenance request already has a budget"),
+  MAINTENANCE_ALREADY_PERFORMED(
+      HttpStatus.CONFLICT, "Maintenance request already has a maintenance"),
+  SELF_REDIRECT_NOT_ALLOWED(
+      HttpStatus.CONFLICT, "Maintenance request cannot be redirected to its current employee");
 
   private final HttpStatus status;
   private final String message;

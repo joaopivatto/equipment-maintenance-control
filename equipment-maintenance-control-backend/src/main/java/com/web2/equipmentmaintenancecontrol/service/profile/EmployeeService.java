@@ -33,7 +33,7 @@ public class EmployeeService {
   public EmployeeResponse create(EmployeeCreateRequest request) {
 
     Employee employee = new Employee();
-    employee.setName(request.name().trim());
+    employee.setName(request.name());
     employee.setEmail(request.email());
     employee.setBirthDate(request.birthDate());
     employee.setType(ProfileType.EMPLOYEE);
@@ -48,7 +48,7 @@ public class EmployeeService {
   public EmployeeResponse update(Integer id, EmployeeUpdateRequest request) {
     Employee employee = findEntityById(id);
 
-    employee.setName(request.name().trim());
+    employee.setName(request.name());
     employee.setEmail(request.email());
     employee.setBirthDate(request.birthDate());
 
@@ -85,7 +85,7 @@ public class EmployeeService {
         employee.getActive());
   }
 
-  private Employee findEntityById(Integer id) {
+  public Employee findEntityById(Integer id) {
     return repository
         .findById(id)
         .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));

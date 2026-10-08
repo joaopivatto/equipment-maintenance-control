@@ -7,6 +7,7 @@ import com.web2.equipmentmaintenancecontrol.model.maintenance.MaintenanceRequest
 import com.web2.equipmentmaintenancecontrol.model.maintenance.MaintenanceRequestHistory;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.MaintenanceRequestStatus;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.MaintenanceRequestDetails;
+import com.web2.equipmentmaintenancecontrol.model.profile.Customer;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -42,20 +43,29 @@ public class MaintenanceRequestMapper extends BaseMapper {
     MaintenanceRequestHistory rejectedEntry =
         findLastEntryByStatus(entity, MaintenanceRequestStatus.REJEITADA);
 
+    Customer customer = entity.getCustomer();
+
     return new MaintenanceRequestDetails(
         entity.getId(),
         formatDateTime(entity.getCreatedAt()),
+        formatDateTime(entity.getUpdatedAt()),
+        equipmentMapper.toId(entity.getEquipment()),
         equipmentMapper.toDescription(entity.getEquipment()),
+        equipmentMapper.toCategoryId(entity.getEquipment()),
         equipmentMapper.toCategoryName(entity.getEquipment()),
         entity.getDefect(),
         entity.getStatus(),
         budgetMapper.toDetails(entity.getBudget()),
-        rejectedEntry != null ? rejectedEntry.getReason() : null,
-        entity.getCustomer().getName(),
+        resolveRejectionReason(entity, rejectedEntry),
+        customer != null ? customer.getId() : null,
+        customer != null ? customer.getName() : null,
+        customer != null ? customer.getEmail() : null,
+        employeeMapper.toId(entity.getEmployee()),
+        employeeMapper.toName(entity.getEmployee()),
         maintenanceMapper.toDetails(entity.getMaintenance()),
         formatDateTime(entity.getPaymentDate()),
-        finalizedEntry != null ? formatDateTime(finalizedEntry.getUpdatedAt()) : null,
-        finalizedEntry != null ? employeeMapper.toName(finalizedEntry.getEmployee()) : null,
+        resolveFinalizedAt(entity, finalizedEntry),
+        resolveFinalizedBy(entity, finalizedEntry),
         historyMapper.toDetails(entity.getHistory()));
   }
 
@@ -64,6 +74,30 @@ public class MaintenanceRequestMapper extends BaseMapper {
       return List.of();
     }
     return entities.stream().map(this::toDetails).toList();
+  }
+
+  private String resolveFinalizedAt(
+      MaintenanceRequest entity, MaintenanceRequestHistory finalizedEntry) {
+    if (entity.getFinalizedAt() != null) {
+      return formatDateTime(entity.getFinalizedAt());
+    }
+    return finalizedEntry != null ? formatDateTime(finalizedEntry.getUpdatedAt()) : null;
+  }
+
+  private String resolveFinalizedBy(
+      MaintenanceRequest entity, MaintenanceRequestHistory finalizedEntry) {
+    if (entity.getFinalizedBy() != null) {
+      return employeeMapper.toName(entity.getFinalizedBy());
+    }
+    return finalizedEntry != null ? employeeMapper.toName(finalizedEntry.getEmployee()) : null;
+  }
+
+  private String resolveRejectionReason(
+      MaintenanceRequest entity, MaintenanceRequestHistory rejectedEntry) {
+    if (entity.getRejectionReason() != null) {
+      return entity.getRejectionReason();
+    }
+    return rejectedEntry != null ? rejectedEntry.getReason() : null;
   }
 
   private MaintenanceRequestHistory findLastEntryByStatus(

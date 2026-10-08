@@ -15,18 +15,17 @@ public class ResendEmailProvider implements EmailProvider {
   public void dispatch(Email email) {
     Resend resend = new Resend(apiKey);
 
-    String subject = "Olá! Sua senha de acesso foi gerada";
     CreateEmailOptions params =
         CreateEmailOptions.builder()
             .from(email.sender())
             .to(email.recipient())
-            .subject(subject)
+            .subject(email.subject())
             .html(email.body())
             .build();
     try {
       resend.emails().send(params);
     } catch (Exception ex) {
-      throw new AppException(ErrorCode.INTERNAL_ERROR);
+      throw new AppException(ErrorCode.EMAIL_PROVIDER_INTEGRATION_ERROR);
     }
   }
 }
