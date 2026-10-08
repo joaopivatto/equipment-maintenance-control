@@ -116,6 +116,10 @@ Este arquivo é apenas o checklist de tarefas do backend.
   Responsável: MATHEUS · Depende de: nada
   Tratar a autenticação entre front e api
 
+- [ ] **B-11.4 — Tratar senha no employee**
+  Responsável: MATHEUS · Depende de: nada
+  arrumar a rota de create, lembrando que a senha do employee deve vir na request de create
+
 - [X] **B-12 — RF004: criar solicitação com descrição + categoria**
   Responsável: João · Depende de: B-05
   Alterar `CreateMaintenanceRequest` para
