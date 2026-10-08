@@ -2,6 +2,7 @@ package com.web2.equipmentmaintenancecontrol.service.profile;
 
 import com.web2.equipmentmaintenancecontrol.exception.AppException;
 import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
+import com.web2.equipmentmaintenancecontrol.mapper.profile.EmployeeMapper;
 import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
 import com.web2.equipmentmaintenancecontrol.model.profile.ProfileType;
 import com.web2.equipmentmaintenancecontrol.model.profile.dtos.EmployeeCreateRequest;
@@ -16,17 +17,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmployeeService {
 
   private final EmployeeRepository repository;
+  private final EmployeeMapper mapper;
 
-  public EmployeeService(EmployeeRepository repository) {
+  public EmployeeService(EmployeeRepository repository, EmployeeMapper mapper) {
     this.repository = repository;
+    this.mapper = mapper;
   }
 
   public EmployeeResponse findById(Integer id) {
-    return toResponse(this.findEntityById(id));
+    return mapper.toResponse(this.findEntityById(id));
   }
 
   public List<EmployeeResponse> findAll() {
-    return this.repository.findAll().stream().map(this::toResponse).toList();
+    return mapper.toResponse(this.repository.findAll());
   }
 
   @Transactional
@@ -41,7 +44,7 @@ public class EmployeeService {
 
     Employee savedEmployee = repository.save(employee);
 
-    return toResponse(savedEmployee);
+    return mapper.toResponse(savedEmployee);
   }
 
   @Transactional
@@ -54,7 +57,7 @@ public class EmployeeService {
 
     Employee updatedEmployee = repository.save(employee);
 
-    return toResponse(updatedEmployee);
+    return mapper.toResponse(updatedEmployee);
   }
 
   @Transactional
@@ -74,15 +77,6 @@ public class EmployeeService {
     }
 
     repository.delete(employee);
-  }
-
-  private EmployeeResponse toResponse(Employee employee) {
-    return new EmployeeResponse(
-        employee.getId(),
-        employee.getName(),
-        employee.getEmail(),
-        employee.getBirthDate(),
-        employee.getActive());
   }
 
   public Employee findEntityById(Integer id) {
