@@ -31,6 +31,15 @@ public class EquipmentMapper extends BaseMapper {
     return entities.stream().map(this::toResponse).toList();
   }
 
+  public Integer toId(Equipment equipment) {
+    return equipment != null ? equipment.getId() : null;
+  }
+
+  public Integer toCategoryId(Equipment equipment) {
+    EquipmentType type = equipment != null ? equipment.getType() : null;
+    return type != null ? type.getId() : null;
+  }
+
   public String toDescription(Equipment equipment) {
     return equipment != null ? equipment.getDescription() : null;
   }

@@ -4,6 +4,9 @@
 >
 > **Regra de uso:** marque uma tarefa com `[/]` quando alguém começar e com `[x]` somente quando ela estiver navegável, testada manualmente e sem quebrar as rotas existentes.
 
+> **Status por requisito:** a tabela consolidada (RF001–RF020, backend e frontend) fica no
+> [README da raiz](../README.md#status-dos-requisitos). Este arquivo é o checklist de tarefas.
+
 ## Visão geral
 
 | Pessoa | Área principal               | Prioridade inicial                                  |
@@ -141,12 +144,12 @@
 
 **Responsável: João Guilherme Pivatto**
 
-- [ X ] **P0-18 - Revisar CRUD de categorias (RF017)**
+- [x] **P0-18 - Revisar CRUD de categorias (RF017)**
   - Criar, listar_, editar e desativar categorias.
   - Confirmar remoção e impedir dados inválidos/duplicados.
   - Integrar seleção de categorias com a criação de solicitação.
 
-- [ X ] **P0-19 - Revisar CRUD de funcionários (RF018)**
+- [x] **P0-19 - Revisar CRUD de funcionários (RF018)**
   - Criar, listar, editar e desativar funcionários.
   - Impedir remover a si mesmo e o único funcionário ativo.
   - Validar e-mail e data de nascimento.
@@ -159,6 +162,8 @@
 
 - [x] **P1-01 - Resgatar serviço (RF009)** - Pessoa 3
   - `REJEITADA` para `APROVADA`, com evento no histórico.
+  - A ação continua separada na tela, mas na integração consome o mesmo endpoint da aprovação
+    (`POST /maintenance-request/{id}/approve`), que aceita `ORCADA` ou `REJEITADA` como origem.
 
 - [x] **P1-02 - Pagar serviço (RF010)** - Pessoa 3
   - Exibir valor, confirmar pagamento, registrar data/hora e mudar para `PAGA`.

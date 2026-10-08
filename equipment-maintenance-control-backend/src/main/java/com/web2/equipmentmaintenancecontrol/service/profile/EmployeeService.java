@@ -86,7 +86,7 @@ public class EmployeeService {
         employee.getActive());
   }
 
-  private Employee findEntityById(Integer id) {
+  public Employee findEntityById(Integer id) {
     return repository
         .findById(id)
         .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));

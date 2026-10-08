@@ -12,20 +12,9 @@ Legenda de status: `[ ]` a fazer · `[~]` em andamento · `[x]` concluído
 
 ## Situação atual (o que já existe)
 
-| RF | Descrição | Status atual |
-|----|-----------|--------------|
-| RF001 | Autocadastro de cliente | ausente |
-| RF002 | Login | pronto (`POST /auth/login`, SHA-256 + salt) |
-| RF003 | Listar solicitações do cliente | parcial (lista todas, sem filtro/ordem) |
-| RF004 | Criar solicitação | parcial (exige `equipmentId`, não descrição + categoria) |
-| RF005 | Mostrar orçamento | parcial (`GET /maintenance-request/{id}`) |
-| RF006–RF010 | Aprovar / Rejeitar / Visualizar / Resgatar / Pagar | ausentes |
-| RF011 | Solicitações ABERTAS | pronto (`GET /maintenance-request/open`) |
-| RF012 | Efetuar orçamento | ausente (entidade `Budget` existe) |
-| RF013–RF016 | Filtros / Manutenção / Redirecionar / Finalizar | ausentes |
-| RF017 | CRUD de categoria | parcial (falta remoção) |
-| RF018 | CRUD de funcionários | ausente |
-| RF019–RF020 | Relatórios em PDF | ausentes |
+O status consolidado por requisito (RF001–RF020), com backend e frontend lado a lado, fica na
+tabela [Status dos requisitos](../README.md#status-dos-requisitos) do README da raiz.
+Este arquivo é apenas o checklist de tarefas do backend.
 
 ---
 
@@ -59,14 +48,19 @@ Legenda de status: `[ ]` a fazer · `[~]` em andamento · `[x]` concluído
   Adicionar `active` em `Profile` e `EquipmentType`, com default `true`.
   *Pronto quando:* listagens passam a considerar apenas registros ativos.
 
-- [ ] **B-05 — Máquina de estados da solicitação**
-  Responsável: ____ · Depende de: B-02
+- [X] **B-05 — Máquina de estados da solicitação**
+  Responsável: João · Depende de: B-02
   Criar um ponto único de transição, por exemplo
   `MaintenanceRequest.transitionTo(status, employee, dataHora)`, que valida a transição
   e **sempre** grava uma linha em `maintenance_request_history`.
   Transições válidas: ABERTA→ORCADA · ORCADA→APROVADA/REJEITADA · REJEITADA→APROVADA ·
   APROVADA/REDIRECIONADA→ARRUMADA/REDIRECIONADA · ARRUMADA→PAGA · PAGA→FINALIZADA.
   Transição inválida deve lançar `AppException`.
+  *Como ficou:* a tabela de transições vive em `MaintenanceRequestStatus.allowedTransitions()`
+  e `MaintenanceRequest.transitionTo(status, funcionário, dataHora[, motivo])` é o único caminho
+  para mudar de estado — valida a transição, grava a linha de histórico e atualiza `updatedAt`.
+  `addHistory` passou a ser privado para que ninguém contorne a validação. Transição inválida
+  devolve `409 INVALID_STATUS_TRANSITION`.
 
 - [ ] **B-06 — Novos códigos de erro**
   Responsável: ____ · Depende de: —
@@ -108,33 +102,45 @@ Legenda de status: `[ ]` a fazer · `[~]` em andamento · `[x]` concluído
   gera a senha de 4 dígitos, grava hash SHA-256 + salt e envia a senha por e-mail.
   *Pronto quando:* o cliente criado consegue fazer login com a senha recebida.
 
-- [ ] **B-12 — RF004: criar solicitação com descrição + categoria**
-  Responsável: ____ · Depende de: B-05
+- [X] **B-12 — RF004: criar solicitação com descrição + categoria**
+  Responsável: João · Depende de: B-05
   Alterar `CreateMaintenanceRequest` para
   `{customerId, equipmentDescription, equipmentTypeId, defectDescription}`.
   O service cria o `Equipment` a partir da descrição + categoria, grava data/hora,
   estado ABERTA e a primeira linha do histórico.
+  *Como ficou:* `EquipmentService.createEntity(descrição, categoriaId)` persiste o equipamento e o
+  builder de `MaintenanceRequest` já nasce ABERTA com a primeira linha de histórico.
 
-- [ ] **B-13 — RF003: listar solicitações de um cliente**
-  Responsável: ____ · Depende de: B-12
+- [X] **B-13 — RF003: listar solicitações de um cliente**
+  Responsável: João · Depende de: B-12
   `GET /customers/{id}/maintenance-requests`, ordenado por `createdAt` crescente.
   Usar `@Query` com `JOIN FETCH` (equipamento, categoria, orçamento) para evitar N+1.
+  *Como ficou:* `MaintenanceRequestRepository.findByCustomerIdWithDetails` faz `JOIN FETCH` de
+  cliente, equipamento, categoria, orçamento e histórico em uma única consulta.
 
-- [ ] **B-14 — RF012: efetuar orçamento**
-  Responsável: ____ · Depende de: B-05
+- [X] **B-14 — RF012: efetuar orçamento**
+  Responsável: João · Depende de: B-05
   `POST /maintenance-request/{id}/budget` com `{employeeId, value}`.
   Só a partir de ABERTA. Cria `Budget` com valor, funcionário e data/hora;
   solicitação passa para ORCADA e o histórico registra o funcionário.
+  *Como ficou:* o `Budget` é salvo pelo `BudgetRepository` antes de ser ligado à solicitação, e o
+  funcionário do orçamento passa a ser o responsável atual (`maintenance_request.employee_id`).
 
-- [ ] **B-15 — RF005: detalhe da solicitação com orçamento**
-  Responsável: ____ · Depende de: B-14
+- [X] **B-15 — RF005: detalhe da solicitação com orçamento**
+  Responsável: João · Depende de: B-14
   Garantir que `GET /maintenance-request/{id}` devolva dados completos da solicitação,
   do cliente, do equipamento e o valor orçado.
+  *Como ficou:* `MaintenanceRequestDetails` ganhou `updatedAt`, `equipmentId`,
+  `equipmentCategoryId`, `customerId`, `customerEmail`, `assignedEmployeeId/Name`, e
+  `BudgetDetails` ganhou `employeeName`. A busca usa `findByIdWithDetails` (com `JOIN FETCH`).
 
-- [ ] **B-16 — RF006: aprovar serviço**
-  Responsável: ____ · Depende de: B-14
+- [X] **B-16 — RF006: aprovar serviço**
+  Responsável: João · Depende de: B-14
   `POST /maintenance-request/{id}/approve` com o cliente dono da solicitação.
   ORCADA → APROVADA, com histórico. Resposta traz o valor aprovado.
+  *Como ficou:* o corpo é `{customerId}`; se a solicitação não for daquele cliente a resposta é
+  `403 MAINTENANCE_REQUEST_NOT_OWNED`. O valor aprovado volta em `budget.value`. O endpoint também
+  atende o resgate (B-22), aceitando `REJEITADA` como estado de origem.
 
 - [ ] **B-17 — RF017: remover categoria (desativação)**
   Responsável: ____ · Depende de: B-04
@@ -170,7 +176,9 @@ Legenda de status: `[ ]` a fazer · `[~]` em andamento · `[x]` concluído
 
 - [ ] **B-22 — RF009: resgatar serviço**
   Responsável: ____ · Depende de: B-21
-  `POST /maintenance-request/{id}/rescue`. REJEITADA → APROVADA, com data/hora no histórico.
+  Sem endpoint próprio: resgatar é a mesma transição de aprovar (`→ APROVADA`, sem campo extra),
+  então `POST /maintenance-request/{id}/approve` aceita `REJEITADA` como origem, com data/hora no
+  histórico e o motivo da rejeição preservado.
 
 - [ ] **B-23 — RF010: pagar serviço**
   Responsável: ____ · Depende de: B-05
@@ -186,23 +194,31 @@ Legenda de status: `[ ]` a fazer · `[~]` em andamento · `[x]` concluído
 
 ## Fase 3 — Fluxo do funcionário
 
-- [ ] **B-25 — RF014: efetuar manutenção**
-  Responsável: ____ · Depende de: B-05
+- [X] **B-25 — RF014: efetuar manutenção**
+  Responsável: João · Depende de: B-05
   `POST /maintenance-request/{id}/maintenance` com
   `{employeeId, description, customerInstructions}`.
   A partir de APROVADA ou REDIRECIONADA. Grava data/hora e funcionário; estado vira ARRUMADA.
+  *Como ficou:* o corpo é `{description, customerInstructions, employeeId}`; a `Maintenance` é
+  persistida antes da transição e o funcionário da manutenção passa a ser o responsável da
+  solicitação.
 
-- [ ] **B-26 — RF015: redirecionar manutenção**
-  Responsável: ____ · Depende de: B-02, B-05
+- [X] **B-26 — RF015: redirecionar manutenção**
+  Responsável: João · Depende de: B-02, B-05
   `POST /maintenance-request/{id}/redirect` com `{sourceEmployeeId, destinationEmployeeId}`.
   Proibir destino igual à origem (`SELF_REDIRECT_NOT_ALLOWED`); permitir redirecionamentos
   infinitos. Cria `Redirect` ligado à solicitação; estado REDIRECIONADA; histórico registra
   data/hora, funcionário origem e destino.
+  *Como ficou:* o `SELF_REDIRECT_NOT_ALLOWED` (409) compara o destino com o responsável atual da
+  solicitação, que é a origem real; a linha em `redirect` guarda origem, destino e data/hora. O
+  histórico registra o funcionário de destino — `fromEmployee`/`toEmployee` em
+  `HistoryEntryDetails` continuam nulos (ver B-28).
 
-- [ ] **B-27 — RF016: finalizar solicitação**
-  Responsável: ____ · Depende de: B-23
+- [X] **B-27 — RF016: finalizar solicitação**
+  Responsável: João · Depende de: B-23
   `POST /maintenance-request/{id}/finish` com `{employeeId}`.
   PAGA → FINALIZADA, gravando data/hora e responsável.
+  *Como ficou:* grava `finalizedBy` e `finalizedAt` na solicitação, além da linha no histórico.
 
 - [ ] **B-28 — RF013: listagem de solicitações com filtros**
   Responsável: ____ · Depende de: B-26
