@@ -2,12 +2,13 @@ package com.web2.equipmentmaintenancecontrol.mapper.maintenance;
 
 import com.web2.equipmentmaintenancecontrol.mapper.BaseMapper;
 import com.web2.equipmentmaintenancecontrol.mapper.equipment.EquipmentMapper;
+import com.web2.equipmentmaintenancecontrol.mapper.profile.CustomerMapper;
 import com.web2.equipmentmaintenancecontrol.mapper.profile.EmployeeMapper;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.MaintenanceRequest;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.MaintenanceRequestHistory;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.MaintenanceRequestStatus;
 import com.web2.equipmentmaintenancecontrol.model.maintenance.dto.MaintenanceRequestDetails;
-import com.web2.equipmentmaintenancecontrol.model.profile.Customer;
+import com.web2.equipmentmaintenancecontrol.model.profile.dtos.EmployeeResponse;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ public class MaintenanceRequestMapper extends BaseMapper {
   private final BudgetMapper budgetMapper;
   private final MaintenanceMapper maintenanceMapper;
   private final MaintenanceRequestHistoryMapper historyMapper;
+  private final CustomerMapper customerMapper;
   private final EmployeeMapper employeeMapper;
 
   public MaintenanceRequestMapper(
@@ -25,11 +27,13 @@ public class MaintenanceRequestMapper extends BaseMapper {
       BudgetMapper budgetMapper,
       MaintenanceMapper maintenanceMapper,
       MaintenanceRequestHistoryMapper historyMapper,
+      CustomerMapper customerMapper,
       EmployeeMapper employeeMapper) {
     this.equipmentMapper = equipmentMapper;
     this.budgetMapper = budgetMapper;
     this.maintenanceMapper = maintenanceMapper;
     this.historyMapper = historyMapper;
+    this.customerMapper = customerMapper;
     this.employeeMapper = employeeMapper;
   }
 
@@ -43,30 +47,22 @@ public class MaintenanceRequestMapper extends BaseMapper {
     MaintenanceRequestHistory rejectedEntry =
         findLastEntryByStatus(entity, MaintenanceRequestStatus.REJEITADA);
 
-    Customer customer = entity.getCustomer();
-
     return new MaintenanceRequestDetails(
         entity.getId(),
         formatDateTime(entity.getCreatedAt()),
         formatDateTime(entity.getUpdatedAt()),
-        equipmentMapper.toId(entity.getEquipment()),
-        equipmentMapper.toDescription(entity.getEquipment()),
-        equipmentMapper.toCategoryId(entity.getEquipment()),
-        equipmentMapper.toCategoryName(entity.getEquipment()),
+        equipmentMapper.toResponse(entity.getEquipment()),
         entity.getDefect(),
         entity.getStatus(),
         budgetMapper.toDetails(entity.getBudget()),
         resolveRejectionReason(entity, rejectedEntry),
-        customer != null ? customer.getId() : null,
-        customer != null ? customer.getName() : null,
-        customer != null ? customer.getEmail() : null,
-        employeeMapper.toId(entity.getEmployee()),
-        employeeMapper.toName(entity.getEmployee()),
+        customerMapper.toResponse(entity.getCustomer()),
+        employeeMapper.toResponse(entity.getEmployee()),
         maintenanceMapper.toDetails(entity.getMaintenance()),
         formatDateTime(entity.getPaymentDate()),
         resolveFinalizedAt(entity, finalizedEntry),
         resolveFinalizedBy(entity, finalizedEntry),
-        historyMapper.toDetails(entity.getHistory()));
+        historyMapper.toDetails(entity));
   }
 
   public List<MaintenanceRequestDetails> toDetails(List<MaintenanceRequest> entities) {
@@ -84,12 +80,12 @@ public class MaintenanceRequestMapper extends BaseMapper {
     return finalizedEntry != null ? formatDateTime(finalizedEntry.getUpdatedAt()) : null;
   }
 
-  private String resolveFinalizedBy(
+  private EmployeeResponse resolveFinalizedBy(
       MaintenanceRequest entity, MaintenanceRequestHistory finalizedEntry) {
     if (entity.getFinalizedBy() != null) {
-      return employeeMapper.toName(entity.getFinalizedBy());
+      return employeeMapper.toResponse(entity.getFinalizedBy());
     }
-    return finalizedEntry != null ? employeeMapper.toName(finalizedEntry.getEmployee()) : null;
+    return finalizedEntry != null ? employeeMapper.toResponse(finalizedEntry.getEmployee()) : null;
   }
 
   private String resolveRejectionReason(

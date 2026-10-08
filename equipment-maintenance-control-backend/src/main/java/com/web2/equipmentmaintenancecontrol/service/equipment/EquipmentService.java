@@ -42,7 +42,7 @@ public class EquipmentService extends BaseService {
   }
 
   public EquipmentResponse create(EquipmentRequest request) {
-    return mapper.toResponse(createEntity(request.description(), request.type()));
+    return mapper.toResponse(createEntity(request.description(), request.typeId()));
   }
 
   public Equipment createEntity(String description, Integer typeId) {
@@ -53,7 +53,7 @@ public class EquipmentService extends BaseService {
   public EquipmentResponse update(Integer id, EquipmentRequest request) {
     Equipment equipment = findEntityById(id);
     equipment.setDescription(request.description());
-    equipment.setType(equipmentTypeService.findEntityById(request.type()));
+    equipment.setType(equipmentTypeService.findEntityById(request.typeId()));
     return mapper.toResponse(repository.save(equipment));
   }
 

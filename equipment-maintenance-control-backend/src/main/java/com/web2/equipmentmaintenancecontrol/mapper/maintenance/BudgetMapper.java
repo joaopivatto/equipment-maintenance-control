@@ -24,7 +24,6 @@ public class BudgetMapper extends BaseMapper {
         entity.getId(),
         entity.getValue(),
         formatDateTime(entity.getCreatedAt()),
-        employeeMapper.toId(entity.getEmployee()),
-        employeeMapper.toName(entity.getEmployee()));
+        employeeMapper.toResponse(entity.getEmployee()));
   }
 }
