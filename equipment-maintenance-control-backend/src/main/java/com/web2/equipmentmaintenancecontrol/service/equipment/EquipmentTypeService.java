@@ -51,8 +51,7 @@ public class EquipmentTypeService extends BaseService {
       throw new AppException(ErrorCode.EQUIPMENT_TYPE_ALREADY_INACTIVE);
     }
 
-    equipmentType.setActive(false);
-    repository.save(equipmentType);
+    repository.delete(equipmentType);
   }
 
   public EquipmentType findEntityById(Integer id) {
