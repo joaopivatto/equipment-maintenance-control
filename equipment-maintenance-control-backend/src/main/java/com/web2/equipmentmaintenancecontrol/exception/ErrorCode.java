@@ -20,7 +20,7 @@ public enum ErrorCode {
   INVALID_MAINTENANCE_REQUEST_STATUS(
       HttpStatus.CONFLICT, "Maintenance request is not in a valid status for this action"),
   EMAIL_PROVIDER_INTEGRATION_ERROR(
-      HttpStatus.INTERNAL_SERVER_ERROR, "Error while integrating with email provider (Resend)");
+      HttpStatus.INTERNAL_SERVER_ERROR, "Error while integrating with email provider (Resend)"),
   MAINTENANCE_REQUEST_NOT_OWNED(
       HttpStatus.FORBIDDEN, "Maintenance request does not belong to this customer"),
   INVALID_STATUS_TRANSITION(HttpStatus.CONFLICT, "Invalid maintenance request status transition"),

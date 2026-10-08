@@ -102,6 +102,16 @@ Este arquivo é apenas o checklist de tarefas do backend.
   gera a senha de 4 dígitos, grava hash SHA-256 + salt e envia a senha por e-mail.
   *Pronto quando:* o cliente criado consegue fazer login com a senha recebida.
 
+- [ ] **B-11.1 — Mensagens customizadas nos validators dos DTOs**
+  Responsável: ____ · Depende de: B-11
+  Adicionar mensagens de validação (`message = "..."`) nas anotações de Bean Validation dos DTOs,
+  seguindo o padrão já usado no projeto (mensagens em português no `GlobalExceptionHandler`).
+
+- [ ] **B-11.2 — Trocar instanciação do Customer por construtor**
+  Responsável: ____ · Depende de: B-11
+  Substituir a criação de `Customer` (builder/setters avulsos) por um construtor dedicado,
+  garantindo que o objeto nasça sempre em estado válido.
+
 - [X] **B-12 — RF004: criar solicitação com descrição + categoria**
   Responsável: João · Depende de: B-05
   Alterar `CreateMaintenanceRequest` para
