@@ -152,20 +152,20 @@ Este arquivo é apenas o checklist de tarefas do backend.
   `403 MAINTENANCE_REQUEST_NOT_OWNED`. O valor aprovado volta em `budget.value`. O endpoint também
   atende o resgate (B-22), aceitando `REJEITADA` como estado de origem.
 
-- [ ] **B-17 — RF017: remover categoria (desativação)**
-  Responsável: ____ · Depende de: B-04
+- [x] **B-17 — RF017: remover categoria (desativação)**
+  Responsável: JOAO VICTOR · Depende de: B-04
   `DELETE /equipment-type/{id}` marcando `active = false`;
   `GET /equipment-type` passa a listar só ativos. Validar descrição não vazia e única.
 
-- [ ] **B-18 — RF018: CRUD de funcionários (leitura e criação)**
-  Responsável: ____ · Depende de: B-04, B-06
+- [x] **B-18 — RF018: CRUD de funcionários (leitura e criação)**
+  Responsável: JOAO VICTOR · Depende de: B-04, B-06
   Criar `EmployeeService` + `EmployeeController`:
   `GET /employees` (só ativos), `GET /employees/{id}` e
   `POST /employees` com `{nome, email, dataNascimento, senha}` — e-mail único, senha com
   hash SHA-256 + salt, perfil `FUNCIONARIO`.
 
-- [ ] **B-19 — RF018: atualizar e remover funcionário**
-  Responsável: ____ · Depende de: B-18
+- [x] **B-19 — RF018: atualizar e remover funcionário**
+  Responsável: JOAO VICTOR · Depende de: B-18
   `PUT /employees/{id}` (senha só é alterada se enviada) e `DELETE /employees/{id}`
   com desativação lógica. Regras: não pode remover a si mesmo; não pode remover se for
   o único funcionário ativo.
