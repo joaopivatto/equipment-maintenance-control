@@ -1,6 +1,7 @@
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
@@ -16,6 +17,7 @@ import { MockEmployeeApiClient } from './features/employees/api/mock-employee-ap
 import { AuthApiClient } from './core/api/auth-api-client';
 import { MockAuthApiClient } from './core/api/mock-auth-api-client';
 import { routes } from './app.routes';
+import { HttpAuthApiClient } from './core/api/http-auth-api-client';
 
 registerLocaleData(localePt);
 
@@ -25,9 +27,10 @@ export const appConfig: ApplicationConfig = {
     { provide: EquipmentCategoryApiClient, useClass: MockEquipmentCategoryApiClient },
     { provide: MaintenanceRequestApiClient, useClass: MockMaintenanceRequestApiClient },
     { provide: EmployeeApiClient, useClass: MockEmployeeApiClient },
-    { provide: AuthApiClient, useClass: MockAuthApiClient },
+    { provide: AuthApiClient, useClass: HttpAuthApiClient },
     MessageService,
     provideBrowserGlobalErrorListeners(),
+    provideHttpClient(),
     provideRouter(routes),
     provideAnimationsAsync(),
     providePrimeNG({
