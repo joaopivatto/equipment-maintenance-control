@@ -7,4 +7,9 @@ import jakarta.validation.constraints.Past;
 import java.time.LocalDate;
 
 public record EmployeeUpdateRequest(
-    @NotBlank @Email String email, @NotBlank String name, @NotNull @Past LocalDate birthDate) {}
+    @NotBlank(message = "O e-mail é obrigatório") @Email(message = "O e-mail informado é inválido")
+        String email,
+    @NotBlank(message = "O nome é obrigatório") String name,
+    @NotNull(message = "A data de nascimento é obrigatória")
+        @Past(message = "A data de nascimento deve ser anterior a hoje")
+        LocalDate birthDate) {}

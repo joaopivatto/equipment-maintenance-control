@@ -8,8 +8,12 @@ import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.br.CPF;
 
 public record SignupRequest(
-    @NotBlank String name,
-    @NotBlank @Email String email,
-    @NotBlank @CPF String cpf,
-    @NotBlank @Pattern(regexp = "\\d{10,11}") String phoneNumber,
-    @NotNull @Valid AddressSignupRequest address) {}
+    @NotBlank(message = "O nome é obrigatório") String name,
+    @NotBlank(message = "O e-mail é obrigatório") @Email(message = "O e-mail informado é inválido")
+        String email,
+    @NotBlank(message = "O CPF é obrigatório") @CPF(message = "O CPF informado é inválido")
+        String cpf,
+    @NotBlank(message = "O telefone é obrigatório")
+        @Pattern(regexp = "\\d{10,11}", message = "O telefone deve ter 10 ou 11 dígitos")
+        String phoneNumber,
+    @NotNull(message = "O endereço é obrigatório") @Valid AddressSignupRequest address) {}
