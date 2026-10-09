@@ -24,6 +24,9 @@ services:
 
         JAVA_OPTS: -XX:MaxRAMPercentage=75
 
+        # APIKEY para envio de e-mail
+        RESEND_API_KEY: ${RESEND_API_KEY}
+
       logging:
         driver: json-file
         options:

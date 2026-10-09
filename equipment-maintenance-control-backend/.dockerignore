@@ -16,6 +16,5 @@ HELP.md
 
 # Nao precisam entrar na imagem
 Dockerfile
-docker-compose.yml
 ROADMAP.md
 src/main/resources/db/
