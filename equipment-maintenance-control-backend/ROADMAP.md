@@ -81,11 +81,11 @@ Este arquivo é apenas o checklist de tarefas do backend.
 > RF001, RF002, RF003, RF004, RF005, RF006, RF011, RF012, RF017, RF018.
 > Prioridade máxima: sem eles a equipe não vai para a defesa.
 
-- [ ] **B-08 — Gerador de senha aleatória de 4 dígitos**
+- [X] **B-08 — Gerador de senha aleatória de 4 dígitos**
   Responsável: Matheus · Depende de: —
   Classe em `domain/security` que gera 4 números aleatórios (`SecureRandom`) para o autocadastro.
 
-- [ ] **B-09 — Serviço de envio de e-mail**
+- [X] **B-09 — Serviço de envio de e-mail**
   Responsável: Matheus· Depende de: —
   Adicionar `spring-boot-starter-mail`, criar interface `EmailSender` e duas implementações:
   uma real (SMTP) e uma de desenvolvimento que só escreve no log.
@@ -95,12 +95,22 @@ Este arquivo é apenas o checklist de tarefas do backend.
   `ViaCepClient` usando `RestClient` para `https://viacep.com.br/ws/{cep}/json/`,
   devolvendo logradouro, bairro, cidade e UF. CEP inexistente → `ZIP_CODE_NOT_FOUND`.
 
-- [ ] **B-11 — RF001: endpoint de autocadastro**
+- [X] **B-11 — RF001: endpoint de autocadastro**
   Responsável: Matheus · Depende de: B-08, B-09, B-10
   `POST /customers` com `{cpf, nome, email, telefone, cep, numero, complemento}`.
   Valida CPF e e-mail únicos, completa o endereço pelo ViaCEP (salvando tudo no banco),
   gera a senha de 4 dígitos, grava hash SHA-256 + salt e envia a senha por e-mail.
   *Pronto quando:* o cliente criado consegue fazer login com a senha recebida.
+
+- [ ] **B-11.1 — Mensagens customizadas nos validators dos DTOs**
+  Responsável: ____ · Depende de: B-11
+  Adicionar mensagens de validação (`message = "..."`) nas anotações de Bean Validation dos DTOs,
+  seguindo o padrão já usado no projeto (mensagens em português no `GlobalExceptionHandler`).
+
+- [ ] **B-11.2 — Trocar instanciação do Customer por construtor**
+  Responsável: ____ · Depende de: B-11
+  Substituir a criação de `Customer` (builder/setters avulsos) por um construtor dedicado,
+  garantindo que o objeto nasça sempre em estado válido.
 
 - [X] **B-12 — RF004: criar solicitação com descrição + categoria**
   Responsável: João · Depende de: B-05
@@ -142,20 +152,20 @@ Este arquivo é apenas o checklist de tarefas do backend.
   `403 MAINTENANCE_REQUEST_NOT_OWNED`. O valor aprovado volta em `budget.value`. O endpoint também
   atende o resgate (B-22), aceitando `REJEITADA` como estado de origem.
 
-- [ ] **B-17 — RF017: remover categoria (desativação)**
-  Responsável: ____ · Depende de: B-04
+- [x] **B-17 — RF017: remover categoria (desativação)**
+  Responsável: JOAO VICTOR · Depende de: B-04
   `DELETE /equipment-type/{id}` marcando `active = false`;
   `GET /equipment-type` passa a listar só ativos. Validar descrição não vazia e única.
 
-- [ ] **B-18 — RF018: CRUD de funcionários (leitura e criação)**
-  Responsável: ____ · Depende de: B-04, B-06
+- [x] **B-18 — RF018: CRUD de funcionários (leitura e criação)**
+  Responsável: JOAO VICTOR · Depende de: B-04, B-06
   Criar `EmployeeService` + `EmployeeController`:
   `GET /employees` (só ativos), `GET /employees/{id}` e
   `POST /employees` com `{nome, email, dataNascimento, senha}` — e-mail único, senha com
   hash SHA-256 + salt, perfil `FUNCIONARIO`.
 
-- [ ] **B-19 — RF018: atualizar e remover funcionário**
-  Responsável: ____ · Depende de: B-18
+- [x] **B-19 — RF018: atualizar e remover funcionário**
+  Responsável: JOAO VICTOR · Depende de: B-18
   `PUT /employees/{id}` (senha só é alterada se enviada) e `DELETE /employees/{id}`
   com desativação lógica. Regras: não pode remover a si mesmo; não pode remover se for
   o único funcionário ativo.
