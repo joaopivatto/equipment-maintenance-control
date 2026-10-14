@@ -73,8 +73,7 @@ public class EmployeeService {
       throw new AppException(ErrorCode.EMPLOYEE_LAST_ACTIVE);
     }
 
-    employee.setActive(false);
-    repository.save(employee);
+    repository.delete(employee);
   }
 
   private EmployeeResponse toResponse(Employee employee) {

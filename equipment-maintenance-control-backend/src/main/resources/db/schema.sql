@@ -8,9 +8,9 @@
 --   mysql -u root -p < src/main/resources/db/schema.sql
 -- =====================================================================
 
-DROP DATABASE IF EXISTS `equipment-maintenance-control`;
-CREATE DATABASE `equipment-maintenance-control` CHARACTER SET utf8mb4;
-USE `equipment-maintenance-control`;
+DROP DATABASE IF EXISTS `equipment_maintenance_control`;
+CREATE DATABASE `equipment_maintenance_control` CHARACTER SET utf8mb4;
+USE `equipment_maintenance_control`;
 
 CREATE TABLE address (
                          id           INT          NOT NULL AUTO_INCREMENT,

@@ -10,6 +10,7 @@ import com.web2.equipmentmaintenancecontrol.repository.equipment.EquipmentTypeRe
 import com.web2.equipmentmaintenancecontrol.service.BaseService;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EquipmentTypeService extends BaseService {
@@ -30,14 +31,27 @@ public class EquipmentTypeService extends BaseService {
     return mapper.toResponse(repository.findAll());
   }
 
+  @Transactional
   public EquipmentTypeResponse create(EquipmentTypeRequest request) {
     return mapper.toResponse(repository.save(new EquipmentType(null, request.description())));
   }
 
+  @Transactional
   public EquipmentTypeResponse update(Integer id, EquipmentTypeRequest request) {
     EquipmentType equipmentType = findEntityById(id);
     equipmentType.setDescription(request.description());
     return mapper.toResponse(repository.save(equipmentType));
+  }
+
+  @Transactional
+  public void delete(Integer id) {
+    EquipmentType equipmentType = findEntityById(id);
+
+    if (!equipmentType.getActive()) {
+      throw new AppException(ErrorCode.EQUIPMENT_TYPE_ALREADY_INACTIVE);
+    }
+
+    repository.delete(equipmentType);
   }
 
   public EquipmentType findEntityById(Integer id) {

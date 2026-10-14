@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
 import { Service } from '@angular/core';
 import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
 
 import { CategoryRevenue, ReportsDashboard } from '../models';
-import { DatePipe } from '@angular/common';
 
 const PDF_MARGIN = 14;
 const PDF_HEADER_COLOR: [number, number, number] = [13, 148, 136];
@@ -25,11 +23,62 @@ export class ReportsPdfService {
       creator: 'Controle de Manutenção de Equipamentos',
     });
 
+    this.addCoverPage(document, dashboard);
+    document.addPage();
     this.addDailyRevenueSection(document, dashboard);
     this.addCategoryRevenueSection(document, dashboard.categoryRevenue);
     this.addPageNumbers(document);
 
     document.save(this.buildFileName(dashboard));
+  }
+
+  private addCoverPage(document: jsPDF, dashboard: ReportsDashboard): void {
+    const pageWidth = document.internal.pageSize.getWidth();
+    const contentWidth = pageWidth - PDF_MARGIN * 2;
+    const { startDate, endDate } = dashboard.revenueReport;
+
+    document.setFillColor(...PDF_HEADER_COLOR);
+    document.rect(0, 0, pageWidth, 8, 'F');
+
+    document.setFont('helvetica', 'normal');
+    document.setFontSize(12);
+    document.setTextColor(90);
+    document.text('Controle de Manutenção de Equipamentos', PDF_MARGIN, 30);
+
+    document.setFont('helvetica', 'bold');
+    document.setFontSize(32);
+    document.setTextColor(...PDF_HEADER_COLOR);
+    document.text('Relatórios\nde receitas', PDF_MARGIN, 100);
+
+    document.setFont('helvetica', 'normal');
+    document.setFontSize(14);
+    document.setTextColor(30);
+    document.text('Receitas por dia e por categoria', PDF_MARGIN, 137);
+
+    document.setDrawColor(...PDF_HEADER_COLOR);
+    document.line(PDF_MARGIN, 151, pageWidth - PDF_MARGIN, 151);
+
+    document.setFontSize(11);
+    document.text('Período das receitas por dia', PDF_MARGIN, 166);
+    document.setFont('helvetica', 'bold');
+    document.setFontSize(15);
+    document.text(
+      `${this.formatDate(startDate)} a ${this.formatDate(endDate)}`,
+      PDF_MARGIN,
+      177,
+    );
+
+    document.setFont('helvetica', 'normal');
+    document.setFontSize(10);
+    document.setTextColor(90);
+    document.text(
+      document.splitTextToSize(
+        'As receitas por categoria consideram todo o histórico da empresa.',
+        contentWidth,
+      ),
+      PDF_MARGIN,
+      197,
+    );
   }
 
   private addDailyRevenueSection(

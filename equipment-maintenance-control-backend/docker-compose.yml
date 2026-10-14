@@ -1,0 +1,34 @@
+services:
+    backend:
+      build: .
+      image: equipment-maintenance-control-backend
+      container_name: emc-backend
+      restart: unless-stopped
+
+      # O container usa a rede do host: assim "127.0.0.1:3306" aponta para o MySQL
+      # instalado na VPS, sem precisar abrir o MySQL para a rede do Docker.
+      network_mode: host
+
+      environment:
+        # A aplicacao escuta so em loopback; quem a expoe e o nginx
+        SERVER_ADDRESS: 127.0.0.1
+        SERVER_PORT: ${APP_PORT:-8080}
+
+        # Sobrescrevem o application.properties (relaxed binding do Spring Boot)
+        SPRING_DATASOURCE_URL: jdbc:mysql://127.0.0.1:3306/${DB_NAME:-equipment-maintenance-control}
+        SPRING_DATASOURCE_USERNAME: ${DB_USER:?Defina DB_USER no arquivo .env}
+        SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no arquivo .env}
+
+        # Origens liberadas no CORS (usado a partir do ajuste no WebConfig)
+        APP_CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:4200}
+
+        JAVA_OPTS: -XX:MaxRAMPercentage=75
+
+        # APIKEY para envio de e-mail
+        RESEND_API_KEY: ${RESEND_API_KEY}
+
+      logging:
+        driver: json-file
+        options:
+          max-size: "10m"
+          max-file: "3"

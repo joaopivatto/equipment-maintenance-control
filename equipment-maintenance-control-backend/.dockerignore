@@ -1,0 +1,21 @@
+# Artefatos de build
+target/
+
+# Controle de versao e IDE
+.git
+.gitignore
+.gitattributes
+.idea
+.vscode
+*.iml
+
+# Arquivos locais e segredos
+.env
+*.log
+HELP.md
+
+# Nao precisam entrar na imagem
+Dockerfile
+docker-compose.yml
+ROADMAP.md
+src/main/resources/db/
