@@ -24,7 +24,6 @@ public class MaintenanceMapper extends BaseMapper {
         entity.getId(),
         entity.getDescription(),
         entity.getCustomerInstructions(),
-        employeeMapper.toId(entity.getEmployee()),
-        employeeMapper.toName(entity.getEmployee()));
+        employeeMapper.toResponse(entity.getEmployee()));
   }
 }
