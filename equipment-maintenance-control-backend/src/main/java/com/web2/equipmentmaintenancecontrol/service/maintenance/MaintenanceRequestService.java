@@ -22,7 +22,6 @@ import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
 import com.web2.equipmentmaintenancecontrol.repository.maintenance.BudgetRepository;
 import com.web2.equipmentmaintenancecontrol.repository.maintenance.MaintenanceRepository;
 import com.web2.equipmentmaintenancecontrol.repository.maintenance.MaintenanceRequestRepository;
-import com.web2.equipmentmaintenancecontrol.repository.maintenance.RedirectRepository;
 import com.web2.equipmentmaintenancecontrol.service.BaseService;
 import com.web2.equipmentmaintenancecontrol.service.equipment.EquipmentService;
 import com.web2.equipmentmaintenancecontrol.service.profile.CustomerService;
@@ -38,7 +37,6 @@ public class MaintenanceRequestService extends BaseService {
   private final MaintenanceRequestRepository repository;
   private final BudgetRepository budgetRepository;
   private final MaintenanceRepository maintenanceRepository;
-  private final RedirectRepository redirectRepository;
   private final MaintenanceRequestMapper mapper;
   private final CustomerService customerService;
   private final EquipmentService equipmentService;
@@ -48,7 +46,6 @@ public class MaintenanceRequestService extends BaseService {
       MaintenanceRequestRepository repository,
       BudgetRepository budgetRepository,
       MaintenanceRepository maintenanceRepository,
-      RedirectRepository redirectRepository,
       MaintenanceRequestMapper mapper,
       CustomerService customerService,
       EquipmentService equipmentService,
@@ -56,7 +53,6 @@ public class MaintenanceRequestService extends BaseService {
     this.repository = repository;
     this.budgetRepository = budgetRepository;
     this.maintenanceRepository = maintenanceRepository;
-    this.redirectRepository = redirectRepository;
     this.mapper = mapper;
     this.customerService = customerService;
     this.equipmentService = equipmentService;
@@ -68,7 +64,8 @@ public class MaintenanceRequestService extends BaseService {
 
     Customer customer = customerService.findById(request.customerId());
     Equipment equipment =
-        equipmentService.createEntity(request.equipmentDescription(), request.equipmentTypeId());
+        equipmentService.createEntity(
+            request.equipment().description(), request.equipment().typeId());
 
     MaintenanceRequest entity =
         MaintenanceRequest.builder()
@@ -162,9 +159,9 @@ public class MaintenanceRequestService extends BaseService {
     Employee destinationEmployee = findEmployeeById(request.destinationEmployeeId());
 
     LocalDateTime redirectedAt = now();
-    entity.redirectTo(destinationEmployee, redirectedAt);
-    redirectRepository.save(
-        new Redirect(null, sourceEmployee, destinationEmployee, entity, redirectedAt));
+    entity.redirectTo(
+        new Redirect(null, sourceEmployee, destinationEmployee, entity, redirectedAt),
+        redirectedAt);
 
     return mapper.toDetails(repository.save(entity));
   }
