@@ -143,6 +143,10 @@ export class SignUpComponent {
   }
 
   private lookupAddress(zipCode: string): void {
+    const addressControls = this.form.controls.address.controls;
+    addressControls.city.enable({ emitEvent: false });
+    addressControls.state.enable({ emitEvent: false });
+
     this.apiClient.findAddressByZipCode(zipCode).subscribe((address) => {
       if (!address) {
         this.notificationService.warning(
@@ -158,6 +162,9 @@ export class SignUpComponent {
         city: address.city,
         state: address.state,
       });
+
+      addressControls.city.disable({ emitEvent: false });
+      addressControls.state.disable({ emitEvent: false });
     });
   }
 }

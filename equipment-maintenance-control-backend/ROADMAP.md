@@ -90,7 +90,7 @@ Este arquivo é apenas o checklist de tarefas do backend.
   Adicionar `spring-boot-starter-mail`, criar interface `EmailSender` e duas implementações:
   uma real (SMTP) e uma de desenvolvimento que só escreve no log.
 
-- [ ] **B-10 — Cliente ViaCEP**
+- [X] **B-10 — Cliente ViaCEP**
   Responsável: Matheus · Depende de: B-06
   `ViaCepClient` usando `RestClient` para `https://viacep.com.br/ws/{cep}/json/`,
   devolvendo logradouro, bairro, cidade e UF. CEP inexistente → `ZIP_CODE_NOT_FOUND`.
@@ -103,14 +103,22 @@ Este arquivo é apenas o checklist de tarefas do backend.
   *Pronto quando:* o cliente criado consegue fazer login com a senha recebida.
 
 - [ ] **B-11.1 — Mensagens customizadas nos validators dos DTOs**
-  Responsável: ____ · Depende de: B-11
+  Responsável: MATHEUS · Depende de: B-11
   Adicionar mensagens de validação (`message = "..."`) nas anotações de Bean Validation dos DTOs,
   seguindo o padrão já usado no projeto (mensagens em português no `GlobalExceptionHandler`).
 
 - [ ] **B-11.2 — Trocar instanciação do Customer por construtor**
-  Responsável: ____ · Depende de: B-11
+  Responsável: MATHEUS · Depende de: B-11
   Substituir a criação de `Customer` (builder/setters avulsos) por um construtor dedicado,
   garantindo que o objeto nasça sempre em estado válido.
+
+- [ ] **B-11.3 — Autenticação na API**
+  Responsável: MATHEUS · Depende de: nada
+  Tratar a autenticação entre front e api
+
+- [ ] **B-11.4 — Tratar senha no employee**
+  Responsável: MATHEUS · Depende de: nada
+  arrumar a rota de create, lembrando que a senha do employee deve vir na request de create
 
 - [X] **B-12 — RF004: criar solicitação com descrição + categoria**
   Responsável: João · Depende de: B-05
