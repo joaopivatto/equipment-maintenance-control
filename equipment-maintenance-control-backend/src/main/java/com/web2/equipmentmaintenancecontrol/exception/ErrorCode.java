@@ -8,6 +8,7 @@ public enum ErrorCode {
   EQUIPMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Equipment not found"),
   CUSTOMER_NOT_FOUND(HttpStatus.NOT_FOUND, "Customer not found"),
   INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Invalid credentials"),
+  INVALID_OR_EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid or expired token"),
   CUSTOMER_EMAIL_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Customer email already exists"),
   CUSTOMER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Customer already exists"),
   EMPLOYEE_NOT_FOUND(HttpStatus.NOT_FOUND, "Employee not found"),
