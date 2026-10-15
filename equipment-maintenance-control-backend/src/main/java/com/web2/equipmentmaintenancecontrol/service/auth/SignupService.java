@@ -67,18 +67,16 @@ public class SignupService extends BaseService {
     Address address = addressRepository.save(buildAddress(request.address()));
     Phone phone = phoneRepository.save(new Phone(null, request.phoneNumber()));
 
-    Customer customer = new Customer();
-    customer.setName(request.name());
-    customer.setEmail(request.email());
-    customer.setCpf(request.cpf());
-    customer.setPasswordHash(hashedSaltedPassword.hash());
-    customer.setPasswordSalt(hashedSaltedPassword.salt());
-    customer.setType(ProfileType.CUSTOMER);
-    customer.setActive(true);
-    customer.setAddress(address);
-    customer.setPhone(phone);
-
-    return customer;
+    return Customer.builder()
+        .name(request.name())
+        .email(request.email())
+        .cpf(request.cpf())
+        .passwordHash(hashedSaltedPassword.hash())
+        .passwordSalt(hashedSaltedPassword.salt())
+        .type(ProfileType.CUSTOMER)
+        .address(address)
+        .phone(phone)
+        .build();
   }
 
   private Address buildAddress(AddressSignupRequest request) {
