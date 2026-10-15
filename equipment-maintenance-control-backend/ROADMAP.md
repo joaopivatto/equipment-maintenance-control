@@ -102,21 +102,21 @@ Este arquivo é apenas o checklist de tarefas do backend.
   gera a senha de 4 dígitos, grava hash SHA-256 + salt e envia a senha por e-mail.
   *Pronto quando:* o cliente criado consegue fazer login com a senha recebida.
 
-- [ ] **B-11.1 — Mensagens customizadas nos validators dos DTOs**
-  Responsável: MATHEUS · Depende de: B-11
+- [X] **B-11.1 — Mensagens customizadas nos validators dos DTOs**
+  Responsável: ja foi rs · Depende de: B-11
   Adicionar mensagens de validação (`message = "..."`) nas anotações de Bean Validation dos DTOs,
   seguindo o padrão já usado no projeto (mensagens em português no `GlobalExceptionHandler`).
 
-- [ ] **B-11.2 — Trocar instanciação do Customer por construtor**
+- [X] **B-11.2 — Trocar instanciação do Customer por construtor**
   Responsável: MATHEUS · Depende de: B-11
   Substituir a criação de `Customer` (builder/setters avulsos) por um construtor dedicado,
-  garantindo que o objeto nasça sempre em estado válido.
+  garantindo que o objeto nasça sempre em estado válido. (usando builder)
 
 - [ ] **B-11.3 — Autenticação na API**
   Responsável: MATHEUS · Depende de: nada
   Tratar a autenticação entre front e api
 
-- [ ] **B-11.4 — Tratar senha no employee**
+- [X] **B-11.4 — Tratar senha no employee**
   Responsável: MATHEUS · Depende de: nada
   arrumar a rota de create, lembrando que a senha do employee deve vir na request de create
 
