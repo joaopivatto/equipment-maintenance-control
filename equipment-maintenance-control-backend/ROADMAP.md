@@ -112,7 +112,7 @@ Este arquivo é apenas o checklist de tarefas do backend.
   Substituir a criação de `Customer` (builder/setters avulsos) por um construtor dedicado,
   garantindo que o objeto nasça sempre em estado válido.
 
-- [ ] **B-11.3 — Autenticação na API**
+- [X] **B-11.3 — Autenticação na API**
   Responsável: MATHEUS · Depende de: nada
   Tratar a autenticação entre front e api
 
