@@ -63,9 +63,13 @@ public class MaintenanceRequest {
   @Nullable
   private Maintenance maintenance;
 
-  @OneToMany(mappedBy = "maintenanceRequest", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "maintenanceRequest", cascade = CascadeType.ALL)
   @OrderBy("updatedAt DESC")
   private List<MaintenanceRequestHistory> history;
+
+  @OneToMany(mappedBy = "maintenanceRequest", cascade = CascadeType.ALL)
+  @OrderBy("createdAt ASC")
+  private List<Redirect> redirects;
 
   public MaintenanceRequest() {}
 
@@ -180,16 +184,28 @@ public class MaintenanceRequest {
     }
   }
 
-  public void redirectTo(Employee destinationEmployee, LocalDateTime dateTime) {
-    Objects.requireNonNull(destinationEmployee, "Funcionário de destino é obrigatório");
+  public void redirectTo(Redirect redirect, LocalDateTime dateTime) {
+    Objects.requireNonNull(redirect, "Redirecionamento é obrigatório");
+    Objects.requireNonNull(dateTime, "Data/hora do redirecionamento é obrigatória");
+    Objects.requireNonNull(
+        redirect.getSourceEmployee(), "Funcionário de origem do redirecionamento é obrigatório");
+    Employee destinationEmployee =
+        Objects.requireNonNull(
+            redirect.getDestinationEmployee(), "Funcionário de destino é obrigatório");
+    requireNotAssignedTo(destinationEmployee);
+
+    transitionTo(MaintenanceRequestStatus.REDIRECIONADA, destinationEmployee, dateTime);
+    this.employee = destinationEmployee;
+    redirect.setCreatedAt(dateTime);
+    addRedirect(redirect);
+  }
+
+  private void requireNotAssignedTo(Employee destinationEmployee) {
     if (employee != null && employee.getId().equals(destinationEmployee.getId())) {
       throw new AppException(
           ErrorCode.SELF_REDIRECT_NOT_ALLOWED,
           "A solicitação %d já é do funcionário %d".formatted(id, destinationEmployee.getId()));
     }
-
-    transitionTo(MaintenanceRequestStatus.REDIRECIONADA, destinationEmployee, dateTime);
-    this.employee = destinationEmployee;
   }
 
   public void pay(LocalDateTime dateTime) {
@@ -241,6 +257,17 @@ public class MaintenanceRequest {
   private void createHistory(LocalDateTime createdAt, @Nullable Employee employee) {
     this.history = new ArrayList<>();
     addHistory(new MaintenanceRequestHistory(MaintenanceRequestStatus.ABERTA, createdAt, employee));
+  }
+
+  private void addRedirect(Redirect redirect) {
+    if (redirects == null) {
+      redirects = new ArrayList<>();
+    }
+    if (redirects.contains(redirect)) {
+      return;
+    }
+    redirects.add(redirect);
+    redirect.setMaintenanceRequest(this);
   }
 
   private void addHistory(MaintenanceRequestHistory historyEntry) {
@@ -328,5 +355,9 @@ public class MaintenanceRequest {
 
   public List<MaintenanceRequestHistory> getHistory() {
     return history;
+  }
+
+  public List<Redirect> getRedirects() {
+    return redirects != null ? redirects : List.of();
   }
 }
