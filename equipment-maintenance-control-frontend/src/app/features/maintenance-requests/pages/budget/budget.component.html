@@ -29,10 +29,12 @@
       </div>
       <div class="budget-details__row">
         <span class="budget-details__label">Estado</span>
-        <p-tag
-          [value]="maintenanceRequest.status"
-          [severity]="maintenanceRequest.status === RequestStatus.OPEN ? 'warn' : 'info'"
-        />
+        <span
+          class="inline-block rounded-lg px-3 py-1 text-xs font-semibold"
+          [ngClass]="statusClasses[maintenanceRequest.status]"
+        >
+          {{ maintenanceRequest.status }}
+        </span>
       </div>
     </div>
 
@@ -90,8 +92,11 @@
             id="rejectionReason"
             rows="3"
             [(ngModel)]="rejectionReason"
+            maxlength="500"
+            aria-describedby="rejectionReasonHelp"
             placeholder="Descreva o motivo da rejeição"
           ></textarea>
+          <small id="rejectionReasonHelp">Máximo de 500 caracteres.</small>
         </div>
 
         <div class="budget-reject__actions">

@@ -3,36 +3,23 @@ import { CommonModule, CurrencyPipe, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { TagModule } from 'primeng/tag';
 import { TimelineModule } from 'primeng/timeline';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
 import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import { MaintenanceRequest, RequestStatus, STATUS_CLASSES } from '../../models/maintenance-request.model';
+import {
+  MaintenanceRequest,
+  RequestStatus,
+  STATUS_CLASSES,
+} from '../../models/maintenance-request.model';
 import { HistoryEntry } from '../../models/history-entry.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
-import { SessionService } from '../../../../core/auth/session.service';
-
-// Mesma paleta usada na listagem para o cliente (RF003/RF013)
-const STATUS_SEVERITY: Record<
-  RequestStatus,
-  'secondary' | 'info' | 'success' | 'danger' | 'contrast' | 'warn'
-> = {
-  [RequestStatus.OPEN]: 'secondary',
-  [RequestStatus.QUOTED]: 'info',
-  [RequestStatus.APPROVED]: 'success',
-  [RequestStatus.REJECTED]: 'danger',
-  [RequestStatus.REDIRECTED]: 'warn',
-  [RequestStatus.REPAIRED]: 'contrast',
-  [RequestStatus.PAID]: 'contrast',
-  [RequestStatus.FINALIZED]: 'success',
-};
 
 @Component({
   selector: 'app-request-details',
   standalone: true,
-  imports: [CommonModule, CardModule, ButtonModule, TagModule, TimelineModule, ConfirmDialogModule],
+  imports: [CommonModule, CardModule, ButtonModule, TimelineModule, ConfirmDialogModule],
   providers: [ConfirmationService, CurrencyPipe],
   templateUrl: './request-details.component.html',
   styleUrl: './request-details.component.scss',
@@ -45,10 +32,8 @@ export class RequestDetailsComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
   private currencyPipe = inject(CurrencyPipe);
-  private sessionService = inject(SessionService);
 
   readonly RequestStatus = RequestStatus;
-  readonly isEmployee = this.sessionService.isEmployee;
 
   request: MaintenanceRequest | undefined;
   timelineEvents: HistoryEntry[] = [];
@@ -90,10 +75,6 @@ export class RequestDetailsComponent implements OnInit {
 
   statusColor(status: string): string {
     return STATUS_CLASSES[status as RequestStatus] ?? 'bg-gray-200 text-gray-800';
-  }
-
-  statusSeverity(status: string) {
-    return STATUS_SEVERITY[status as RequestStatus] ?? 'secondary';
   }
 
   hasActions(): boolean {

@@ -4,13 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
 import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
+import {
+  MaintenanceRequest,
+  RequestStatus,
+  STATUS_CLASSES,
+} from '../../models/maintenance-request.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 import { CurrentEmployeeService } from '../../../employees/services/current-employee.service';
 
@@ -22,7 +25,6 @@ import { CurrentEmployeeService } from '../../../employees/services/current-empl
     FormsModule,
     CardModule,
     ButtonModule,
-    TagModule,
     TextareaModule,
     ConfirmDialogModule,
   ],
@@ -31,6 +33,7 @@ import { CurrentEmployeeService } from '../../../employees/services/current-empl
   styleUrl: './maintenance.component.scss',
 })
 export class MaintenanceComponent implements OnInit {
+  readonly statusClasses = STATUS_CLASSES;
   private maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
   private currentEmployeeService = inject(CurrentEmployeeService);
   private route = inject(ActivatedRoute);
@@ -88,6 +91,14 @@ export class MaintenanceComponent implements OnInit {
       this.notificationService.warning(
         'Aviso',
         'Informe a descrição da manutenção e as orientações antes de confirmar.',
+      );
+      return;
+    }
+
+    if (this.maintenanceDescription.length > 255 || this.maintenanceInstructions.length > 255) {
+      this.notificationService.warning(
+        'Limite de caracteres',
+        'A descrição da manutenção e as orientações devem ter no máximo 255 caracteres cada.',
       );
       return;
     }

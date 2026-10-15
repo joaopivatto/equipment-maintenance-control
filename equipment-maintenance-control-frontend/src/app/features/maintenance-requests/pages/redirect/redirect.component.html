@@ -17,7 +17,12 @@
       </div>
       <div class="redirect-details__row">
         <span class="redirect-details__label">Status atual</span>
-        <p-tag [value]="maintenanceRequest.status" severity="info" />
+        <span
+          class="inline-block rounded-lg px-3 py-1 text-xs font-semibold"
+          [ngClass]="statusClasses[maintenanceRequest.status]"
+        >
+          {{ maintenanceRequest.status }}
+        </span>
       </div>
       <div class="redirect-details__row">
         <span class="redirect-details__label">Origem (funcionário atual)</span>
@@ -37,9 +42,9 @@
         placeholder="Selecione o funcionário de destino"
       />
       @if (errorMessage()) {
-      <p-message severity="error" variant="simple" size="small">
-        {{ errorMessage() }}
-      </p-message>
+        <p-message severity="error" variant="simple" size="small">
+          {{ errorMessage() }}
+        </p-message>
       }
     </div>
 

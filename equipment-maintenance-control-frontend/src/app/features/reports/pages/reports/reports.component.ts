@@ -12,6 +12,7 @@ import { TableModule } from 'primeng/table';
 
 import { NotificationService } from '../../../../core/notifications/notification.service';
 import { ReportsDashboard } from '../../models';
+import { STATUS_COLORS } from '../../../maintenance-requests/models/maintenance-request.model';
 import { ReportsService } from '../../services/reports.service';
 import { ReportsPdfService } from '../../services/reports-pdf.service';
 
@@ -208,16 +209,7 @@ export class ReportsComponent implements OnInit {
       datasets: [
         {
           data: dashboard.statusSummary.map((item) => item.requestsCount),
-          backgroundColor: [
-            '#60a5fa',
-            '#fbbf24',
-            '#22c55e',
-            '#f43f5e',
-            '#a78bfa',
-            '#06b6d4',
-            '#fb923c',
-            '#10b981',
-          ],
+          backgroundColor: dashboard.statusSummary.map((item) => STATUS_COLORS[item.status]),
           borderColor: 'transparent',
           borderWidth: 0,
           hoverBorderWidth: 0,
