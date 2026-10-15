@@ -21,7 +21,12 @@
       </div>
       <div class="maintenance-details__row">
         <span class="maintenance-details__label">Status</span>
-        <p-tag value="APROVADA" severity="success" />
+        <span
+          class="inline-block rounded-lg px-3 py-1 text-xs font-semibold"
+          [ngClass]="statusClasses[maintenanceRequest.status]"
+        >
+          {{ maintenanceRequest.status }}
+        </span>
       </div>
       <div class="maintenance-details__row">
         <span class="maintenance-details__label">Funcionário responsável</span>
@@ -36,8 +41,11 @@
         id="maintenanceDescription"
         rows="3"
         [(ngModel)]="maintenanceDescription"
+        maxlength="255"
+        aria-describedby="maintenanceDescriptionHelp"
         placeholder="Descreva o que foi feito no equipamento"
       ></textarea>
+      <small id="maintenanceDescriptionHelp">Máximo de 255 caracteres.</small>
 
       <label for="maintenanceInstructions">Orientações ao cliente</label>
       <textarea
@@ -45,8 +53,11 @@
         id="maintenanceInstructions"
         rows="3"
         [(ngModel)]="maintenanceInstructions"
+        maxlength="255"
+        aria-describedby="maintenanceInstructionsHelp"
         placeholder="Descreva orientações de uso ou cuidados após a manutenção"
       ></textarea>
+      <small id="maintenanceInstructionsHelp">Máximo de 255 caracteres.</small>
     </div>
 
     <div class="maintenance-actions">

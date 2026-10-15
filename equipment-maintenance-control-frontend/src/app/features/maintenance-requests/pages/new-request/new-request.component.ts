@@ -48,9 +48,9 @@ export class NewRequestComponent {
   }
 
   form = this.formBuilder.group({
-    equipmentDescription: ['', [Validators.required, Validators.maxLength(100)]],
+    equipmentDescription: ['', [Validators.required, Validators.maxLength(255)]],
     equipmentCategoryId: this.formBuilder.control<number | null>(null, Validators.required),
-    defectDescription: ['', [Validators.required, Validators.maxLength(500)]],
+    defectDescription: ['', [Validators.required, Validators.maxLength(255)]],
   });
 
   submit(): void {

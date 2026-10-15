@@ -4,14 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { TagModule } from 'primeng/tag';
 import { SelectModule } from 'primeng/select';
 import { MessageModule } from 'primeng/message';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
 import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
+import {
+  MaintenanceRequest,
+  RequestStatus,
+  STATUS_CLASSES,
+} from '../../models/maintenance-request.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 import { EmployeeApiClient } from '../../../employees/api/employee-api-client';
 import { CurrentEmployeeService } from '../../../employees/services/current-employee.service';
@@ -25,7 +28,6 @@ import { Employee } from '../../../employees/models/employee.model';
     FormsModule,
     CardModule,
     ButtonModule,
-    TagModule,
     SelectModule,
     MessageModule,
     ConfirmDialogModule,
@@ -35,6 +37,7 @@ import { Employee } from '../../../employees/models/employee.model';
   styleUrl: './redirect.component.scss',
 })
 export class RedirectComponent implements OnInit {
+  readonly statusClasses = STATUS_CLASSES;
   private maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
   private employeeApiClient = inject(EmployeeApiClient);
   private currentEmployeeService = inject(CurrentEmployeeService);

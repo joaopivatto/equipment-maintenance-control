@@ -5,14 +5,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
 import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
+import {
+  MaintenanceRequest,
+  RequestStatus,
+  STATUS_CLASSES,
+} from '../../models/maintenance-request.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 
 @Component({
@@ -23,7 +26,6 @@ import { NotificationService } from '../../../../core/notifications/notification
     FormsModule,
     CardModule,
     ButtonModule,
-    TagModule,
     TextareaModule,
     InputNumberModule,
     ConfirmDialogModule,
@@ -33,6 +35,7 @@ import { NotificationService } from '../../../../core/notifications/notification
   styleUrl: './budget.component.scss',
 })
 export class BudgetComponent implements OnInit {
+  readonly statusClasses = STATUS_CLASSES;
   private maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -156,8 +159,16 @@ export class BudgetComponent implements OnInit {
       return;
     }
 
+    if (this.rejectionReason.length > 500) {
+      this.notificationService.warning(
+        'Limite de caracteres',
+        'O motivo da rejeição deve ter no máximo 500 caracteres.',
+      );
+      return;
+    }
+
     this.confirmationService.confirm({
-      message: 'Tem certeza que deseja rejeitar este orçamento? Essa ação não pode ser desfeita.',
+      message: 'Deseja rejeitar este orçamento? Você poderá resgatar o serviço posteriormente.',
       header: 'Rejeitar orçamento',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Rejeitar',

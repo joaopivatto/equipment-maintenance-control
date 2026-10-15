@@ -23,6 +23,7 @@ export class EmployeeHomeComponent implements OnInit {
   requests: MaintenanceRequest[] = [];
 
   isLoading = signal(true);
+  errorMessage = signal<string | null>(null);
 
   protected readonly skeletonRows: MaintenanceRequest[] = Array.from(
     { length: 5 },
@@ -33,19 +34,25 @@ export class EmployeeHomeComponent implements OnInit {
     this.reload();
   }
 
-  private reload(): void {
+  reload(): void {
     this.isLoading.set(true);
+    this.errorMessage.set(null);
 
-    this.maintenanceRequestApiClient.listAll().subscribe((requests) => {
-      this.requests = requests
-        .filter((request) => request.status === RequestStatus.OPEN)
-        .sort(
-          (a, b) =>
-            this.parseRequestDate(a.createdAt).getTime() -
-            this.parseRequestDate(b.createdAt).getTime(),
-        );
-
-      this.isLoading.set(false);
+    this.maintenanceRequestApiClient.listAll().subscribe({
+      next: (requests) => {
+        this.requests = requests
+          .filter((request) => request.status === RequestStatus.OPEN)
+          .sort(
+            (a, b) =>
+              this.parseRequestDate(a.createdAt).getTime() -
+              this.parseRequestDate(b.createdAt).getTime(),
+          );
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.isLoading.set(false);
+        this.errorMessage.set('Não foi possível carregar as solicitações. Tente novamente.');
+      },
     });
   }
 
@@ -59,7 +66,7 @@ export class EmployeeHomeComponent implements OnInit {
       return description;
     }
 
-    return `${description.slice(0, 30)}…`;
+    return `${description.slice(0, 29)}…`;
   }
 
   /**

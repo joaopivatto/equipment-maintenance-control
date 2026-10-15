@@ -3,7 +3,6 @@ import { CommonModule, CurrencyPipe, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TableModule } from 'primeng/table';
-import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -22,20 +21,6 @@ import { NotificationService } from '../../../../core/notifications/notification
 import { SessionService } from '../../../../core/auth/session.service';
 import { CurrentEmployeeService } from '../../../employees/services/current-employee.service';
 
-const STATUS_SEVERITY: Record<
-  RequestStatus,
-  'secondary' | 'info' | 'success' | 'danger' | 'contrast' | 'warn'
-> = {
-  [RequestStatus.OPEN]: 'secondary',
-  [RequestStatus.QUOTED]: 'info',
-  [RequestStatus.APPROVED]: 'success',
-  [RequestStatus.REJECTED]: 'danger',
-  [RequestStatus.REDIRECTED]: 'warn',
-  [RequestStatus.REPAIRED]: 'contrast',
-  [RequestStatus.PAID]: 'contrast',
-  [RequestStatus.FINALIZED]: 'success',
-};
-
 type FilterMode = 'today' | 'period' | 'all';
 
 const FILTER_OPTIONS: { label: string; value: FilterMode }[] = [
@@ -52,7 +37,6 @@ const FILTER_OPTIONS: { label: string; value: FilterMode }[] = [
     FormsModule,
     RouterLink,
     TableModule,
-    TagModule,
     ButtonModule,
     CardModule,
     SkeletonModule,
@@ -383,11 +367,7 @@ export class CustomerRequestListComponent implements OnInit {
       return description;
     }
 
-    return `${description.slice(0, 30)}…`;
-  }
-
-  statusSeverity(status: RequestStatus) {
-    return STATUS_SEVERITY[status] ?? 'secondary';
+    return `${description.slice(0, 29)}…`;
   }
 
   statusColor(status: RequestStatus): string {

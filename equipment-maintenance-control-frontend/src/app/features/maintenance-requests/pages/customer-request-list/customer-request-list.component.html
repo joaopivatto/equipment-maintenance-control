@@ -98,13 +98,9 @@
           </td>
 
           <td>
-            @if (isEmployee()) {
             <span class="status-badge" [ngClass]="statusColor(request.status)">
               {{ request.status }}
             </span>
-            } @else {
-            <p-tag [value]="request.status" [severity]="statusSeverity(request.status)" />
-            }
           </td>
 
           <td>

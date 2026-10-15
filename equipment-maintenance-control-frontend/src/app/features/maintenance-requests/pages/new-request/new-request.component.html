@@ -16,6 +16,8 @@
           id="equipmentDescription"
           type="text"
           formControlName="equipmentDescription"
+          maxlength="255"
+          aria-describedby="equipmentDescriptionHelp"
           placeholder="Ex: Notebook Dell Inspiron 15"
           [invalid]="
             !!(
@@ -27,9 +29,10 @@
           form.get('equipmentDescription')?.invalid && form.get('equipmentDescription')?.touched
         ) {
           <p-message severity="error" variant="simple" size="small">
-            Informe a descrição do equipamento (máx. 100 caracteres).
+            Informe a descrição do equipamento (máx. 255 caracteres).
           </p-message>
         }
+        <small id="equipmentDescriptionHelp">Máximo de 255 caracteres.</small>
       </div>
 
       <div class="field">
@@ -60,6 +63,8 @@
           id="defectDescription"
           rows="4"
           formControlName="defectDescription"
+          maxlength="255"
+          aria-describedby="defectDescriptionHelp"
           placeholder="Descreva o problema apresentado pelo equipamento"
           [invalid]="
             !!(form.get('defectDescription')?.invalid && form.get('defectDescription')?.touched)
@@ -67,9 +72,10 @@
         ></textarea>
         @if (form.get('defectDescription')?.invalid && form.get('defectDescription')?.touched) {
           <p-message severity="error" variant="simple" size="small">
-            Informe a descrição do defeito (máx. 500 caracteres).
+            Informe a descrição do defeito (máx. 255 caracteres).
           </p-message>
         }
+        <small id="defectDescriptionHelp">Máximo de 255 caracteres.</small>
       </div>
 
       <div class="form-actions">

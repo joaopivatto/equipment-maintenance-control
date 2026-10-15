@@ -66,16 +66,12 @@
 
       <div class="details__row">
         <span class="details__label">Status atual</span>
-        @if (isEmployee()) {
         <span
           class="status-badge"
-          [style.background-color]="statusColor(maintenanceRequest.status)"
+          [ngClass]="statusColor(maintenanceRequest.status)"
         >
           {{ maintenanceRequest.status }}
         </span>
-        } @else {
-        <p-tag [value]="maintenanceRequest.status" [severity]="statusSeverity(maintenanceRequest.status)" />
-        }
       </div>
 
       @if (maintenanceRequest.budget) {
@@ -138,16 +134,12 @@
     <p-timeline [value]="timelineEvents" layout="horizontal" align="top">
       <ng-template #content let-event>
         <div class="timeline-event">
-          @if (isEmployee()) {
           <span
             class="status-badge"
-            [style.background-color]="statusColor(event.status)"
+            [ngClass]="statusColor(event.status)"
           >
             {{ event.status }}
           </span>
-          } @else {
-          <p-tag [value]="event.status" [severity]="statusSeverity(event.status)" />
-          }
           <span class="timeline-event__date">{{ event.dateTime | date: 'dd/MM/yyyy HH:mm' }}</span>
 
           @if (event.responsible) {

@@ -12,7 +12,19 @@ export enum RequestStatus {
   FINALIZED = 'FINALIZADA',
 }
 
-// Escala de cores oficiais definida no RF013 (mesmos valores usados no backend/MaintenanceRequestStatus)
+// Cores do RF013 usadas pelos gráficos e pelos indicadores das telas.
+export const STATUS_COLORS: Record<RequestStatus, string> = {
+  [RequestStatus.OPEN]: '#4b5563',
+  [RequestStatus.QUOTED]: '#92400e',
+  [RequestStatus.APPROVED]: '#facc15',
+  [RequestStatus.REJECTED]: '#b91c1c',
+  [RequestStatus.REDIRECTED]: '#7e22ce',
+  [RequestStatus.REPAIRED]: '#1d4ed8',
+  [RequestStatus.PAID]: '#c2410c',
+  [RequestStatus.FINALIZED]: '#15803d',
+};
+
+// Mesmas cores em classes Tailwind, incluindo a cor legível do texto.
 export const STATUS_CLASSES: Record<RequestStatus, string> = {
   [RequestStatus.OPEN]: 'bg-gray-200 text-gray-800',
   [RequestStatus.QUOTED]: 'bg-taupe-300 text-taupe-800',

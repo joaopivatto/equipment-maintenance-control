@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { AuthApiClient } from '../../../../core/api/auth-api-client';
+import { MockAuthApiClient } from '../../../../core/api/mock-auth-api-client';
 import { EmployeeApiClient } from '../../api/employee-api-client';
 import { MockEmployeeApiClient } from '../../api/mock-employee-api-client';
 import { EmployeeListComponent } from './employee-list.component';
@@ -16,6 +18,7 @@ describe('EmployeeListComponent', () => {
         MessageService,
         provideRouter([]),
         { provide: EmployeeApiClient, useClass: MockEmployeeApiClient },
+        { provide: AuthApiClient, useClass: MockAuthApiClient },
       ],
     }).compileComponents();
 
