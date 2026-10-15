@@ -1,4 +1,4 @@
-package com.web2.equipmentmaintenancecontrol.domain.session;
+package com.web2.equipmentmaintenancecontrol.domain.token;
 
 import com.web2.equipmentmaintenancecontrol.exception.AppException;
 import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JwtSessionManager implements SessionManager {
+public class JwtTokenManager implements TokenManager {
 
   private static final String PROFILE_TYPE_CLAIM = "profileType";
 

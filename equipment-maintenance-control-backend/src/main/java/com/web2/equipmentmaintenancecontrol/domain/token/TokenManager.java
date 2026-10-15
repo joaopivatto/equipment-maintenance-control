@@ -1,8 +1,8 @@
-package com.web2.equipmentmaintenancecontrol.domain.session;
+package com.web2.equipmentmaintenancecontrol.domain.token;
 
 import com.web2.equipmentmaintenancecontrol.model.profile.ProfileType;
 
-public interface SessionManager {
+public interface TokenManager {
   String generateToken(Integer userId, ProfileType profileType);
 
   void validateToken(String token);
