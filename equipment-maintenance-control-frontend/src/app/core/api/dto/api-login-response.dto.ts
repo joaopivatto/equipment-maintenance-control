@@ -1,4 +1,6 @@
 export interface ApiLoginResponseDto {
-  userId: string;
-  profileType: string;
+  userId: number;
+  profileType: 'EMPLOYEE' | 'CUSTOMER' | string;
+  name?: string;
+  email?: string;
 }
