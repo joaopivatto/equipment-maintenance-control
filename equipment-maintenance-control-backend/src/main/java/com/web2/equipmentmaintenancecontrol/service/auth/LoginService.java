@@ -36,7 +36,6 @@ public class LoginService extends BaseService {
     }
 
     return new LoginResponse(
-            profile.getType(), profile.getId(), profile.getName(), profile.getEmail()
-    );
+        profile.getType(), profile.getId(), profile.getName(), profile.getEmail());
   }
 }
