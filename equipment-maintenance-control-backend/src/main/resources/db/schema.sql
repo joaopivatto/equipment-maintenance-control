@@ -72,6 +72,7 @@ CREATE TABLE equipment (
                            id          INT          NOT NULL AUTO_INCREMENT,
                            description VARCHAR(255) NULL,
                            type_id     INT          NULL,
+                           active      BOOLEAN      NOT NULL DEFAULT TRUE,
                            PRIMARY KEY (id),
                            CONSTRAINT fk_equipment_type FOREIGN KEY (type_id) REFERENCES equipment_type (id)
 );
