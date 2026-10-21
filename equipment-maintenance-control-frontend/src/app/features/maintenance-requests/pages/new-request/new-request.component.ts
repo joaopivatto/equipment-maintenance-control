@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -30,6 +30,7 @@ import { EquipmentCategory } from '../../../equipment-categories/models/equipmen
   templateUrl: './new-request.component.html',
 })
 export class NewRequestComponent {
+  private readonly changeDetector = inject(ChangeDetectorRef);
   private formBuilder = inject(FormBuilder);
   private maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
   private router = inject(Router);
@@ -44,6 +45,7 @@ export class NewRequestComponent {
   constructor() {
     this.equipmentCategoryApiClient.listAll().subscribe((categories) => {
       this.equipmentCategories = categories;
+      this.changeDetector.markForCheck();
     });
   }
 
