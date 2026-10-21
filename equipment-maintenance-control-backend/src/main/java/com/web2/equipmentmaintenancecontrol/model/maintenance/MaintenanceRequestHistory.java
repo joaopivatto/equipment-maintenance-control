@@ -4,6 +4,7 @@ import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class MaintenanceRequestHistory {
@@ -28,7 +29,7 @@ public class MaintenanceRequestHistory {
 
   @Nullable private String reason;
 
-  public MaintenanceRequestHistory() {}
+  protected MaintenanceRequestHistory() {}
 
   public MaintenanceRequestHistory(MaintenanceRequestStatus status, LocalDateTime updatedAt) {
     this(status, updatedAt, null);
@@ -44,57 +45,40 @@ public class MaintenanceRequestHistory {
       LocalDateTime updatedAt,
       @Nullable Employee employee,
       @Nullable String reason) {
-    this.status = status;
-    this.updatedAt = updatedAt;
+    this.status = Objects.requireNonNull(status, "status é obrigatório");
+    this.updatedAt = Objects.requireNonNull(updatedAt, "updatedAt é obrigatório");
     this.employee = employee;
     this.reason = reason;
+  }
+
+  void attachTo(MaintenanceRequest maintenanceRequest) {
+    this.maintenanceRequest =
+        Objects.requireNonNull(maintenanceRequest, "maintenanceRequest é obrigatório");
   }
 
   public Integer getId() {
     return id;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
   public MaintenanceRequest getMaintenanceRequest() {
     return maintenanceRequest;
-  }
-
-  public void setMaintenanceRequest(MaintenanceRequest maintenanceRequest) {
-    this.maintenanceRequest = maintenanceRequest;
   }
 
   public LocalDateTime getUpdatedAt() {
     return updatedAt;
   }
 
-  public void setUpdatedAt(LocalDateTime updatedAt) {
-    this.updatedAt = updatedAt;
-  }
-
   public MaintenanceRequestStatus getStatus() {
     return status;
   }
 
-  public void setStatus(MaintenanceRequestStatus status) {
-    this.status = status;
-  }
-
+  @Nullable
   public Employee getEmployee() {
     return employee;
   }
 
-  public void setEmployee(Employee employee) {
-    this.employee = employee;
-  }
-
+  @Nullable
   public String getReason() {
     return reason;
-  }
-
-  public void setReason(String reason) {
-    this.reason = reason;
   }
 }

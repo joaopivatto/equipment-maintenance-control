@@ -1,10 +1,11 @@
 package com.web2.equipmentmaintenancecontrol.service.profile;
 
+import com.web2.equipmentmaintenancecontrol.domain.security.HashedSaltedPassword;
+import com.web2.equipmentmaintenancecontrol.domain.security.PasswordHasherSalter;
 import com.web2.equipmentmaintenancecontrol.exception.AppException;
 import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
 import com.web2.equipmentmaintenancecontrol.mapper.profile.EmployeeMapper;
 import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
-import com.web2.equipmentmaintenancecontrol.model.profile.ProfileType;
 import com.web2.equipmentmaintenancecontrol.model.profile.dtos.EmployeeCreateRequest;
 import com.web2.equipmentmaintenancecontrol.model.profile.dtos.EmployeeResponse;
 import com.web2.equipmentmaintenancecontrol.model.profile.dtos.EmployeeUpdateRequest;
@@ -18,10 +19,15 @@ public class EmployeeService {
 
   private final EmployeeRepository repository;
   private final EmployeeMapper mapper;
+  private final PasswordHasherSalter passwordHasherSalter;
 
-  public EmployeeService(EmployeeRepository repository, EmployeeMapper mapper) {
+  public EmployeeService(
+      EmployeeRepository repository,
+      EmployeeMapper mapper,
+      PasswordHasherSalter passwordHasherSalter) {
     this.repository = repository;
     this.mapper = mapper;
+    this.passwordHasherSalter = passwordHasherSalter;
   }
 
   public EmployeeResponse findById(Integer id) {
@@ -34,30 +40,21 @@ public class EmployeeService {
 
   @Transactional
   public EmployeeResponse create(EmployeeCreateRequest request) {
+    HashedSaltedPassword password = passwordHasherSalter.hashAndSalt(request.password());
 
-    Employee employee = new Employee();
-    employee.setName(request.name());
-    employee.setEmail(request.email());
-    employee.setBirthDate(request.birthDate());
-    employee.setType(ProfileType.EMPLOYEE);
-    employee.setActive(true);
+    Employee employee =
+        new Employee(request.name(), request.email(), request.birthDate(), password);
 
-    Employee savedEmployee = repository.save(employee);
-
-    return mapper.toResponse(savedEmployee);
+    return mapper.toResponse(repository.save(employee));
   }
 
   @Transactional
   public EmployeeResponse update(Integer id, EmployeeUpdateRequest request) {
     Employee employee = findEntityById(id);
 
-    employee.setName(request.name());
-    employee.setEmail(request.email());
-    employee.setBirthDate(request.birthDate());
+    employee.update(request.name(), request.email(), request.birthDate());
 
-    Employee updatedEmployee = repository.save(employee);
-
-    return mapper.toResponse(updatedEmployee);
+    return mapper.toResponse(repository.save(employee));
   }
 
   @Transactional
