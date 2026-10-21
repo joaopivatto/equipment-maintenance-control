@@ -156,21 +156,6 @@ public class MaintenanceRequest {
     this.rejectionReason = reason;
   }
 
-  public void recover(LocalDateTime dateTime, Integer customerId) {
-    requireOwner(customerId);
-    if (status != MaintenanceRequestStatus.REJEITADA) {
-      throw new AppException(
-          ErrorCode.INVALID_STATUS_TRANSITION,
-          "Somente solicitações rejeitadas podem ser resgatadas.");
-    }
-    transitionTo(
-        MaintenanceRequestStatus.APROVADA,
-        null,
-        dateTime,
-        "Serviço resgatado após rejeição anterior.");
-    this.rejectionReason = null;
-  }
-
   public void performMaintenance(Maintenance maintenance, LocalDateTime dateTime) {
     Objects.requireNonNull(maintenance, "Manutenção é obrigatória");
     requireNoMaintenance();

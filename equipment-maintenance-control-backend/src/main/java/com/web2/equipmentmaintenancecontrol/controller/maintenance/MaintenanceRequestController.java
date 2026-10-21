@@ -69,12 +69,6 @@ public class MaintenanceRequestController {
     return ResponseEntity.ok(service.reject(id, request));
   }
 
-  @PostMapping("/{id}/recover")
-  public ResponseEntity<MaintenanceRequestDetails> recover(
-      @PathVariable Integer id, @Valid @RequestBody ApproveMaintenanceRequest request) {
-    return ResponseEntity.ok(service.recover(id, request));
-  }
-
   @PostMapping("/{id}/maintenance")
   public ResponseEntity<MaintenanceRequestDetails> performMaintenance(
       @PathVariable Integer id, @Valid @RequestBody CreateMaintenance request) {

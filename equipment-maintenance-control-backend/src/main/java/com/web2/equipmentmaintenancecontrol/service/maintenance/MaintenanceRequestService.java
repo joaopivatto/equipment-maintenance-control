@@ -132,13 +132,6 @@ public class MaintenanceRequestService extends BaseService {
   }
 
   @Transactional
-  public MaintenanceRequestDetails recover(Integer id, ApproveMaintenanceRequest request) {
-    MaintenanceRequest entity = findEntityById(id);
-    entity.recover(now(), request.customerId());
-    return mapper.toDetails(repository.save(entity));
-  }
-
-  @Transactional
   public MaintenanceRequestDetails performMaintenance(Integer id, CreateMaintenance request) {
     MaintenanceRequest entity = findEntityById(id);
     entity.requireNoMaintenance();

@@ -82,7 +82,7 @@ export class HttpMaintenanceRequestApiClient extends MaintenanceRequestApiClient
 
   recover(id: number): Observable<MaintenanceRequest | undefined> {
     return this.withUserId((customerId) =>
-      this.post(id, 'recover', { customerId }, 'Não foi possível resgatar a solicitação.'),
+      this.post(id, 'approve', { customerId }, 'Não foi possível resgatar a solicitação.'),
     );
   }
 
