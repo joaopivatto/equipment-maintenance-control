@@ -1,61 +1,70 @@
-import { inject } from '@angular/core';
-import { AuthApiClient } from './auth-api-client';
-import { HttpClient } from '@angular/common/http';
-import { SignUpRequest } from '../auth/models/sign-up-request.model';
-import { Observable, catchError, map, of } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { EMPTY, Observable, catchError, map, of } from 'rxjs';
+import { Address } from '../../shared';
 import { SessionUser } from '../auth/models/session-user.model';
-import { MockSessionUserFactory } from '../auth/models/testing/session-user.mock';
-import { Address, ProfileType } from '../../shared';
-import { ViaCepResponseDto } from './dto';
-import { toAddress } from './mappers/auth.mapper';
+import { SignUpRequest } from '../auth/models/sign-up-request.model';
+import { NotificationService } from '../notifications/notification.service';
+import { API_BASE_URL } from './api.config';
+import { toErrorMessage } from './api-error';
+import { AuthApiClient } from './auth-api-client';
+import { ApiLoginResponseDto, ViaCepResponseDto } from './dto';
+import { toAddress, toSessionUser } from './mappers/auth.mapper';
 
-interface MockAccount extends SessionUser {
-  password: string;
-  cpf?: string;
-  phoneNumber?: string;
-  address?: Address;
-}
+const onlyDigits = (value: string): string => value.replace(/\D/g, '');
 
+@Injectable()
 export class HttpAuthApiClient extends AuthApiClient {
   private readonly http = inject(HttpClient);
+  private readonly notifications = inject(NotificationService);
+
   private readonly VIA_CEP_URL = 'https://viacep.com.br/ws';
 
-  private readonly accountFactory = new MockSessionUserFactory();
-
-  private readonly accounts: MockAccount[] = [this.accountFactory.generate(), this.accountFactory.generate()];
-
-  private nextId = this.accounts.length + 1;
-
   login(email: string, password: string): Observable<SessionUser | null> {
-    const account = this.accounts.find((acc) => acc.email === email && acc.password === password);
-    if (!account) {
-      return of(null);
-    }
+    return this.http
+      .post<ApiLoginResponseDto>(`${API_BASE_URL}/auth/login`, { email, password })
+      .pipe(
+        map((dto) => toSessionUser(dto, email)),
+        catchError((error: unknown) => {
+          if (
+            error instanceof HttpErrorResponse &&
+            (error.status === 401 || error.status === 400)
+          ) {
+            return of(null);
+          }
 
-    const { password: _password, ...user } = account;
-    return of(user);
+          this.notifications.error(
+            'Erro',
+            toErrorMessage(error, 'Não foi possível realizar o login. Tente novamente.'),
+          );
+          return EMPTY;
+        }),
+      );
   }
 
   signUp(request: SignUpRequest): Observable<{ error?: string }> {
-    const emailTaken = this.accounts.some((acc) => acc.email === request.email);
-    if (emailTaken) {
-      return of({ error: 'Já existe uma conta cadastrada com este e-mail.' });
-    }
-
-    const account: MockAccount = {
-      id: this.nextId++,
-      name: request.name,
-      email: request.email,
-      // Senha gerada e enviada por e-mail; nunca volta na resposta da API.
-      password: this.generatePassword(),
-      profileType: ProfileType.CUSTOMER,
-      cpf: request.cpf,
-      phoneNumber: request.phoneNumber,
-      address: request.address,
+    const body = {
+      name: request.name.trim(),
+      email: request.email.trim(),
+      cpf: onlyDigits(request.cpf),
+      phoneNumber: onlyDigits(request.phoneNumber),
+      address: {
+        street: request.address.street,
+        number: request.address.number,
+        complement: request.address.complement,
+        neighborhood: request.address.neighborhood,
+        city: request.address.city,
+        state: request.address.state,
+        zipCode: onlyDigits(request.address.zipCode),
+      },
     };
-    this.accounts.push(account);
 
-    return of({});
+    return this.http.post<void>(`${API_BASE_URL}/auth/signup`, body).pipe(
+      map(() => ({}) as { error?: string }),
+      catchError((error: unknown) =>
+        of({ error: toErrorMessage(error, 'Não foi possível concluir o cadastro.') }),
+      ),
+    );
   }
 
   logout(): Observable<void> {
@@ -63,15 +72,11 @@ export class HttpAuthApiClient extends AuthApiClient {
   }
 
   findAddressByZipCode(zipCode: string): Observable<Address | null> {
-    const sanitizedZipCode = zipCode.replace(/\D/g, '');
+    const sanitizedZipCode = onlyDigits(zipCode);
 
     return this.http.get<ViaCepResponseDto>(`${this.VIA_CEP_URL}/${sanitizedZipCode}/json/`).pipe(
       map((dto) => (dto.erro ? null : toAddress(dto))),
       catchError(() => of(null)),
     );
-  }
-
-  private generatePassword(): string {
-    return String(Math.floor(1000 + Math.random() * 9000));
   }
 }

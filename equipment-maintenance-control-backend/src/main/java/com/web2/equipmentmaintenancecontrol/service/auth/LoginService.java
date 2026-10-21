@@ -35,6 +35,7 @@ public class LoginService extends BaseService {
       throw new AppException(ErrorCode.INVALID_CREDENTIALS);
     }
 
-    return new LoginResponse(profile.getType(), profile.getId());
+    return new LoginResponse(
+        profile.getType(), profile.getId(), profile.getName(), profile.getEmail());
   }
 }

@@ -62,13 +62,13 @@ Este arquivo é apenas o checklist de tarefas do backend.
   `addHistory` passou a ser privado para que ninguém contorne a validação. Transição inválida
   devolve `409 INVALID_STATUS_TRANSITION`.
 
-- [ ] **B-06 — Novos códigos de erro**
+- [X] **B-06 — Novos códigos de erro**
   Responsável: ____ · Depende de: —
   Acrescentar em `ErrorCode`: `EMPLOYEE_NOT_FOUND`, `INVALID_STATUS_TRANSITION`,
   `EMAIL_ALREADY_EXISTS`, `CPF_ALREADY_EXISTS`, `SELF_REDIRECT_NOT_ALLOWED`,
   `LAST_EMPLOYEE_CANNOT_BE_REMOVED`, `SELF_DELETE_NOT_ALLOWED`, `ZIP_CODE_NOT_FOUND`.
 
-- [ ] **B-07 — Definir como o backend identifica quem age**
+- [X] **B-07 — Definir como o backend identifica quem age**
   Responsável: ____ · Depende de: —
   Combinar em equipe: `employeeId`/`customerId` no corpo da requisição **ou** header `X-User-Id`.
   Documentar a decisão neste arquivo e usar o mesmo padrão em todos os endpoints novos.
