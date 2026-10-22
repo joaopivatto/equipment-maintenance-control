@@ -1,7 +1,9 @@
 package com.web2.equipmentmaintenancecontrol.model.profile;
 
+import com.web2.equipmentmaintenancecontrol.domain.security.HashedSaltedPassword;
 import com.web2.equipmentmaintenancecontrol.model.ActivatableEntity;
 import jakarta.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -23,51 +25,51 @@ public abstract class Profile extends ActivatableEntity {
   @Enumerated(EnumType.STRING)
   private ProfileType type;
 
-  public Integer getId() {
-    return id;
+  protected Profile() {}
+
+  protected Profile(String name, String email, HashedSaltedPassword password, ProfileType type) {
+    this.name = requireName(name);
+    this.email = requireEmail(email);
+    Objects.requireNonNull(password, "password é obrigatório");
+    this.passwordHash = Objects.requireNonNull(password.hash(), "passwordHash é obrigatório");
+    this.passwordSalt = Objects.requireNonNull(password.salt(), "passwordSalt é obrigatório");
+    this.type = Objects.requireNonNull(type, "type é obrigatório");
   }
 
-  public void setId(Integer id) {
-    this.id = id;
+  protected void updateBasicInfo(String name, String email) {
+    this.name = requireName(name);
+    this.email = requireEmail(email);
+  }
+
+  private static String requireName(String name) {
+    return Objects.requireNonNull(name, "name é obrigatório");
+  }
+
+  private static String requireEmail(String email) {
+    return Objects.requireNonNull(email, "email é obrigatório");
+  }
+
+  public Integer getId() {
+    return id;
   }
 
   public String getName() {
     return name;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public String getEmail() {
     return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
   }
 
   public String getPasswordHash() {
     return passwordHash;
   }
 
-  public void setPasswordHash(String passwordHash) {
-    this.passwordHash = passwordHash;
-  }
-
   public String getPasswordSalt() {
     return passwordSalt;
   }
 
-  public void setPasswordSalt(String passwordSalt) {
-    this.passwordSalt = passwordSalt;
-  }
-
   public ProfileType getType() {
     return type;
-  }
-
-  public void setType(ProfileType type) {
-    this.type = type;
   }
 }

@@ -13,10 +13,7 @@ import com.web2.equipmentmaintenancecontrol.model.auth.dto.SignupRequest;
 import com.web2.equipmentmaintenancecontrol.model.profile.Address;
 import com.web2.equipmentmaintenancecontrol.model.profile.Customer;
 import com.web2.equipmentmaintenancecontrol.model.profile.Phone;
-import com.web2.equipmentmaintenancecontrol.model.profile.ProfileType;
-import com.web2.equipmentmaintenancecontrol.repository.profile.AddressRepository;
 import com.web2.equipmentmaintenancecontrol.repository.profile.CustomerRepository;
-import com.web2.equipmentmaintenancecontrol.repository.profile.PhoneRepository;
 import com.web2.equipmentmaintenancecontrol.service.BaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SignupService extends BaseService {
   private final CustomerRepository repository;
-  private final AddressRepository addressRepository;
-  private final PhoneRepository phoneRepository;
   private final PasswordGenerator passwordGenerator;
   private final PasswordHasherSalter passwordHasherSalter;
   private final EmailProvider emailProvider;
@@ -35,15 +30,11 @@ public class SignupService extends BaseService {
 
   SignupService(
       CustomerRepository repository,
-      AddressRepository addressRepository,
-      PhoneRepository phoneRepository,
       PasswordGenerator passwordGenerator,
       PasswordHasherSalter passwordHasherSalter,
       EmailProvider emailProvider,
       PasswordEmail passwordEmail) {
     this.repository = repository;
-    this.addressRepository = addressRepository;
-    this.phoneRepository = phoneRepository;
     this.passwordGenerator = passwordGenerator;
     this.passwordHasherSalter = passwordHasherSalter;
     this.emailProvider = emailProvider;
@@ -64,26 +55,17 @@ public class SignupService extends BaseService {
   }
 
   private Customer buildCustomer(SignupRequest request, HashedSaltedPassword hashedSaltedPassword) {
-    Address address = addressRepository.save(buildAddress(request.address()));
-    Phone phone = phoneRepository.save(new Phone(null, request.phoneNumber()));
-
-    Customer customer = new Customer();
-    customer.setName(request.name());
-    customer.setEmail(request.email());
-    customer.setCpf(request.cpf());
-    customer.setPasswordHash(hashedSaltedPassword.hash());
-    customer.setPasswordSalt(hashedSaltedPassword.salt());
-    customer.setType(ProfileType.CUSTOMER);
-    customer.setActive(true);
-    customer.setAddress(address);
-    customer.setPhone(phone);
-
-    return customer;
+    return new Customer(
+        request.name(),
+        request.email(),
+        hashedSaltedPassword,
+        request.cpf(),
+        buildAddress(request.address()),
+        new Phone(request.phoneNumber()));
   }
 
   private Address buildAddress(AddressSignupRequest request) {
     return new Address(
-        null,
         request.zipCode(),
         request.street(),
         request.number(),

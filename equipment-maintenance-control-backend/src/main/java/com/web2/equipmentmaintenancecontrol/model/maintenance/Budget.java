@@ -4,6 +4,7 @@ import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class Budget {
@@ -20,44 +21,27 @@ public class Budget {
 
   private LocalDateTime createdAt;
 
-  public Budget() {}
+  protected Budget() {}
 
-  public Budget(Integer id, BigDecimal value, Employee employee, LocalDateTime createdAt) {
-    this.id = id;
-    this.value = value;
-    this.employee = employee;
-    this.createdAt = createdAt;
+  public Budget(BigDecimal value, Employee employee, LocalDateTime createdAt) {
+    this.value = Objects.requireNonNull(value, "value é obrigatório");
+    this.employee = Objects.requireNonNull(employee, "employee é obrigatório");
+    this.createdAt = Objects.requireNonNull(createdAt, "createdAt é obrigatório");
   }
 
   public Integer getId() {
     return id;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
   public BigDecimal getValue() {
     return value;
-  }
-
-  public void setValue(BigDecimal value) {
-    this.value = value;
   }
 
   public Employee getEmployee() {
     return employee;
   }
 
-  public void setEmployee(Employee employee) {
-    this.employee = employee;
-  }
-
   public LocalDateTime getCreatedAt() {
     return createdAt;
-  }
-
-  public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
   }
 }
