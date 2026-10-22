@@ -2,6 +2,7 @@ package com.web2.equipmentmaintenancecontrol.model.equipment;
 
 import com.web2.equipmentmaintenancecontrol.model.ActivatableEntity;
 import jakarta.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Equipment extends ActivatableEntity {
@@ -16,35 +17,35 @@ public class Equipment extends ActivatableEntity {
   @JoinColumn(name = "type_id")
   private EquipmentType type;
 
-  public Equipment() {}
+  protected Equipment() {}
 
-  public Equipment(Integer id, String description, EquipmentType type) {
-    this.id = id;
-    this.description = description;
-    this.type = type;
+  public Equipment(String description, EquipmentType type) {
+    this.description = requireDescription(description);
+    this.type = requireType(type);
+  }
+
+  public void update(String description, EquipmentType type) {
+    this.description = requireDescription(description);
+    this.type = requireType(type);
+  }
+
+  private static String requireDescription(String description) {
+    return Objects.requireNonNull(description, "description é obrigatório");
+  }
+
+  private static EquipmentType requireType(EquipmentType type) {
+    return Objects.requireNonNull(type, "type é obrigatório");
   }
 
   public Integer getId() {
     return id;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
   public String getDescription() {
     return description;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
   public EquipmentType getType() {
     return type;
-  }
-
-  public void setType(EquipmentType type) {
-    this.type = type;
   }
 }
