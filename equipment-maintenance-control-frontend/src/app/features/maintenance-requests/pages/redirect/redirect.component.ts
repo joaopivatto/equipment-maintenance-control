@@ -47,7 +47,7 @@ export class RedirectComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
 
-  request: MaintenanceRequest | undefined;
+  readonly request = signal<MaintenanceRequest | undefined>(undefined);
   selectedEmployeeId: number | null = null;
 
   readonly currentEmployee = this.currentEmployeeService.currentEmployee;
@@ -73,24 +73,24 @@ export class RedirectComponent implements OnInit {
 
     const id = Number(this.route.snapshot.params['id']);
     this.maintenanceRequestApiClient.findById(id).subscribe((request) => {
-      this.request = request;
-
-      if (!this.request) {
+      if (!request) {
         this.notificationService.error('Erro', 'Solicitação não encontrada.');
         this.router.navigate(['/requests/list']);
         return;
       }
 
       if (
-        this.request.status !== RequestStatus.APPROVED &&
-        this.request.status !== RequestStatus.QUOTED
+        request.status !== RequestStatus.APPROVED &&
+        request.status !== RequestStatus.REDIRECTED
       ) {
         this.notificationService.warning(
           'Aviso',
           'Esta solicitação não pode mais ser redirecionada neste estado.',
         );
         this.router.navigate(['/requests/list']);
+        return;
       }
+      this.request.set(request);
     });
   }
 
@@ -101,8 +101,8 @@ export class RedirectComponent implements OnInit {
   // RF015 - Redirecionar manutenção
   confirmRedirect(): void {
     this.errorMessage.set(null);
-
-    if (!this.request) {
+    const request = this.request();
+    if (!request) {
       return;
     }
 
@@ -141,18 +141,8 @@ export class RedirectComponent implements OnInit {
       acceptButtonProps: { severity: 'secondary' },
       rejectButtonProps: { severity: 'secondary', outlined: true },
       accept: () => {
-        if (!this.request) {
-          return;
-        }
-
         this.maintenanceRequestApiClient
-          .redirect(
-            this.request.id,
-            fromEmployee.id,
-            fromEmployee.name,
-            toEmployee.id,
-            toEmployee.name,
-          )
+          .redirect(request.id, fromEmployee.id, fromEmployee.name, toEmployee.id, toEmployee.name)
           .subscribe((result) => {
             if (result.error) {
               this.notificationService.error('Erro', result.error);

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -42,7 +42,7 @@ export class MaintenanceComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
 
-  request: MaintenanceRequest | undefined;
+  readonly request = signal<MaintenanceRequest | undefined>(undefined);
 
   maintenanceDescription = '';
   maintenanceInstructions = '';
@@ -59,21 +59,24 @@ export class MaintenanceComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
     this.maintenanceRequestApiClient.findById(id).subscribe((request) => {
-      this.request = request;
-
-      if (!this.request) {
+      if (!request) {
         this.notificationService.error('Erro', 'Solicitação não encontrada.');
         this.router.navigate(['/requests/list']);
         return;
       }
 
-      if (this.request.status !== RequestStatus.APPROVED) {
+      if (
+        request.status !== RequestStatus.APPROVED &&
+        request.status !== RequestStatus.REDIRECTED
+      ) {
         this.notificationService.warning(
           'Aviso',
           'Esta solicitação não está mais aguardando manutenção.',
         );
         this.router.navigate(['/requests/list']);
+        return;
       }
+      this.request.set(request);
     });
   }
 
@@ -83,7 +86,8 @@ export class MaintenanceComponent implements OnInit {
 
   // RF014 - Efetuar manutenção: APROVADA -> ARRUMADA
   confirmMaintenance(): void {
-    if (!this.request) {
+    const request = this.request();
+    if (!request) {
       return;
     }
 
@@ -120,12 +124,9 @@ export class MaintenanceComponent implements OnInit {
       acceptButtonProps: { severity: 'success' },
       rejectButtonProps: { severity: 'secondary', outlined: true },
       accept: () => {
-        if (!this.request) {
-          return;
-        }
         this.maintenanceRequestApiClient
           .performMaintenance(
-            this.request.id,
+            request.id,
             this.maintenanceDescription.trim(),
             this.maintenanceInstructions.trim(),
             this.responsibleEmployeeId,

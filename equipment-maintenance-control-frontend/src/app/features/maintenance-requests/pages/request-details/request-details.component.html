@@ -1,6 +1,7 @@
 <p-confirmdialog />
 
-<div class="app-page" *ngIf="request as maintenanceRequest">
+@if (request(); as maintenanceRequest) {
+<div class="app-page">
   <div class="page__head">
     <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
       <i class="pi pi-arrow-left"></i>
@@ -131,7 +132,7 @@
   </p-card>
 
   <p-card header="Linha do tempo" class="timeline-card">
-    <p-timeline [value]="timelineEvents" layout="horizontal" align="top">
+    <p-timeline [value]="timelineEvents()" layout="horizontal" align="top">
       <ng-template #content let-event>
         <div class="timeline-event">
           <span
@@ -160,3 +161,8 @@
     </p-timeline>
   </p-card>
 </div>
+} @else {
+<div class="app-page" role="status" aria-live="polite">
+  <p-card>Carregando detalhes da solicitação...</p-card>
+</div>
+}

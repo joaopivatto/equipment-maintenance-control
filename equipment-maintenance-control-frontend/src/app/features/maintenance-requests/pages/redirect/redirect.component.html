@@ -1,6 +1,7 @@
 <p-confirmdialog />
 
-<div class="app-page" *ngIf="request as maintenanceRequest">
+@if (request(); as maintenanceRequest) {
+<div class="app-page">
   <div class="page__head">
     <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
       <i class="pi pi-arrow-left"></i>
@@ -56,3 +57,8 @@
     </div>
   </p-card>
 </div>
+} @else {
+<div class="app-page" role="status" aria-live="polite">
+  <p-card>Carregando solicitação para redirecionamento...</p-card>
+</div>
+}

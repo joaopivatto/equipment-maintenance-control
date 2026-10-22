@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
@@ -58,6 +58,7 @@ const UF_OPTIONS = [
   templateUrl: './sign-up.component.html',
 })
 export class SignUpComponent {
+  private readonly changeDetector = inject(ChangeDetectorRef);
   private readonly apiClient = inject(AuthApiClient);
   private readonly notificationService = inject(NotificationService);
   private readonly signUpService = inject(SignUpService);
@@ -146,8 +147,10 @@ export class SignUpComponent {
     const addressControls = this.form.controls.address.controls;
     addressControls.city.enable({ emitEvent: false });
     addressControls.state.enable({ emitEvent: false });
+    this.changeDetector.markForCheck();
 
     this.apiClient.findAddressByZipCode(zipCode).subscribe((address) => {
+      this.changeDetector.markForCheck();
       if (!address) {
         this.notificationService.warning(
           'Aviso',
