@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -27,6 +27,7 @@ import { NotificationService } from '../../../../core/notifications/notification
   templateUrl: './employee-form.component.html',
 })
 export class EmployeeFormComponent implements OnInit {
+  private readonly changeDetector = inject(ChangeDetectorRef);
   private employeeApiClient = inject(EmployeeApiClient);
   private dateService = inject(DateService);
   private notificationService = inject(NotificationService);
@@ -73,6 +74,7 @@ export class EmployeeFormComponent implements OnInit {
         email: employee.email,
         birthDate: this.dateService.fromIsoDate(employee.birthDate),
       });
+      this.changeDetector.markForCheck();
     });
   }
 

@@ -43,6 +43,7 @@ public class LoginService extends BaseService {
 
     String token = tokenManager.generateToken(profile.getId(), profile.getType());
 
-    return new LoginResponse(profile.getType(), profile.getId(), token);
+    return new LoginResponse(
+        profile.getType(), profile.getId(), profile.getName(), profile.getEmail(), token);
   }
 }

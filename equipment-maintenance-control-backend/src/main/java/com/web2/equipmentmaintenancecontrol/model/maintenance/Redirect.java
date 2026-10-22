@@ -3,6 +3,7 @@ package com.web2.equipmentmaintenancecontrol.model.maintenance;
 import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class Redirect {
@@ -25,58 +26,37 @@ public class Redirect {
 
   private LocalDateTime createdAt;
 
-  public Redirect() {}
+  protected Redirect() {}
 
-  public Redirect(
-      Integer id,
-      Employee sourceEmployee,
-      Employee destinationEmployee,
-      MaintenanceRequest maintenanceRequest,
-      LocalDateTime createdAt) {
-    this.id = id;
-    this.sourceEmployee = sourceEmployee;
-    this.destinationEmployee = destinationEmployee;
-    this.maintenanceRequest = maintenanceRequest;
-    this.createdAt = createdAt;
+  public Redirect(Employee sourceEmployee, Employee destinationEmployee) {
+    this.sourceEmployee = Objects.requireNonNull(sourceEmployee, "sourceEmployee é obrigatório");
+    this.destinationEmployee =
+        Objects.requireNonNull(destinationEmployee, "destinationEmployee é obrigatório");
+  }
+
+  void attachTo(MaintenanceRequest maintenanceRequest, LocalDateTime createdAt) {
+    this.maintenanceRequest =
+        Objects.requireNonNull(maintenanceRequest, "maintenanceRequest é obrigatório");
+    this.createdAt = Objects.requireNonNull(createdAt, "createdAt é obrigatório");
   }
 
   public Integer getId() {
     return id;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
   public Employee getSourceEmployee() {
     return sourceEmployee;
-  }
-
-  public void setSourceEmployee(Employee sourceEmployee) {
-    this.sourceEmployee = sourceEmployee;
   }
 
   public Employee getDestinationEmployee() {
     return destinationEmployee;
   }
 
-  public void setDestinationEmployee(Employee destinationEmployee) {
-    this.destinationEmployee = destinationEmployee;
-  }
-
   public MaintenanceRequest getMaintenanceRequest() {
     return maintenanceRequest;
   }
 
-  public void setMaintenanceRequest(MaintenanceRequest maintenanceRequest) {
-    this.maintenanceRequest = maintenanceRequest;
-  }
-
   public LocalDateTime getCreatedAt() {
     return createdAt;
-  }
-
-  public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
   }
 }

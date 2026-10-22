@@ -62,13 +62,13 @@ Este arquivo é apenas o checklist de tarefas do backend.
   `addHistory` passou a ser privado para que ninguém contorne a validação. Transição inválida
   devolve `409 INVALID_STATUS_TRANSITION`.
 
-- [ ] **B-06 — Novos códigos de erro**
+- [X] **B-06 — Novos códigos de erro**
   Responsável: ____ · Depende de: —
   Acrescentar em `ErrorCode`: `EMPLOYEE_NOT_FOUND`, `INVALID_STATUS_TRANSITION`,
   `EMAIL_ALREADY_EXISTS`, `CPF_ALREADY_EXISTS`, `SELF_REDIRECT_NOT_ALLOWED`,
   `LAST_EMPLOYEE_CANNOT_BE_REMOVED`, `SELF_DELETE_NOT_ALLOWED`, `ZIP_CODE_NOT_FOUND`.
 
-- [ ] **B-07 — Definir como o backend identifica quem age**
+- [X] **B-07 — Definir como o backend identifica quem age**
   Responsável: ____ · Depende de: —
   Combinar em equipe: `employeeId`/`customerId` no corpo da requisição **ou** header `X-User-Id`.
   Documentar a decisão neste arquivo e usar o mesmo padrão em todos os endpoints novos.
@@ -107,18 +107,22 @@ Este arquivo é apenas o checklist de tarefas do backend.
   Adicionar mensagens de validação (`message = "..."`) nas anotações de Bean Validation dos DTOs,
   seguindo o padrão já usado no projeto (mensagens em português no `GlobalExceptionHandler`).
 
-- [ ] **B-11.2 — Trocar instanciação do Customer por construtor**
+- [X] **B-11.2 — Trocar instanciação do Customer por construtor**
   Responsável: MATHEUS · Depende de: B-11
   Substituir a criação de `Customer` (builder/setters avulsos) por um construtor dedicado,
   garantindo que o objeto nasça sempre em estado válido.
+  *Como ficou:* resolvido junto de B-37 — ver `SPEC_CONSTRUTORES_E_CASCADE.md`.
 
 - [X] **B-11.3 — Autenticação na API**
   Responsável: MATHEUS · Depende de: nada
   Tratar a autenticação entre front e api
 
-- [ ] **B-11.4 — Tratar senha no employee**
+- [X] **B-11.4 — Tratar senha no employee**
   Responsável: MATHEUS · Depende de: nada
   arrumar a rota de create, lembrando que a senha do employee deve vir na request de create
+  *Como ficou:* o construtor de `Employee` exige a senha, então `EmployeeService.create` passou a
+  hashear o `password` do request (antes o campo era validado e ignorado, e o funcionário criado
+  não conseguia logar).
 
 - [X] **B-12 — RF004: criar solicitação com descrição + categoria**
   Responsável: João · Depende de: B-05
@@ -291,6 +295,23 @@ Este arquivo é apenas o checklist de tarefas do backend.
   Responsável: ____ · Depende de: todas
   Rodar `./mvnw spotless:apply verify`, tirar a senha do banco de `application.properties`
   (usar variável de ambiente) e revisar nomes de pacotes/classes.
+
+- [X] **B-37 — Entidades criadas por construtor (sem setters)**
+  Responsável: João · Depende de: Fases 1–3
+  Toda entidade passa a ser criada por construtor que exige os campos obrigatórios
+  (`Objects.requireNonNull`), com construtor sem argumentos `protected` só para o Hibernate.
+  Mutação só por método de domínio (`Employee.update`, `Equipment.update`,
+  `EquipmentType.updateDescription`, `Redirect.attachTo`). Nenhum construtor recebe `id`.
+  *Como ficou:* 47 setters removidos (35 já eram código morto); `grep '\.set[A-Z]'` em
+  `src/main/java` volta vazio. Especificação em `SPEC_CONSTRUTORES_E_CASCADE.md`.
+
+- [X] **B-38 — Cascade do Hibernate: um `save` por operação**
+  Responsável: João · Depende de: B-37
+  `Customer` → `Address`/`Phone` (`CascadeType.ALL`) e `MaintenanceRequest` →
+  `Budget`/`Maintenance` (`ALL`) + `Equipment` (`{PERSIST, MERGE}`). Os services pararam de salvar
+  filho por filho: signup saiu de 3 saves para 1 e as operações da solicitação de 2 para 1.
+  Equipamento deixou de ter controller — só nasce via solicitação de manutenção.
+  *Pronto quando:* `CascadePersistenceTest` confirma as linhas no banco com um único save.
 
 - [ ] **B-36 — Documentar as suposições**
   Responsável: ____ · Depende de: todas

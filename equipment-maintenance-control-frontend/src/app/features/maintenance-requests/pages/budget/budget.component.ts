@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
+import { finalize } from 'rxjs';
 import { CommonModule, CurrencyPipe, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -35,6 +36,7 @@ import { NotificationService } from '../../../../core/notifications/notification
   styleUrl: './budget.component.scss',
 })
 export class BudgetComponent implements OnInit {
+  private readonly changeDetector = inject(ChangeDetectorRef);
   readonly statusClasses = STATUS_CLASSES;
   private maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
   private route = inject(ActivatedRoute);
@@ -62,6 +64,7 @@ export class BudgetComponent implements OnInit {
 
     this.maintenanceRequestApiClient.findById(id).subscribe((request) => {
       this.request = request;
+      this.changeDetector.markForCheck();
 
       if (!this.request) {
         this.notificationService.error('Erro', 'Solicitação não encontrada.');
@@ -99,9 +102,13 @@ export class BudgetComponent implements OnInit {
 
     this.maintenanceRequestApiClient
       .createBudget(this.request.id, this.budgetValue)
+      .pipe(
+        finalize(() => {
+          this.submitting = false;
+          this.changeDetector.markForCheck();
+        }),
+      )
       .subscribe((updated) => {
-        this.submitting = false;
-
         if (!updated) {
           this.notificationService.error('Erro', 'Não foi possível registrar o orçamento.');
           return;

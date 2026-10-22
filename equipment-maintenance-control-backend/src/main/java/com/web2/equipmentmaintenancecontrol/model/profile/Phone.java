@@ -1,6 +1,7 @@
 package com.web2.equipmentmaintenancecontrol.model.profile;
 
 import jakarta.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Phone {
@@ -11,26 +12,17 @@ public class Phone {
 
   private String number;
 
-  public Phone() {}
+  protected Phone() {}
 
-  public Phone(Integer id, String number) {
-    this.id = id;
-    this.number = number;
+  public Phone(String number) {
+    this.number = Objects.requireNonNull(number, "number é obrigatório");
   }
 
   public Integer getId() {
     return id;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
   public String getNumber() {
     return number;
-  }
-
-  public void setNumber(String number) {
-    this.number = number;
   }
 }

@@ -35,7 +35,7 @@ public class MaintenanceRequest {
   @Column(nullable = false)
   private MaintenanceRequestStatus status;
 
-  @ManyToOne
+  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinColumn(name = "equipment_id", nullable = false)
   private Equipment equipment;
 
@@ -53,12 +53,12 @@ public class MaintenanceRequest {
   @Nullable
   private Employee finalizedBy;
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "budget_id")
   @Nullable
   private Budget budget;
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "maintenance_id")
   @Nullable
   private Maintenance maintenance;
@@ -71,7 +71,7 @@ public class MaintenanceRequest {
   @OrderBy("createdAt ASC")
   private List<Redirect> redirects;
 
-  public MaintenanceRequest() {}
+  protected MaintenanceRequest() {}
 
   private MaintenanceRequest(Builder builder) {
     this.customer = Objects.requireNonNull(builder.customer, "customer é obrigatório");
@@ -196,8 +196,7 @@ public class MaintenanceRequest {
 
     transitionTo(MaintenanceRequestStatus.REDIRECIONADA, destinationEmployee, dateTime);
     this.employee = destinationEmployee;
-    redirect.setCreatedAt(dateTime);
-    addRedirect(redirect);
+    addRedirect(redirect, dateTime);
   }
 
   private void requireNotAssignedTo(Employee destinationEmployee) {
@@ -259,7 +258,7 @@ public class MaintenanceRequest {
     addHistory(new MaintenanceRequestHistory(MaintenanceRequestStatus.ABERTA, createdAt, employee));
   }
 
-  private void addRedirect(Redirect redirect) {
+  private void addRedirect(Redirect redirect, LocalDateTime createdAt) {
     if (redirects == null) {
       redirects = new ArrayList<>();
     }
@@ -267,7 +266,7 @@ public class MaintenanceRequest {
       return;
     }
     redirects.add(redirect);
-    redirect.setMaintenanceRequest(this);
+    redirect.attachTo(this, createdAt);
   }
 
   private void addHistory(MaintenanceRequestHistory historyEntry) {
@@ -275,7 +274,7 @@ public class MaintenanceRequest {
       history = new ArrayList<>();
     }
     history.add(historyEntry);
-    historyEntry.setMaintenanceRequest(this);
+    historyEntry.attachTo(this);
     if (historyEntry.getStatus() != null) {
       this.status = historyEntry.getStatus();
     }
@@ -284,10 +283,6 @@ public class MaintenanceRequest {
 
   public Integer getId() {
     return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
   }
 
   public LocalDateTime getCreatedAt() {
@@ -300,10 +295,6 @@ public class MaintenanceRequest {
 
   public String getDefect() {
     return defect;
-  }
-
-  public void setDefect(String defect) {
-    this.defect = defect;
   }
 
   @Nullable
