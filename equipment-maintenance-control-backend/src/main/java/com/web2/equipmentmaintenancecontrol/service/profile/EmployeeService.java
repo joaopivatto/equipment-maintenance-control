@@ -6,7 +6,6 @@ import com.web2.equipmentmaintenancecontrol.exception.AppException;
 import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
 import com.web2.equipmentmaintenancecontrol.mapper.profile.EmployeeMapper;
 import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
-import com.web2.equipmentmaintenancecontrol.model.profile.ProfileType;
 import com.web2.equipmentmaintenancecontrol.model.profile.dtos.EmployeeCreateRequest;
 import com.web2.equipmentmaintenancecontrol.model.profile.dtos.EmployeeResponse;
 import com.web2.equipmentmaintenancecontrol.model.profile.dtos.EmployeeUpdateRequest;
@@ -41,36 +40,21 @@ public class EmployeeService {
 
   @Transactional
   public EmployeeResponse create(EmployeeCreateRequest request) {
-
-    HashedSaltedPassword hashedSaltedPassword =
-        passwordHasherSalter.hashAndSalt(request.password());
+    HashedSaltedPassword password = passwordHasherSalter.hashAndSalt(request.password());
 
     Employee employee =
-        Employee.builder()
-            .name(request.name())
-            .email(request.email())
-            .birthDate(request.birthDate())
-            .type(ProfileType.EMPLOYEE)
-            .passwordHash(hashedSaltedPassword.hash())
-            .passwordSalt(hashedSaltedPassword.salt())
-            .build();
+        new Employee(request.name(), request.email(), request.birthDate(), password);
 
-    Employee savedEmployee = repository.save(employee);
-
-    return mapper.toResponse(savedEmployee);
+    return mapper.toResponse(repository.save(employee));
   }
 
   @Transactional
   public EmployeeResponse update(Integer id, EmployeeUpdateRequest request) {
     Employee employee = findEntityById(id);
 
-    employee.setName(request.name());
-    employee.setEmail(request.email());
-    employee.setBirthDate(request.birthDate());
+    employee.update(request.name(), request.email(), request.birthDate());
 
-    Employee updatedEmployee = repository.save(employee);
-
-    return mapper.toResponse(updatedEmployee);
+    return mapper.toResponse(repository.save(employee));
   }
 
   @Transactional

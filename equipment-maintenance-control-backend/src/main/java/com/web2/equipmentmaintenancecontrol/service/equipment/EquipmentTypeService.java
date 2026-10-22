@@ -33,13 +33,13 @@ public class EquipmentTypeService extends BaseService {
 
   @Transactional
   public EquipmentTypeResponse create(EquipmentTypeRequest request) {
-    return mapper.toResponse(repository.save(new EquipmentType(null, request.description())));
+    return mapper.toResponse(repository.save(new EquipmentType(request.description())));
   }
 
   @Transactional
   public EquipmentTypeResponse update(Integer id, EquipmentTypeRequest request) {
     EquipmentType equipmentType = findEntityById(id);
-    equipmentType.setDescription(request.description());
+    equipmentType.updateDescription(request.description());
     return mapper.toResponse(repository.save(equipmentType));
   }
 

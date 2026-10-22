@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardModule } from 'primeng/card';
@@ -35,8 +35,11 @@ export class RequestDetailsComponent implements OnInit {
 
   readonly RequestStatus = RequestStatus;
 
-  request: MaintenanceRequest | undefined;
-  timelineEvents: HistoryEntry[] = [];
+  readonly request = signal<MaintenanceRequest | undefined>(undefined);
+  readonly timelineEvents = computed(() => {
+    const request = this.request();
+    return request ? this.buildTimeline(request) : [];
+  });
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
@@ -53,8 +56,7 @@ export class RequestDetailsComponent implements OnInit {
   }
 
   private setRequest(request: MaintenanceRequest): void {
-    this.request = request;
-    this.timelineEvents = this.buildTimeline(request);
+    this.request.set(request);
   }
 
   // A linha do tempo do RF008 deve sempre exibir ao menos a criação da solicitação,
@@ -78,33 +80,36 @@ export class RequestDetailsComponent implements OnInit {
   }
 
   hasActions(): boolean {
-    if (!this.request) {
+    const request = this.request();
+    if (!request) {
       return false;
     }
 
     return (
-      this.request.status === RequestStatus.QUOTED ||
-      this.request.status === RequestStatus.REJECTED ||
-      this.request.status === RequestStatus.REPAIRED
+      request.status === RequestStatus.QUOTED ||
+      request.status === RequestStatus.REJECTED ||
+      request.status === RequestStatus.REPAIRED
     );
   }
 
   // RF005 - Mostrar orçamento
   reviewBudget(): void {
-    if (!this.request) {
+    const request = this.request();
+    if (!request) {
       return;
     }
 
-    this.router.navigate(['/requests', this.request.id, 'budget']);
+    this.router.navigate(['/requests', request.id, 'budget']);
   }
 
   // RF009 - Resgatar serviço: REJEITADA -> APROVADA
   recoverService(): void {
-    if (!this.request) {
+    const request = this.request();
+    if (!request) {
       return;
     }
 
-    const id = this.request.id;
+    const id = request.id;
 
     this.confirmationService.confirm({
       message: 'Deseja resgatar este serviço? O estado voltará para "Aprovada".',
@@ -133,12 +138,13 @@ export class RequestDetailsComponent implements OnInit {
 
   // RF010 - Pagar serviço: ARRUMADA -> PAGA
   payForService(): void {
-    if (!this.request) {
+    const request = this.request();
+    if (!request) {
       return;
     }
 
-    const id = this.request.id;
-    const formattedValue = this.currencyPipe.transform(this.request.budget?.value, 'BRL');
+    const id = request.id;
+    const formattedValue = this.currencyPipe.transform(request.budget?.value, 'BRL');
 
     this.confirmationService.confirm({
       message: `Confirmar o pagamento no valor de ${formattedValue}?`,

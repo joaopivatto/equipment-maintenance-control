@@ -27,7 +27,6 @@
   display: inline-block;
   padding: 0.25rem 0.65rem;
   border-radius: 1rem;
-  color: #fff;
   font-size: 0.75rem;
   font-weight: 600;
   white-space: nowrap;
@@ -44,6 +43,36 @@ p-card + p-card {
 :host ::ng-deep .timeline-card .p-timeline {
   min-width: max-content;
   padding: 0.5rem 1rem;
+}
+
+:host ::ng-deep .timeline-card .p-timeline-horizontal {
+  .p-timeline-event {
+    flex: 1 1 0;
+    min-width: 11rem;
+  }
+
+  .p-timeline-event-separator {
+    position: relative;
+    justify-content: center;
+  }
+
+  .p-timeline-event-marker {
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .p-timeline-event-connector {
+    position: absolute;
+    inset-inline-start: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .p-timeline-event-content {
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0.5rem;
+  }
 }
 
 // Sem um "opposite template", a área oposta fica vazia, mas o PrimeNG

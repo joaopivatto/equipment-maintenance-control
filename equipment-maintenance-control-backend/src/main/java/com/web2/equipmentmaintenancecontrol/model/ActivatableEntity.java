@@ -12,8 +12,4 @@ public abstract class ActivatableEntity {
   public boolean getActive() {
     return active;
   }
-
-  public void setActive(boolean active) {
-    this.active = active;
-  }
 }

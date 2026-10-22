@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -26,6 +26,7 @@ import { NotificationService } from '../../../../core/notifications/notification
   styleUrl: './category-form.component.scss',
 })
 export class CategoryFormComponent implements OnInit {
+  private readonly changeDetector = inject(ChangeDetectorRef);
   // Obtém a referência do formulário HTML para validações
   @ViewChild('categoryForm') categoryForm!: NgForm;
 
@@ -52,6 +53,7 @@ export class CategoryFormComponent implements OnInit {
         if (found) {
           // Clona o objeto para não alterar o serviço antes de clicar em "Salvar"
           this.category = { ...found };
+          this.changeDetector.markForCheck();
         } else {
           this.notificationService.error('Erro', 'Categoria não encontrada!');
           this.router.navigate(['/categories/list']); // Volta para a listagem se der erro

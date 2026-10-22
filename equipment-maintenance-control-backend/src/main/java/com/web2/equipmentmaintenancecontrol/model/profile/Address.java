@@ -1,6 +1,7 @@
 package com.web2.equipmentmaintenancecontrol.model.profile;
 
 import jakarta.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Address {
@@ -23,10 +24,9 @@ public class Address {
 
   private String state;
 
-  public Address() {}
+  protected Address() {}
 
   public Address(
-      Integer id,
       String zipCode,
       String street,
       Integer number,
@@ -34,9 +34,8 @@ public class Address {
       String neighborhood,
       String city,
       String state) {
-    this.id = id;
-    this.zipCode = zipCode;
-    this.street = street;
+    this.zipCode = Objects.requireNonNull(zipCode, "zipCode é obrigatório");
+    this.street = Objects.requireNonNull(street, "street é obrigatório");
     this.number = number;
     this.complement = complement;
     this.neighborhood = neighborhood;
@@ -48,63 +47,31 @@ public class Address {
     return id;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
   public String getZipCode() {
     return zipCode;
-  }
-
-  public void setZipCode(String zipCode) {
-    this.zipCode = zipCode;
   }
 
   public String getStreet() {
     return street;
   }
 
-  public void setStreet(String street) {
-    this.street = street;
-  }
-
   public Integer getNumber() {
     return number;
-  }
-
-  public void setNumber(Integer number) {
-    this.number = number;
   }
 
   public String getComplement() {
     return complement;
   }
 
-  public void setComplement(String complement) {
-    this.complement = complement;
-  }
-
   public String getNeighborhood() {
     return neighborhood;
-  }
-
-  public void setNeighborhood(String neighborhood) {
-    this.neighborhood = neighborhood;
   }
 
   public String getCity() {
     return city;
   }
 
-  public void setCity(String city) {
-    this.city = city;
-  }
-
   public String getState() {
     return state;
-  }
-
-  public void setState(String state) {
-    this.state = state;
   }
 }
