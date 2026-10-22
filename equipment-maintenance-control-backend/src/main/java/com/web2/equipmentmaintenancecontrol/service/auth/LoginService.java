@@ -2,6 +2,7 @@ package com.web2.equipmentmaintenancecontrol.service.auth;
 
 import com.web2.equipmentmaintenancecontrol.domain.security.HashedSaltedPassword;
 import com.web2.equipmentmaintenancecontrol.domain.security.PasswordHasherSalter;
+import com.web2.equipmentmaintenancecontrol.domain.token.TokenManager;
 import com.web2.equipmentmaintenancecontrol.exception.AppException;
 import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
 import com.web2.equipmentmaintenancecontrol.model.auth.dto.LoginRequest;
@@ -16,10 +17,15 @@ public class LoginService extends BaseService {
 
   private final ProfileRepository repository;
   private final PasswordHasherSalter passwordHasherSalter;
+  private final TokenManager tokenManager;
 
-  LoginService(ProfileRepository repository, PasswordHasherSalter passwordHasherSalter) {
+  LoginService(
+      ProfileRepository repository,
+      PasswordHasherSalter passwordHasherSalter,
+      TokenManager tokenManager) {
     this.repository = repository;
     this.passwordHasherSalter = passwordHasherSalter;
+    this.tokenManager = tokenManager;
   }
 
   public LoginResponse execute(LoginRequest request) {
@@ -35,7 +41,9 @@ public class LoginService extends BaseService {
       throw new AppException(ErrorCode.INVALID_CREDENTIALS);
     }
 
+    String token = tokenManager.generateToken(profile.getId(), profile.getType());
+
     return new LoginResponse(
-        profile.getType(), profile.getId(), profile.getName(), profile.getEmail());
+        profile.getType(), profile.getId(), profile.getName(), profile.getEmail(), token);
   }
 }

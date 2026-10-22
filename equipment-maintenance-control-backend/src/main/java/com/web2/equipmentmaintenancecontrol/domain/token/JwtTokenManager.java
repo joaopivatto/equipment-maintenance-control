@@ -37,24 +37,18 @@ public class JwtTokenManager implements TokenManager {
         .compact();
   }
 
-  public void validateToken(String token) {
+  public TokenClaims parseToken(String token) {
     try {
-      parseClaims(token);
+      Claims claims =
+          Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
+
+      Integer userId = Integer.valueOf(claims.getSubject());
+      ProfileType profileType = ProfileType.valueOf(claims.get(PROFILE_TYPE_CLAIM, String.class));
+
+      return new TokenClaims(userId, profileType);
     } catch (JwtException | IllegalArgumentException e) {
       throw new AppException(ErrorCode.INVALID_OR_EXPIRED_TOKEN);
     }
-  }
-
-  public Integer extractUserId(String token) {
-    return Integer.valueOf(parseClaims(token).getSubject());
-  }
-
-  public ProfileType extractProfileType(String token) {
-    return ProfileType.valueOf(parseClaims(token).get(PROFILE_TYPE_CLAIM, String.class));
-  }
-
-  private Claims parseClaims(String token) {
-    return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
   }
 
   private SecretKey getSigningKey() {

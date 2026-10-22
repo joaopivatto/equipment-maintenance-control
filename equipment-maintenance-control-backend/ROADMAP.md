@@ -113,7 +113,7 @@ Este arquivo é apenas o checklist de tarefas do backend.
   garantindo que o objeto nasça sempre em estado válido.
   *Como ficou:* resolvido junto de B-37 — ver `SPEC_CONSTRUTORES_E_CASCADE.md`.
 
-- [ ] **B-11.3 — Autenticação na API**
+- [X] **B-11.3 — Autenticação na API**
   Responsável: MATHEUS · Depende de: nada
   Tratar a autenticação entre front e api
 
