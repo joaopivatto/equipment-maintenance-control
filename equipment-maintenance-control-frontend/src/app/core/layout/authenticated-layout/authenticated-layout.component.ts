@@ -6,7 +6,6 @@ import { SidebarModule } from 'primeng/sidebar';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { Wrench } from '@primeicons/angular/wrench';
 import { PopoverModule } from 'primeng/popover';
 import { SignOut } from '@primeicons/angular/sign-out';
 
@@ -19,7 +18,6 @@ import { SignOut } from '@primeicons/angular/sign-out';
     AvatarModule,
     ButtonModule,
     CardModule,
-    Wrench,
     PopoverModule,
     SignOut,
     SlicePipe,

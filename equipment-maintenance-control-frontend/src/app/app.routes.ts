@@ -55,6 +55,7 @@ export const routes: Routes = [
   // sempre deixar por último, para que seja a última rota a ser verificada
   {
     path: '**',
+    title: 'Página não encontrada | Sistema de Gerenciamento',
     loadComponent: () =>
       import('./core/pages/not-found/not-found.component').then((m) => m.NotFoundComponent),
   },
