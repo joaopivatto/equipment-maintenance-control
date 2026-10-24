@@ -30,13 +30,14 @@ describe('HttpAuthApiClient', () => {
 
     const req = http.expectOne('/api/auth/login');
     expect(req.request.body).toEqual({ email: 'ana@x.com', password: '1234' });
-    req.flush({ userId: 7, profileType: 'EMPLOYEE', name: 'Ana', email: 'ana@x.com' });
+    req.flush({ userId: 7, profileType: 'EMPLOYEE', name: 'Ana', email: 'ana@x.com', token: 'test-token' });
 
     expect(result).toEqual({
       id: 7,
       name: 'Ana',
       email: 'ana@x.com',
       profileType: ProfileType.EMPLOYEE,
+      token: 'test-token',
     });
   });
 
