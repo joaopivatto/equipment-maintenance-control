@@ -26,5 +26,6 @@ export function toSessionUser(dto: ApiLoginResponseDto, typedEmail: string): Ses
     name: dto.name ?? email,
     email,
     profileType: toProfileType(dto.profileType),
+    token: dto.token,
   };
 }

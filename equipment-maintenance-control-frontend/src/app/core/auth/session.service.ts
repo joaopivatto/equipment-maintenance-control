@@ -50,7 +50,12 @@ export class SessionService {
     }
 
     try {
-      return JSON.parse(raw) as SessionUser;
+      const user = JSON.parse(raw) as SessionUser | null;
+      if (!user || typeof user.token !== 'string' || !user.token.trim()) {
+        localStorage.removeItem(STORAGE_KEY);
+        return null;
+      }
+      return user;
     } catch {
       localStorage.removeItem(STORAGE_KEY);
       return null;

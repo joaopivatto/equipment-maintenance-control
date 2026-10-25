@@ -1,7 +1,7 @@
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
@@ -17,6 +17,7 @@ import { EmployeeApiClient } from './features/employees/api/employee-api-client'
 import { HttpEmployeeApiClient } from './features/employees/api/http-employee-api-client';
 import { AuthApiClient } from './core/api/auth-api-client';
 import { routes } from './app.routes';
+import { authInterceptor } from './core/auth/auth.interceptor';
 
 
 registerLocaleData(localePt);
@@ -30,7 +31,7 @@ export const appConfig: ApplicationConfig = {
     { provide: AuthApiClient, useClass: HttpAuthApiClient },
     MessageService,
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authInterceptor])),
     provideRouter(routes),
     provideAnimationsAsync(),
     providePrimeNG({
