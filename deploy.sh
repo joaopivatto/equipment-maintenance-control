@@ -34,8 +34,10 @@ if changed equipment-maintenance-control-backend; then
 
   echo ">>> Aguardando a API responder em $HEALTH_URL"
   for i in $(seq 1 40); do
-    if curl -fsS -o /dev/null "$HEALTH_URL"; then
-      echo "API no ar."
+    # Qualquer resposta HTTP (200, 401...) prova que a API subiu; 000 = sem conexao.
+    CODE=$(curl -s -o /dev/null -w '%{http_code}' "$HEALTH_URL" || true)
+    if [ "$CODE" != "000" ]; then
+      echo "API no ar (HTTP $CODE)."
       break
     fi
     if [ "$i" = 40 ]; then
