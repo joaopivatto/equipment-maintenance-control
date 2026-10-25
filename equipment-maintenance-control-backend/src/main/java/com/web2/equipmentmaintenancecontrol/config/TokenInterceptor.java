@@ -4,11 +4,14 @@ import com.web2.equipmentmaintenancecontrol.domain.token.TokenClaims;
 import com.web2.equipmentmaintenancecontrol.domain.token.TokenManager;
 import com.web2.equipmentmaintenancecontrol.exception.AppException;
 import com.web2.equipmentmaintenancecontrol.exception.ErrorCode;
+import com.web2.equipmentmaintenancecontrol.model.profile.ProfileType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jspecify.annotations.NonNull;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
@@ -35,6 +38,8 @@ public class TokenInterceptor implements HandlerInterceptor {
     String token = extractToken(request);
     TokenClaims claims = tokenManager.parseToken(token);
 
+    requireAllowedProfile(handler, claims.profileType());
+
     request.setAttribute(USER_ID_ATTRIBUTE, claims.userId());
     request.setAttribute(PROFILE_TYPE_ATTRIBUTE, claims.profileType());
 
@@ -49,5 +54,24 @@ public class TokenInterceptor implements HandlerInterceptor {
     }
 
     return header.substring(BEARER_PREFIX.length());
+  }
+
+  private void requireAllowedProfile(Object handler, ProfileType profileType) {
+    if (!(handler instanceof HandlerMethod handlerMethod)) {
+      return;
+    }
+
+    RequiresProfile required =
+        AnnotatedElementUtils.findMergedAnnotation(
+            handlerMethod.getMethod(), RequiresProfile.class);
+    if (required == null) {
+      required =
+          AnnotatedElementUtils.findMergedAnnotation(
+              handlerMethod.getBeanType(), RequiresProfile.class);
+    }
+
+    if (required != null && required.value() != profileType) {
+      throw new AppException(ErrorCode.ACCESS_DENIED);
+    }
   }
 }

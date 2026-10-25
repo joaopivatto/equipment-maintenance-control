@@ -1,7 +1,9 @@
 package com.web2.equipmentmaintenancecontrol.controller.equipment;
 
+import com.web2.equipmentmaintenancecontrol.config.RequiresProfile;
 import com.web2.equipmentmaintenancecontrol.model.equipment.dto.EquipmentTypeRequest;
 import com.web2.equipmentmaintenancecontrol.model.equipment.dto.EquipmentTypeResponse;
+import com.web2.equipmentmaintenancecontrol.model.profile.ProfileType;
 import com.web2.equipmentmaintenancecontrol.service.equipment.EquipmentTypeService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -30,18 +32,21 @@ public class EquipmentTypeController {
   }
 
   @PostMapping
+  @RequiresProfile(ProfileType.EMPLOYEE)
   public ResponseEntity<EquipmentTypeResponse> create(
       @Valid @RequestBody EquipmentTypeRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
   }
 
   @PutMapping("/{id}")
+  @RequiresProfile(ProfileType.EMPLOYEE)
   public ResponseEntity<EquipmentTypeResponse> update(
       @PathVariable Integer id, @Valid @RequestBody EquipmentTypeRequest request) {
     return ResponseEntity.ok(service.update(id, request));
   }
 
   @DeleteMapping("/{id}")
+  @RequiresProfile(ProfileType.EMPLOYEE)
   public ResponseEntity<Void> delete(@PathVariable Integer id) {
 
     service.delete(id);

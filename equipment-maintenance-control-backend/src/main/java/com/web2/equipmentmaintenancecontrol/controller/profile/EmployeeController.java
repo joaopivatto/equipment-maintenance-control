@@ -1,5 +1,9 @@
 package com.web2.equipmentmaintenancecontrol.controller.profile;
 
+import com.web2.equipmentmaintenancecontrol.config.AccessGuard;
+import com.web2.equipmentmaintenancecontrol.config.RequiresProfile;
+import com.web2.equipmentmaintenancecontrol.config.TokenInterceptor;
+import com.web2.equipmentmaintenancecontrol.model.profile.ProfileType;
 import com.web2.equipmentmaintenancecontrol.model.profile.dtos.EmployeeCreateRequest;
 import com.web2.equipmentmaintenancecontrol.model.profile.dtos.EmployeeResponse;
 import com.web2.equipmentmaintenancecontrol.model.profile.dtos.EmployeeUpdateRequest;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/employees")
+@RequiresProfile(ProfileType.EMPLOYEE)
 public class EmployeeController {
 
   private final EmployeeService service;
@@ -54,7 +60,11 @@ public class EmployeeController {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(
-      @PathVariable Integer id, @RequestParam Integer currentEmployeeId) {
+      @RequestAttribute(TokenInterceptor.USER_ID_ATTRIBUTE) Integer userId,
+      @PathVariable Integer id,
+      @RequestParam Integer currentEmployeeId) {
+    AccessGuard.requireSameUser(userId, currentEmployeeId);
+
     service.delete(id, currentEmployeeId);
 
     return ResponseEntity.noContent().build();

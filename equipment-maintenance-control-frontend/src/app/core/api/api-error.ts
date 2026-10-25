@@ -26,6 +26,8 @@ const MESSAGES_BY_CODE: Record<string, string> = {
   MAINTENANCE_ALREADY_PERFORMED: 'A manutenção desta solicitação já foi efetuada.',
   SELF_REDIRECT_NOT_ALLOWED: 'Não é possível redirecionar a solicitação para si mesmo.',
   INVALID_CREDENTIALS: 'E-mail ou senha inválidos.',
+  INVALID_OR_EXPIRED_TOKEN: 'Sua sessão expirou. Faça login novamente.',
+  ACCESS_DENIED: 'Você não tem permissão para realizar esta ação.',
 };
 
 const NETWORK_ERROR_MESSAGE = 'Não foi possível conectar ao servidor. Tente novamente.';
