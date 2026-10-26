@@ -33,9 +33,6 @@ jobs:
             set -euo pipefail
             cd ~/equipment-maintenance-control/equipment-maintenance-control-backend
 
-            # Le as credenciais do container ja em execucao (o Compose ja resolveu o .env
-            # com suas proprias regras; dar "source" no .env como shell script quebra se
-            # algum valor tiver "!", aspas, "$" etc.)
             DB_USER=$(docker compose exec -T backend printenv SPRING_DATASOURCE_USERNAME)
             DB_PASSWORD=$(docker compose exec -T backend printenv SPRING_DATASOURCE_PASSWORD)
 
