@@ -18,7 +18,7 @@ import { HttpEmployeeApiClient } from './features/employees/api/http-employee-ap
 import { AuthApiClient } from './core/api/auth-api-client';
 import { routes } from './app.routes';
 import { authInterceptor } from './core/auth/auth.interceptor';
-
+import { authErrorInterceptor } from './core/auth/auth-error.interceptor';
 
 registerLocaleData(localePt);
 
@@ -31,7 +31,7 @@ export const appConfig: ApplicationConfig = {
     { provide: AuthApiClient, useClass: HttpAuthApiClient },
     MessageService,
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, authErrorInterceptor])),
     provideRouter(routes),
     provideAnimationsAsync(),
     providePrimeNG({

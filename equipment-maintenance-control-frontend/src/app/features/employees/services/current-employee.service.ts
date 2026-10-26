@@ -3,8 +3,6 @@ import { SessionService } from '../../../core/auth/session.service';
 import { EmployeeApiClient } from '../api/employee-api-client';
 import { Employee } from '../models/employee.model';
 
-// Correlaciona o usuário da sessão (SessionUser) com o funcionário cadastrado,
-// já que SessionUser.id e Employee.id não são o mesmo identificador.
 @Injectable({
   providedIn: 'root',
 })
@@ -19,7 +17,7 @@ export class CurrentEmployeeService {
   constructor() {
     effect(() => {
       const email = this.sessionService.currentUser()?.email;
-      if (!email) {
+      if (!email || !this.sessionService.isEmployee()) {
         this.currentEmployeeState.set(undefined);
         return;
       }
