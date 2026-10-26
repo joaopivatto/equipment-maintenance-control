@@ -32,7 +32,10 @@ jobs:
           ssh -i ~/.ssh/id_deploy "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" '
             set -euo pipefail
             cd ~/equipment-maintenance-control/equipment-maintenance-control-backend
-            set -a; source .env; set +a
+
+            DB_USER=$(docker compose exec -T backend printenv SPRING_DATASOURCE_USERNAME)
+            DB_PASSWORD=$(docker compose exec -T backend printenv SPRING_DATASOURCE_PASSWORD)
+
             mysql -u "$DB_USER" -p"$DB_PASSWORD" < src/main/resources/db/schema.sql
             mysql -u "$DB_USER" -p"$DB_PASSWORD" < src/main/resources/db/seed.sql
             docker compose restart backend
