@@ -1,0 +1,39 @@
+name: Reset Database
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Digite RESETAR para confirmar: isso APAGA o banco atual na VPS (schema.sql + seed.sql)'
+        required: true
+
+jobs:
+  reset-db:
+    name: Resetar banco na VPS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validar confirmação
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "RESETAR" ]; then
+            echo "Confirmação inválida. Digite exatamente RESETAR para prosseguir."
+            exit 1
+          fi
+
+      - name: Configurar chave SSH
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Rodar schema.sql + seed.sql na VPS
+        run: |
+          ssh -i ~/.ssh/id_deploy "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" '
+            set -euo pipefail
+            cd ~/equipment-maintenance-control/equipment-maintenance-control-backend
+            set -a; source .env; set +a
+            mysql -u "$DB_USER" -p"$DB_PASSWORD" < src/main/resources/db/schema.sql
+            mysql -u "$DB_USER" -p"$DB_PASSWORD" < src/main/resources/db/seed.sql
+            docker compose restart backend
+          '
