@@ -6,7 +6,7 @@ import java.time.ZoneId;
 
 public abstract class BaseService {
 
-  protected static final ZoneId APPLICATION_ZONE = ZoneId.of("America/Sao_Paulo");
+  public static final ZoneId APPLICATION_ZONE = ZoneId.of("America/Sao_Paulo");
 
   protected LocalDateTime now() {
     return LocalDateTime.now(APPLICATION_ZONE);
