@@ -1,0 +1,64 @@
+@if (request; as maintenanceRequest) {
+<div class="app-page">
+  <div class="page__head">
+    <button type="button" pButton [text]="true" class="page__back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Voltar
+    </button>
+    <h2 class="page__title">Pagamento da Solicitação #{{ maintenanceRequest.id }}</h2>
+  </div>
+
+  <p-card>
+    <div class="payment-details">
+      <div class="payment-details__row">
+        <span class="payment-details__label">Equipamento</span>
+        <span>{{ maintenanceRequest.equipmentDescription }}</span>
+      </div>
+      <div class="payment-details__row">
+        <span class="payment-details__label">Defeito relatado</span>
+        <span>{{ maintenanceRequest.defectDescription }}</span>
+      </div>
+      <div class="payment-details__row">
+        <span class="payment-details__label">Estado</span>
+        <span
+          class="inline-block rounded-lg px-3 py-1 text-xs font-semibold"
+          [ngClass]="statusClasses[maintenanceRequest.status]"
+        >
+            {{ maintenanceRequest.status }}
+          </span>
+      </div>
+      @if (maintenanceRequest.maintenanceInstructions) {
+      <div class="payment-details__row">
+        <span class="payment-details__label">Orientações de manutenção</span>
+        <span>{{ maintenanceRequest.maintenanceInstructions }}</span>
+      </div>
+      }
+    </div>
+
+    <div class="payment-value">
+      <span class="payment-value__label">Valor a pagar</span>
+      <span class="payment-value__amount">
+          {{ maintenanceRequest.budget?.value | currency: 'BRL' }}
+        </span>
+    </div>
+
+    <div class="payment-actions">
+      <button
+        type="button"
+        pButton
+        severity="success"
+        [disabled]="paying"
+        (click)="confirmPayment()"
+      >
+        <i class="pi pi-wallet"></i>
+        Pagar
+      </button>
+      <button type="button" pButton [text]="true" (click)="goBack()">Cancelar</button>
+    </div>
+  </p-card>
+</div>
+} @else {
+<div class="app-page" role="status" aria-live="polite">
+  <p-card>Carregando pagamento...</p-card>
+</div>
+}

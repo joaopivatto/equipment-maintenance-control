@@ -9,7 +9,6 @@ const PDF_HEADER_COLOR: [number, number, number] = [13, 148, 136];
 
 @Service()
 export class ReportsPdfService {
-
   downloadRevenueReportsPdf(dashboard: ReportsDashboard): void {
     const document = new jsPDF({
       orientation: 'portrait',
@@ -18,7 +17,7 @@ export class ReportsPdfService {
     });
 
     document.setProperties({
-      title: `Relatórios de receitas (${this.formatDate(dashboard.revenueReport.startDate)} a ${this.formatDate(dashboard.revenueReport.endDate)})`,
+      title: `Relatórios de receitas (${this.formatPeriod(dashboard.revenueReport.startDate, dashboard.revenueReport.endDate)})`,
       subject: 'Receitas por dia e por categoria',
       creator: 'Controle de Manutenção de Equipamentos',
     });
@@ -62,11 +61,7 @@ export class ReportsPdfService {
     document.text('Período das receitas por dia', PDF_MARGIN, 166);
     document.setFont('helvetica', 'bold');
     document.setFontSize(15);
-    document.text(
-      `${this.formatDate(startDate)} a ${this.formatDate(endDate)}`,
-      PDF_MARGIN,
-      177,
-    );
+    document.text(this.formatPeriod(startDate, endDate), PDF_MARGIN, 177);
 
     document.setFont('helvetica', 'normal');
     document.setFontSize(10);
@@ -81,10 +76,7 @@ export class ReportsPdfService {
     );
   }
 
-  private addDailyRevenueSection(
-    document: jsPDF,
-    dashboard: ReportsDashboard,
-  ): void {
+  private addDailyRevenueSection(document: jsPDF, dashboard: ReportsDashboard): void {
     const report = dashboard.revenueReport;
 
     document.setFontSize(18);
@@ -94,7 +86,7 @@ export class ReportsPdfService {
     document.setFontSize(10);
     document.setTextColor(90);
     document.text(
-      `Período: ${this.formatDate(report.startDate)} a ${this.formatDate(report.endDate)}`,
+      `Período: ${this.formatPeriod(report.startDate, report.endDate)}`,
       PDF_MARGIN,
       26,
     );
@@ -106,16 +98,8 @@ export class ReportsPdfService {
       PDF_MARGIN,
       35,
     );
-    document.text(
-      `Pagamentos: ${report.paidRequestsCount}`,
-      PDF_MARGIN,
-      42,
-    );
-    document.text(
-      `Ticket médio: ${this.formatCurrency(report.averageTicket)}`,
-      90,
-      42,
-    );
+    document.text(`Pagamentos: ${report.paidRequestsCount}`, PDF_MARGIN, 42);
+    document.text(`Ticket médio: ${this.formatCurrency(report.averageTicket)}`, 90, 42);
 
     const dailyRevenueRows = report.dailyRevenue.length
       ? report.dailyRevenue.map((item) => [
@@ -141,10 +125,7 @@ export class ReportsPdfService {
     });
   }
 
-  private addCategoryRevenueSection(
-    document: jsPDF,
-    categoryRevenue: CategoryRevenue[],
-  ): void {
+  private addCategoryRevenueSection(document: jsPDF, categoryRevenue: CategoryRevenue[]): void {
     document.addPage();
 
     document.setFontSize(18);
@@ -153,11 +134,7 @@ export class ReportsPdfService {
 
     document.setFontSize(10);
     document.setTextColor(90);
-    document.text(
-      'Receita acumulada em todo o histórico da empresa',
-      PDF_MARGIN,
-      26,
-    );
+    document.text('Receita acumulada em todo o histórico da empresa', PDF_MARGIN, 26);
 
     const categoryRevenueRows = categoryRevenue.length
       ? categoryRevenue.map((item) => [
@@ -202,7 +179,24 @@ export class ReportsPdfService {
 
   private buildFileName(dashboard: ReportsDashboard): string {
     const { startDate, endDate } = dashboard.revenueReport;
-    return `relatorios-receitas-${this.formatDate(startDate)}-a-${this.formatDate(endDate)}.pdf`;
+    const period = this.formatPeriod(startDate, endDate)
+      .replaceAll('/', '-')
+      .replaceAll(' ', '-')
+      .toLowerCase();
+    return `relatorios-receitas-${period}.pdf`;
+  }
+
+  private formatPeriod(startDate?: string, endDate?: string): string {
+    if (startDate && endDate) {
+      return `${this.formatDate(startDate)} a ${this.formatDate(endDate)}`;
+    }
+    if (startDate) {
+      return `a partir de ${this.formatDate(startDate)}`;
+    }
+    if (endDate) {
+      return `até ${this.formatDate(endDate)}`;
+    }
+    return 'todo o período';
   }
 
   private formatDate(value: string): string {

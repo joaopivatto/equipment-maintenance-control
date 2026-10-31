@@ -18,12 +18,12 @@
       @if (selectedPeriod === 'custom') {
       <div class="field">
         <label for="reportStartDate">Data inicial</label>
-        <p-datepicker inputId="reportStartDate" [(ngModel)]="startDate" dateFormat="dd/mm/yy" [showIcon]="true" [iconDisplay]="'input'" [showClear]="false" (ngModelChange)="loadReports()" />
+        <p-datepicker inputId="reportStartDate" [(ngModel)]="startDate" dateFormat="dd/mm/yy" [showIcon]="true" [iconDisplay]="'input'" [showClear]="true" (ngModelChange)="loadReports()" />
       </div>
 
       <div class="field">
         <label for="reportEndDate">Data final</label>
-        <p-datepicker inputId="reportEndDate" [(ngModel)]="endDate" dateFormat="dd/mm/yy" [showIcon]="true" [iconDisplay]="'input'" [showClear]="false" (ngModelChange)="loadReports()" />
+        <p-datepicker inputId="reportEndDate" [(ngModel)]="endDate" dateFormat="dd/mm/yy" [showIcon]="true" [iconDisplay]="'input'" [showClear]="true" (ngModelChange)="loadReports()" />
       </div>
       }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, effect, inject, signal } from '@angular/core';
-import { CommonModule, CurrencyPipe, Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TableModule } from 'primeng/table';
@@ -44,7 +44,7 @@ const FILTER_OPTIONS: { label: string; value: FilterMode }[] = [
     DatePickerModule,
     ConfirmDialogModule,
   ],
-  providers: [ConfirmationService, CurrencyPipe],
+  providers: [ConfirmationService],
   templateUrl: './customer-request-list.component.html',
   styleUrl: './customer-request-list.component.scss',
 })
@@ -56,7 +56,6 @@ export class CustomerRequestListComponent implements OnInit {
   private router = inject(Router);
   private notificationService = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
-  private currencyPipe = inject(CurrencyPipe);
 
   private allRequests: MaintenanceRequest[] = [];
   requests: MaintenanceRequest[] = [];
@@ -262,40 +261,7 @@ export class CustomerRequestListComponent implements OnInit {
 
   // RF010 - Pagar serviço: ARRUMADA -> PAGA
   payForService(id: number): void {
-    this.maintenanceRequestApiClient.findById(id).subscribe((request) => {
-      const formattedValue = this.currencyPipe.transform(request?.budget?.value, 'BRL');
-
-      this.confirmationService.confirm({
-        message: `Confirmar o pagamento no valor de ${formattedValue}?`,
-        header: 'Pagar serviço',
-        icon: 'pi pi-wallet',
-        acceptLabel: 'Confirmar pagamento',
-        rejectLabel: 'Cancelar',
-        acceptButtonProps: {
-          severity: 'success',
-        },
-        rejectButtonProps: {
-          severity: 'secondary',
-          outlined: true,
-        },
-        accept: () => {
-          this.maintenanceRequestApiClient.pay(id).subscribe((updated) => {
-            if (!updated) {
-              this.notificationService.error('Erro', 'Não foi possível registrar o pagamento.');
-
-              return;
-            }
-
-            this.notificationService.success(
-              'Pagamento confirmado',
-              `Serviço pago no valor de ${formattedValue}.`,
-            );
-
-            this.reload();
-          });
-        },
-      });
-    });
+    this.router.navigate(['/requests', id, 'payment']);
   }
 
   // --- Ações do funcionário ---

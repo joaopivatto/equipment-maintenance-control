@@ -55,8 +55,8 @@ export class ReportsComponent implements OnInit {
   ];
 
   protected selectedPeriod: PeriodPreset = 'last-month';
-  protected startDate = this.subtractMonths(new Date(), 1);
-  protected endDate = new Date();
+  protected startDate: Date | null = this.subtractMonths(new Date(), 1);
+  protected endDate: Date | null = new Date();
 
   protected dailyRevenueData: ChartData<'line'> = { labels: [], datasets: [] };
   protected categoryRevenueData: ChartData<'bar'> = { labels: [], datasets: [] };
@@ -90,15 +90,7 @@ export class ReportsComponent implements OnInit {
   }
 
   protected loadReports(): void {
-    if (!this.startDate || !this.endDate) {
-      this.notificationService.warning(
-        'Informe o período',
-        'Selecione as datas inicial e final do relatório.',
-      );
-      return;
-    }
-
-    if (this.startDate > this.endDate) {
+    if (this.startDate && this.endDate && this.startDate > this.endDate) {
       this.notificationService.warning(
         'Período inválido',
         'A data inicial deve ser anterior ou igual à data final.',
