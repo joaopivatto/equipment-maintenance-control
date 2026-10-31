@@ -27,6 +27,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("LoginService")
@@ -93,6 +94,20 @@ class LoginServiceTest {
     verify(passwordHasherSalter).matches(eq("1234"), captor.capture());
     assertThat(captor.getValue().hash()).isEqualTo(customer.getPasswordHash());
     assertThat(captor.getValue().salt()).isEqualTo(customer.getPasswordSalt());
+  }
+
+  @Test
+  @DisplayName("falha com INVALID_CREDENTIALS quando o perfil está inativo")
+  void failsWhenProfileInactive() {
+    Customer customer = Fixtures.customer(5);
+    ReflectionTestUtils.setField(customer, "active", false);
+    when(repository.findByEmail(customer.getEmail())).thenReturn(customer);
+
+    assertThatThrownBy(() -> service.execute(new LoginRequest(customer.getEmail(), "1234")))
+        .isInstanceOf(AppException.class)
+        .extracting(e -> ((AppException) e).getErrorCode())
+        .isEqualTo(ErrorCode.INVALID_CREDENTIALS);
+    verify(tokenManager, never()).generateToken(any(), any());
   }
 
   @Test

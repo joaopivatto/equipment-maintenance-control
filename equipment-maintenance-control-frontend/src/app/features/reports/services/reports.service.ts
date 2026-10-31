@@ -31,7 +31,7 @@ export class ReportsService {
   private readonly categoryApiClient = inject(EquipmentCategoryApiClient);
   private readonly maintenanceRequestApiClient = inject(MaintenanceRequestApiClient);
 
-  loadDashboard(startDate: Date, endDate: Date): Observable<ReportsDashboard> {
+  loadDashboard(startDate: Date | null, endDate: Date | null): Observable<ReportsDashboard> {
     return forkJoin({
       requests: this.maintenanceRequestApiClient.listAll(),
       categories: this.categoryApiClient.listAll(),
@@ -46,8 +46,8 @@ export class ReportsService {
 
   private buildRevenueReport(
     requests: MaintenanceRequest[],
-    startDate: Date,
-    endDate: Date,
+    startDate: Date | null,
+    endDate: Date | null,
   ): RevenueReport {
     const paidRequests = requests.filter(
       (request) =>
@@ -66,8 +66,8 @@ export class ReportsService {
     ).length;
 
     return {
-      startDate: this.dateService.toIsoDate(startDate),
-      endDate: this.dateService.toIsoDate(endDate),
+      startDate: startDate ? this.dateService.toIsoDate(startDate) : undefined,
+      endDate: endDate ? this.dateService.toIsoDate(endDate) : undefined,
       totalRevenue,
       totalQuoted,
       paidRequestsCount: paidRequests.length,
@@ -111,28 +111,45 @@ export class ReportsService {
     requests: MaintenanceRequest[],
     categories: EquipmentCategory[],
   ): CategoryRevenue[] {
-    const paidRequests = requests.filter(
-      (request) => REVENUE_STATUSES.has(request.status) && !!request.paidAt,
-    );
+    const revenueByCategory = new Map<number, CategoryRevenue>();
 
-    return categories.map((category) => {
-      const categoryRequests = paidRequests.filter(
-        (request) => request.equipmentCategoryId === category.id,
-      );
-
-      return {
+    for (const category of categories) {
+      revenueByCategory.set(category.id, {
         categoryId: category.id,
         categoryName: category.name,
-        totalRevenue: this.sumRevenue(categoryRequests),
-        paidRequestsCount: categoryRequests.length,
+        totalRevenue: 0,
+        paidRequestsCount: 0,
+      });
+    }
+
+    const paidRequests = requests.filter(
+      (request) =>
+        REVENUE_STATUSES.has(request.status) &&
+        !!request.paidAt &&
+        request.equipmentCategoryId !== undefined,
+    );
+
+    for (const request of paidRequests) {
+      const categoryId = request.equipmentCategoryId!;
+      const current = revenueByCategory.get(categoryId) ?? {
+        categoryId,
+        categoryName: request.equipmentCategoryName ?? `Categoria ${categoryId}`,
+        totalRevenue: 0,
+        paidRequestsCount: 0,
       };
-    });
+
+      current.totalRevenue += request.budget?.value ?? 0;
+      current.paidRequestsCount += 1;
+      revenueByCategory.set(categoryId, current);
+    }
+
+    return [...revenueByCategory.values()];
   }
 
   private buildStatusSummary(
     requests: MaintenanceRequest[],
-    startDate: Date,
-    endDate: Date,
+    startDate: Date | null,
+    endDate: Date | null,
   ): StatusSummary[] {
     const requestsInPeriod = requests.filter((request) =>
       this.isDateInRange(request.createdAt, startDate, endDate),
@@ -144,15 +161,30 @@ export class ReportsService {
     }));
   }
 
-  private isDateInRange(value: string, startDate: Date, endDate: Date): boolean {
+  private isDateInRange(value: string, startDate: Date | null, endDate: Date | null): boolean {
     const date = new Date(value);
-    const start = new Date(startDate);
-    const end = new Date(endDate);
 
-    start.setHours(0, 0, 0, 0);
-    end.setHours(23, 59, 59, 999);
+    if (Number.isNaN(date.getTime())) {
+      return false;
+    }
 
-    return !Number.isNaN(date.getTime()) && date >= start && date <= end;
+    if (startDate) {
+      const start = new Date(startDate);
+      start.setHours(0, 0, 0, 0);
+      if (date < start) {
+        return false;
+      }
+    }
+
+    if (endDate) {
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999);
+      if (date > end) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   private sumRevenue(requests: MaintenanceRequest[]): number {

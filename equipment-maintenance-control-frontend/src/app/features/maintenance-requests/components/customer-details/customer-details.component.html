@@ -1,0 +1,22 @@
+<div class="customer-details">
+  <div class="customer-details__row">
+    <span class="customer-details__label">Cliente</span>
+    <span>{{ name() }}</span>
+  </div>
+  <div class="customer-details__row">
+    <span class="customer-details__label">E-mail</span>
+    <span>{{ customer()?.email || '-' }}</span>
+  </div>
+  <div class="customer-details__row">
+    <span class="customer-details__label">CPF</span>
+    <span>{{ cpf() }}</span>
+  </div>
+  <div class="customer-details__row">
+    <span class="customer-details__label">Telefone</span>
+    <span>{{ phone() }}</span>
+  </div>
+  <div class="customer-details__row">
+    <span class="customer-details__label">Endereço</span>
+    <span>{{ address() }}</span>
+  </div>
+</div>

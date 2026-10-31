@@ -20,8 +20,8 @@ export interface StatusSummary {
 }
 
 export interface RevenueReport {
-  startDate: string;
-  endDate: string;
+  startDate?: string;
+  endDate?: string;
   totalRevenue: number;
   totalQuoted: number;
   paidRequestsCount: number;

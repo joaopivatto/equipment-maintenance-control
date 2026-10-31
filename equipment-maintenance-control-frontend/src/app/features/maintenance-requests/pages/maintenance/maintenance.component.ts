@@ -14,6 +14,7 @@ import {
   RequestStatus,
   STATUS_CLASSES,
 } from '../../models/maintenance-request.model';
+import { CustomerDetailsComponent } from '../../components/customer-details/customer-details.component';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 import { CurrentEmployeeService } from '../../../employees/services/current-employee.service';
 
@@ -27,6 +28,7 @@ import { CurrentEmployeeService } from '../../../employees/services/current-empl
     ButtonModule,
     TextareaModule,
     ConfirmDialogModule,
+    CustomerDetailsComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './maintenance.component.html',
@@ -54,6 +56,13 @@ export class MaintenanceComponent implements OnInit {
   }
   get responsibleEmployeeName(): string {
     return this.currentEmployee()?.name ?? 'Funcionário não identificado';
+  }
+
+  redirect(): void {
+    const current = this.request();
+    if (current) {
+      this.router.navigate(['/requests', current.id, 'redirect']);
+    }
   }
 
   ngOnInit(): void {

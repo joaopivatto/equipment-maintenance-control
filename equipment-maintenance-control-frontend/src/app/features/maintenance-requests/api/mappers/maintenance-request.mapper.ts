@@ -1,9 +1,14 @@
 import { ApiEmployeeDto } from '../../../employees/api/dto/api-employee.dto';
 import { Budget } from '../../models/budget.model';
 import { HistoryEntry } from '../../models/history-entry.model';
-import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
+import {
+  CustomerInfo,
+  MaintenanceRequest,
+  RequestStatus,
+} from '../../models/maintenance-request.model';
 import {
   ApiBudgetDto,
+  ApiCustomerDto,
   ApiHistoryEntryDto,
   ApiMaintenanceRequestDto,
 } from '../dto/api-maintenance-request.dto';
@@ -50,6 +55,20 @@ function toBudget(dto: ApiBudgetDto): Budget {
   };
 }
 
+function toCustomerInfo(dto: ApiCustomerDto | undefined): CustomerInfo | undefined {
+  if (!dto) {
+    return undefined;
+  }
+
+  return {
+    name: dto.name,
+    email: dto.email,
+    cpf: dto.cpf,
+    phone: dto.phone,
+    address: dto.address ? { ...dto.address } : undefined,
+  };
+}
+
 function nameOf(employee: ApiEmployeeDto | undefined): string | undefined {
   return employee?.name;
 }
@@ -77,6 +96,7 @@ export function toMaintenanceRequest(dto: ApiMaintenanceRequestDto): Maintenance
     budget: dto.budget ? toBudget(dto.budget) : undefined,
     rejectionReason: dto.rejectionReason,
     customerName: dto.customer?.name,
+    customer: toCustomerInfo(dto.customer),
     maintenanceDescription: dto.maintenance?.description,
     maintenanceInstructions: dto.maintenance?.instructions,
     assignedEmployeeId: dto.assignedEmployee?.id,

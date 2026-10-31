@@ -31,7 +31,9 @@ public class LoginService extends BaseService {
   public LoginResponse execute(LoginRequest request) {
     Profile profile = this.repository.findByEmail(request.email());
 
-    if (profile == null) throw new AppException(ErrorCode.INVALID_CREDENTIALS);
+    if (profile == null || !profile.getActive()) {
+      throw new AppException(ErrorCode.INVALID_CREDENTIALS);
+    }
 
     HashedSaltedPassword hashedSaltedPassword =
         new HashedSaltedPassword(profile.getPasswordHash(), profile.getPasswordSalt());

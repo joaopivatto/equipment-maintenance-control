@@ -42,6 +42,12 @@ export const MAINTENANCE_REQUESTS_ROUTES: Routes = [
       import('./pages/maintenance/maintenance.component').then((m) => m.MaintenanceComponent),
   },
   {
+    path: ':id/payment',
+    title: 'Pagamento | Sistema de Gerenciamento',
+    loadComponent: () =>
+      import('./pages/payment/payment.component').then((m) => m.PaymentComponent),
+  },
+  {
     path: ':id/redirect',
     title: 'Redirecionar solicitação | Sistema de Gerenciamento',
     loadComponent: () =>
