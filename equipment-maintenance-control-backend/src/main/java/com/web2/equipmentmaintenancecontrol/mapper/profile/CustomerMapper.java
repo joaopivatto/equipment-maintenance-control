@@ -17,12 +17,12 @@ public class CustomerMapper extends BaseMapper {
     }
     String phone = entity.getPhone() != null ? entity.getPhone().getNumber() : null;
     return new CustomerResponse(
-            entity.getId(),
-            entity.getName(),
-            entity.getEmail(),
-            entity.getCpf(),
-            phone,
-            toAddressResponse(entity.getAddress()));
+        entity.getId(),
+        entity.getName(),
+        entity.getEmail(),
+        entity.getCpf(),
+        phone,
+        toAddressResponse(entity.getAddress()));
   }
 
   public List<CustomerResponse> toResponse(List<Customer> entities) {
@@ -37,12 +37,12 @@ public class CustomerMapper extends BaseMapper {
       return null;
     }
     return new AddressResponse(
-            address.getZipCode(),
-            address.getStreet(),
-            address.getNumber(),
-            address.getComplement(),
-            address.getNeighborhood(),
-            address.getCity(),
-            address.getState());
+        address.getZipCode(),
+        address.getStreet(),
+        address.getNumber(),
+        address.getComplement(),
+        address.getNeighborhood(),
+        address.getCity(),
+        address.getState());
   }
 }
