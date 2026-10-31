@@ -20,9 +20,9 @@ public class LoginService extends BaseService {
   private final TokenManager tokenManager;
 
   LoginService(
-      ProfileRepository repository,
-      PasswordHasherSalter passwordHasherSalter,
-      TokenManager tokenManager) {
+          ProfileRepository repository,
+          PasswordHasherSalter passwordHasherSalter,
+          TokenManager tokenManager) {
     this.repository = repository;
     this.passwordHasherSalter = passwordHasherSalter;
     this.tokenManager = tokenManager;
@@ -31,10 +31,12 @@ public class LoginService extends BaseService {
   public LoginResponse execute(LoginRequest request) {
     Profile profile = this.repository.findByEmail(request.email());
 
-    if (profile == null) throw new AppException(ErrorCode.INVALID_CREDENTIALS);
+    if (profile == null || !profile.getActive()) {
+      throw new AppException(ErrorCode.INVALID_CREDENTIALS);
+    }
 
     HashedSaltedPassword hashedSaltedPassword =
-        new HashedSaltedPassword(profile.getPasswordHash(), profile.getPasswordSalt());
+            new HashedSaltedPassword(profile.getPasswordHash(), profile.getPasswordSalt());
     boolean matches = this.passwordHasherSalter.matches(request.password(), hashedSaltedPassword);
 
     if (!matches) {
@@ -44,6 +46,6 @@ public class LoginService extends BaseService {
     String token = tokenManager.generateToken(profile.getId(), profile.getType());
 
     return new LoginResponse(
-        profile.getType(), profile.getId(), profile.getName(), profile.getEmail(), token);
+            profile.getType(), profile.getId(), profile.getName(), profile.getEmail(), token);
   }
 }

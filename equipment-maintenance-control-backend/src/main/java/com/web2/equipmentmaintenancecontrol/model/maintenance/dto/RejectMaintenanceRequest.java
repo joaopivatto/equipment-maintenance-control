@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record RejectMaintenanceRequest(
-    @NotNull(message = "O ID do cliente é obrigatório") Integer customerId,
-    @NotBlank(message = "O motivo da rejeição é obrigatório")
-        @Size(max = 500, message = "O motivo da rejeição deve ter no máximo 500 caracteres")
+        @NotNull(message = "O ID do cliente é obrigatório") Integer customerId,
+        @NotBlank(message = "O motivo da rejeição é obrigatório")
+        @Size(max = 255, message = "O motivo da rejeição deve ter no máximo 255 caracteres")
         String reason) {}

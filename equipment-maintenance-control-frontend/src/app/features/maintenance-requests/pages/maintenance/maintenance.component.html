@@ -12,6 +12,10 @@
 
   <p-card>
     <div class="maintenance-details">
+      <app-customer-details
+        [customer]="maintenanceRequest.customer"
+        [fallbackName]="maintenanceRequest.customerName"
+      />
       <div class="maintenance-details__row">
         <span class="maintenance-details__label">Equipamento</span>
         <span>{{ maintenanceRequest.equipmentDescription }}</span>
@@ -62,6 +66,10 @@
     </div>
 
     <div class="maintenance-actions">
+      <button pButton severity="secondary" [outlined]="true" (click)="redirect()">
+        <i class="pi pi-share-alt"></i>
+        Redirecionar manutenção
+      </button>
       <button pButton severity="success" (click)="confirmMaintenance()">
         <i class="pi pi-check"></i>
         Concluir manutenção

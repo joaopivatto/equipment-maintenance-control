@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.web2.equipmentmaintenancecontrol.model.profile.Customer;
 import com.web2.equipmentmaintenancecontrol.model.profile.Employee;
+import com.web2.equipmentmaintenancecontrol.model.profile.dtos.AddressResponse;
 import com.web2.equipmentmaintenancecontrol.model.profile.dtos.CustomerResponse;
 import com.web2.equipmentmaintenancecontrol.model.profile.dtos.EmployeeResponse;
 import com.web2.equipmentmaintenancecontrol.support.Fixtures;
@@ -29,7 +30,7 @@ class ProfileMapperTest {
       EmployeeResponse response = employeeMapper.toResponse(Fixtures.employee(10, "Ana"));
 
       assertThat(response)
-          .isEqualTo(new EmployeeResponse(10, "Ana", "func10@web2.com", LocalDate.of(1995, 6, 15)));
+              .isEqualTo(new EmployeeResponse(10, "Ana", "func10@web2.com", LocalDate.of(1995, 6, 15)));
     }
 
     @Test
@@ -44,9 +45,9 @@ class ProfileMapperTest {
     void mapsList() {
       assertThat(
               employeeMapper.toResponse(
-                  List.of(Fixtures.employee(1, "Ana"), Fixtures.employee(2, "Bia"))))
-          .extracting(EmployeeResponse::name)
-          .containsExactly("Ana", "Bia");
+                      List.of(Fixtures.employee(1, "Ana"), Fixtures.employee(2, "Bia"))))
+              .extracting(EmployeeResponse::name)
+              .containsExactly("Ana", "Bia");
     }
   }
 
@@ -55,11 +56,20 @@ class ProfileMapperTest {
   class CustomerMapping {
 
     @Test
-    @DisplayName("expõe apenas id, nome e e-mail (sem CPF, endereço ou senha)")
+    @DisplayName("expõe id, nome, e-mail, CPF, telefone e endereço (sem senha)")
     void mapsEntity() {
       CustomerResponse response = customerMapper.toResponse(Fixtures.customer(5, "Bruno"));
 
-      assertThat(response).isEqualTo(new CustomerResponse(5, "Bruno", "cliente5@web2.com"));
+      assertThat(response)
+              .isEqualTo(
+                      new CustomerResponse(
+                              5,
+                              "Bruno",
+                              "cliente5@web2.com",
+                              "12345678905",
+                              "41999990000",
+                              new AddressResponse(
+                                      "80010000", "Rua das Flores", 100, "Apto 10", "Centro", "Curitiba", "PR")));
     }
 
     @Test
@@ -74,9 +84,9 @@ class ProfileMapperTest {
     void mapsList() {
       assertThat(
               customerMapper.toResponse(
-                  List.of(Fixtures.customer(1, "Ana"), Fixtures.customer(2, "Bia"))))
-          .extracting(CustomerResponse::name)
-          .containsExactly("Ana", "Bia");
+                      List.of(Fixtures.customer(1, "Ana"), Fixtures.customer(2, "Bia"))))
+              .extracting(CustomerResponse::name)
+              .containsExactly("Ana", "Bia");
     }
   }
 }

@@ -7,10 +7,23 @@ export interface ApiEquipmentDto {
   type?: ApiEquipmentTypeDto;
 }
 
+export interface ApiAddressDto {
+  zipCode?: string;
+  street?: string;
+  number?: number;
+  complement?: string;
+  neighborhood?: string;
+  city?: string;
+  state?: string;
+}
+
 export interface ApiCustomerDto {
   id: number;
   name: string;
   email: string;
+  cpf?: string;
+  phone?: string;
+  address?: ApiAddressDto;
 }
 
 export interface ApiBudgetDto {

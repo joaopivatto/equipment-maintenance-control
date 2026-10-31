@@ -11,10 +11,17 @@
 
   <p-card>
     <div class="budget-details">
+      @if (maintenanceRequest.status === RequestStatus.OPEN) {
+      <app-customer-details
+        [customer]="maintenanceRequest.customer"
+        [fallbackName]="maintenanceRequest.customerName"
+      />
+      } @else {
       <div class="budget-details__row">
         <span class="budget-details__label">Cliente</span>
         <span>{{ maintenanceRequest.customerName || '-' }}</span>
       </div>
+      }
       <div class="budget-details__row">
         <span class="budget-details__label">Data de abertura</span>
         <span>{{ maintenanceRequest.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
@@ -92,11 +99,11 @@
             id="rejectionReason"
             rows="3"
             [(ngModel)]="rejectionReason"
-            maxlength="500"
+            maxlength="255"
             aria-describedby="rejectionReasonHelp"
             placeholder="Descreva o motivo da rejeição"
           ></textarea>
-          <small id="rejectionReasonHelp">Máximo de 500 caracteres.</small>
+          <small id="rejectionReasonHelp">Máximo de 255 caracteres.</small>
         </div>
 
         <div class="budget-reject__actions">

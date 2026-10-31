@@ -17,6 +17,7 @@ import {
   RequestStatus,
   STATUS_CLASSES,
 } from '../../models/maintenance-request.model';
+import { CustomerDetailsComponent } from '../../components/customer-details/customer-details.component';
 import { NotificationService } from '../../../../core/notifications/notification.service';
 
 @Component({
@@ -30,6 +31,7 @@ import { NotificationService } from '../../../../core/notifications/notification
     TextareaModule,
     InputNumberModule,
     ConfirmDialogModule,
+    CustomerDetailsComponent,
   ],
   providers: [ConfirmationService, CurrencyPipe],
   templateUrl: './budget.component.html',
@@ -140,13 +142,22 @@ export class BudgetComponent implements OnInit {
           return;
         }
         this.maintenanceRequestApiClient.approve(this.request.id).subscribe(() => {
-          this.notificationService.success(
-            'Orçamento aprovado',
-            `Serviço aprovado com valor de ${formattedBudgetValue}.`,
-          );
-          this.router.navigate(['/requests/list']);
+          this.showApprovedMessage(formattedBudgetValue);
         });
       },
+    });
+  }
+
+  private showApprovedMessage(formattedBudgetValue: string | null): void {
+    this.confirmationService.confirm({
+      message: `Serviço Aprovado no Valor ${formattedBudgetValue}`,
+      header: 'Serviço aprovado',
+      icon: 'pi pi-check-circle',
+      acceptLabel: 'OK',
+      rejectVisible: false,
+      closable: false,
+      acceptButtonProps: { severity: 'success' },
+      accept: () => this.router.navigate(['/requests/list']),
     });
   }
 
@@ -166,10 +177,10 @@ export class BudgetComponent implements OnInit {
       return;
     }
 
-    if (this.rejectionReason.length > 500) {
+    if (this.rejectionReason.length > 255) {
       this.notificationService.warning(
         'Limite de caracteres',
-        'O motivo da rejeição deve ter no máximo 500 caracteres.',
+        'O motivo da rejeição deve ter no máximo 255 caracteres.',
       );
       return;
     }

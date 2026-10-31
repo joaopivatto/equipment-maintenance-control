@@ -36,6 +36,24 @@ export const STATUS_CLASSES: Record<RequestStatus, string> = {
   [RequestStatus.FINALIZED]: 'bg-green-100 text-green-800',
 };
 
+export interface CustomerAddress {
+  zipCode?: string;
+  street?: string;
+  number?: number;
+  complement?: string;
+  neighborhood?: string;
+  city?: string;
+  state?: string;
+}
+
+export interface CustomerInfo {
+  name: string;
+  email?: string;
+  cpf?: string;
+  phone?: string;
+  address?: CustomerAddress;
+}
+
 export interface MaintenanceRequest {
   id: number;
   createdAt: string;
@@ -49,6 +67,7 @@ export interface MaintenanceRequest {
 
   // Nome do cliente que abriu a solicitação (exibido no RF011/RF013)
   customerName?: string;
+  customer?: CustomerInfo;
 
   // RF014 - Efetuar manutenção
   maintenanceDescription?: string;
