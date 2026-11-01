@@ -9,6 +9,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
+import { InputMaskModule } from 'primeng/inputmask';
 
 import { NotificationService } from '../../../../core/notifications/notification.service';
 import { ReportsDashboard } from '../../models';
@@ -31,6 +32,7 @@ type PeriodPreset = 'last-month' | 'last-three-months' | 'last-six-months' | 'la
     CurrencyPipe,
     DatePipe,
     DecimalPipe,
+    InputMaskModule
   ],
   selector: 'app-reports',
   styleUrl: './reports.component.scss',

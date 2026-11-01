@@ -10,6 +10,8 @@ import { EmployeeApiClient } from '../../api/employee-api-client';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DateService } from '../../../../shared/services/date.service';
 import { NotificationService } from '../../../../core/notifications/notification.service';
+import { InputMaskModule } from 'primeng/inputmask';
+import { KeyFilterModule } from 'primeng/keyfilter';
 
 @Component({
   imports: [
@@ -21,6 +23,8 @@ import { NotificationService } from '../../../../core/notifications/notification
     ButtonModule,
     MessageModule,
     DatePickerModule,
+    InputMaskModule,
+    KeyFilterModule
   ],
   selector: 'app-employee-form',
   styleUrl: './employee-form.component.scss',

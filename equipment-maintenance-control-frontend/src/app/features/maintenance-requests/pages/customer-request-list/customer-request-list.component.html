@@ -26,13 +26,33 @@
         <div class="field">
           <label for="periodStart">Data inicial</label>
 
-          <p-datepicker inputId="periodStart" [(ngModel)]="periodStart" dateFormat="dd/mm/yy" [showIcon]="true" iconDisplay="input" [showClear]="true" (ngModelChange)="onPeriodChange()" />
+          <p-datepicker
+          inputId="periodStart"
+          [(ngModel)]="periodStart"
+          dateFormat="dd/mm/yy"
+          placeholder="dd/mm/aaaa"
+          pInputMask="99/99/9999"
+          [keepCharPositions]="true"
+          [showIcon]="true"
+          iconDisplay="input"
+          [showClear]="true"
+          (ngModelChange)="onPeriodChange()" />
         </div>
 
         <div class="field">
           <label for="periodEnd">Data final</label>
 
-          <p-datepicker inputId="periodEnd" [(ngModel)]="periodEnd" dateFormat="dd/mm/yy" [showIcon]="true" iconDisplay="input" [showClear]="true" (ngModelChange)="onPeriodChange()" />
+          <p-datepicker
+          inputId="periodEnd"
+          [(ngModel)]="periodEnd"
+          dateFormat="dd/mm/yy"
+          placeholder="dd/mm/aaaa"
+          pInputMask="99/99/9999"
+          [keepCharPositions]="true"
+          [showIcon]="true"
+          iconDisplay="input"
+          [showClear]="true"
+          (ngModelChange)="onPeriodChange()" />
         </div>
       </div>
       }
