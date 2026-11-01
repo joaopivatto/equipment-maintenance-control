@@ -26,33 +26,13 @@
         <div class="field">
           <label for="periodStart">Data inicial</label>
 
-          <p-datepicker
-          inputId="periodStart"
-          [(ngModel)]="periodStart"
-          dateFormat="dd/mm/yy"
-          placeholder="dd/mm/aaaa"
-          pInputMask="99/99/9999"
-          [keepCharPositions]="true"
-          [showIcon]="true"
-          iconDisplay="input"
-          [showClear]="true"
-          (ngModelChange)="onPeriodChange()" />
+          <p-datepicker inputId="periodStart" [(ngModel)]="periodStart" dateFormat="dd/mm/yy" placeholder="dd/mm/aaaa" pInputMask="99/99/9999" [keepCharPositions]="true" [showIcon]="true" iconDisplay="input" [showClear]="true" (ngModelChange)="onPeriodChange()" />
         </div>
 
         <div class="field">
           <label for="periodEnd">Data final</label>
 
-          <p-datepicker
-          inputId="periodEnd"
-          [(ngModel)]="periodEnd"
-          dateFormat="dd/mm/yy"
-          placeholder="dd/mm/aaaa"
-          pInputMask="99/99/9999"
-          [keepCharPositions]="true"
-          [showIcon]="true"
-          iconDisplay="input"
-          [showClear]="true"
-          (ngModelChange)="onPeriodChange()" />
+          <p-datepicker inputId="periodEnd" [(ngModel)]="periodEnd" dateFormat="dd/mm/yy" placeholder="dd/mm/aaaa" pInputMask="99/99/9999" [keepCharPositions]="true" [showIcon]="true" iconDisplay="input" [showClear]="true" (ngModelChange)="onPeriodChange()" />
         </div>
       </div>
       }
@@ -125,6 +105,10 @@
 
           <td>
             <div class="actions">
+              <button type="button" pButton [text]="true" (click)="viewDetails(request.id)">
+                <i class="pi pi-eye"></i>
+                Detalhes
+              </button>
               @if (isEmployee()) {
               @if (request.status === RequestStatus.OPEN) {
               <button type="button" pButton [text]="true" (click)="reviewBudget(request.id)">
@@ -142,10 +126,10 @@
                 Manutenção
               </button>
 
-              <button type="button" pButton [text]="true" (click)="redirectService(request.id)">
+              <!-- <button type="button" pButton [text]="true" (click)="redirectService(request.id)">
                 <i class="pi pi-arrow-right"></i>
                 Redirecionar
-              </button>
+              </button> -->
               }
 
               @if (request.status === RequestStatus.PAID) {
@@ -155,10 +139,6 @@
               </button>
               }
               } @else {
-              <button type="button" pButton [text]="true" (click)="viewDetails(request.id)">
-                <i class="pi pi-eye"></i>
-                Detalhes
-              </button>
 
               @if (request.status === RequestStatus.QUOTED) {
               <button type="button" pButton [text]="true" (click)="reviewBudget(request.id)">
@@ -181,6 +161,7 @@
               </button>
               }
               }
+
             </div>
           </td>
         </tr>

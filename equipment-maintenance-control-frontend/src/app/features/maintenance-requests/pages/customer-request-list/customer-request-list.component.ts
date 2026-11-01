@@ -107,7 +107,7 @@ export class CustomerRequestListComponent implements OnInit {
   }
 
   onFilterModeChange(): void {
-    this.applyFilters();
+    this.reload();
   }
 
   /**
