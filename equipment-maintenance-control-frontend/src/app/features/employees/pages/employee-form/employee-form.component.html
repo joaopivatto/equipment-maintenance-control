@@ -23,6 +23,7 @@
           id="name"
           type="text"
           formControlName="name"
+          placeholder="Nome completo"
           [invalid]="!!(form.get('name')?.invalid && form.get('name')?.touched)"
         />
         @if (form.get('name')?.invalid && form.get('name')?.touched) {
@@ -37,6 +38,7 @@
           id="email"
           type="email"
           formControlName="email"
+          placeholder="exemplo@email.com"
           [invalid]="!!(form.get('email')?.invalid && form.get('email')?.touched)"
         />
         @if (form.get('email')?.invalid && form.get('email')?.touched) {
@@ -52,6 +54,8 @@
           inputId="birthDate"
           dateFormat="dd/mm/yy"
           placeholder="dd/mm/aaaa"
+          pInputMask="99/99/9999"
+          [keepCharPositions]="true"
           [showIcon]="true"
           [iconDisplay]="'input'"
           formControlName="birthDate"
@@ -72,6 +76,9 @@
           id="password"
           type="password"
           formControlName="password"
+          inputmode="numeric"
+          pKeyFilter="int"
+          placeholder="Senha de 4 dígitos"
           maxlength="4"
           [invalid]="!!(form.get('password')?.invalid && form.get('password')?.touched)"
         />

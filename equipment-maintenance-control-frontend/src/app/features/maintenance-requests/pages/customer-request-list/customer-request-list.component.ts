@@ -9,6 +9,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputMaskModule } from 'primeng/inputmask';
 import { ConfirmationService } from 'primeng/api';
 
 import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
@@ -43,6 +44,7 @@ const FILTER_OPTIONS: { label: string; value: FilterMode }[] = [
     SelectButtonModule,
     DatePickerModule,
     ConfirmDialogModule,
+    InputMaskModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './customer-request-list.component.html',
