@@ -137,7 +137,6 @@ public class MaintenanceRequest {
 
     transitionTo(MaintenanceRequestStatus.ORCADA, responsible, dateTime);
     this.budget = budget;
-    this.employee = responsible;
   }
 
   public void approve(LocalDateTime dateTime, Integer customerId) {
