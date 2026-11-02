@@ -114,7 +114,6 @@ class MaintenanceRequestTest {
       assertThat(request.getStatus()).isEqualTo(MaintenanceRequestStatus.ORCADA);
       assertThat(request.getBudget()).isNotNull();
       assertThat(request.getBudget().getValue()).isEqualByComparingTo(new BigDecimal("450.00"));
-      assertThat(request.getEmployee()).isSameAs(employee);
       assertThat(request.getUpdatedAt()).isEqualTo(budgetedAt);
       assertThat(request.getHistory()).hasSize(2);
       assertThat(request.getHistory().getLast().getEmployee()).isSameAs(employee);

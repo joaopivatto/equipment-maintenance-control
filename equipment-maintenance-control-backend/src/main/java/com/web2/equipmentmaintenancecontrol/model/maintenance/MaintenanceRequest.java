@@ -137,7 +137,6 @@ public class MaintenanceRequest {
 
     transitionTo(MaintenanceRequestStatus.ORCADA, responsible, dateTime);
     this.budget = budget;
-    this.employee = responsible;
   }
 
   public void approve(LocalDateTime dateTime, Integer customerId) {
@@ -187,20 +186,22 @@ public class MaintenanceRequest {
   public void redirectTo(Redirect redirect, LocalDateTime dateTime) {
     Objects.requireNonNull(redirect, "Redirecionamento é obrigatório");
     Objects.requireNonNull(dateTime, "Data/hora do redirecionamento é obrigatória");
-    Objects.requireNonNull(
-        redirect.getSourceEmployee(), "Funcionário de origem do redirecionamento é obrigatório");
+    Employee sourceEmployee =
+        Objects.requireNonNull(
+            redirect.getSourceEmployee(),
+            "Funcionário de origem do redirecionamento é obrigatório");
     Employee destinationEmployee =
         Objects.requireNonNull(
             redirect.getDestinationEmployee(), "Funcionário de destino é obrigatório");
-    requireNotAssignedTo(destinationEmployee);
+    requireNotSelfRedirect(sourceEmployee, destinationEmployee);
 
     transitionTo(MaintenanceRequestStatus.REDIRECIONADA, destinationEmployee, dateTime);
     this.employee = destinationEmployee;
     addRedirect(redirect, dateTime);
   }
 
-  private void requireNotAssignedTo(Employee destinationEmployee) {
-    if (employee != null && employee.getId().equals(destinationEmployee.getId())) {
+  private void requireNotSelfRedirect(Employee sourceEmployee, Employee destinationEmployee) {
+    if (sourceEmployee.getId().equals(destinationEmployee.getId())) {
       throw new AppException(
           ErrorCode.SELF_REDIRECT_NOT_ALLOWED,
           "A solicitação %d já é do funcionário %d".formatted(id, destinationEmployee.getId()));
