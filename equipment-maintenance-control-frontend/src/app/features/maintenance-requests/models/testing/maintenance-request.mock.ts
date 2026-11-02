@@ -112,9 +112,6 @@ export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRe
     return request;
   }
 
-  // Monta o histórico percorrendo, em ordem, apenas os estados possíveis
-  // (RequestStatus) pelos quais a solicitação realmente passou até chegar
-  // ao status atual, no mesmo formato gerado pelas transições reais da API.
   private buildHistory(status: RequestStatus, createdAt: string, index: number): HistoryEntry[] {
     const responsible = this.employeeNames[index % this.employeeNames.length];
     const baseTime = new Date(createdAt).getTime();
