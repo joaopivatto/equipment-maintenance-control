@@ -168,6 +168,12 @@
   font-weight: 600;
 }
 
+.chart-card__note {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #ee5a5a;
+}
+
 @media (max-width: 960px) {
   .metrics-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
