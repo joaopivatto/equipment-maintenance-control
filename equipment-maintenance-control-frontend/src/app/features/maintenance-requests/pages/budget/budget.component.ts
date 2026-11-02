@@ -10,6 +10,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { DividerModule } from 'primeng/divider';
 
 import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
 import {
@@ -32,6 +33,7 @@ import { NotificationService } from '../../../../core/notifications/notification
     InputNumberModule,
     ConfirmDialogModule,
     CustomerDetailsComponent,
+    DividerModule
   ],
   providers: [ConfirmationService, CurrencyPipe],
   templateUrl: './budget.component.html',
