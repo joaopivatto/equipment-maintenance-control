@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { DividerModule } from 'primeng/divider';
 
 import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
 import {
@@ -29,6 +30,7 @@ import { CurrentEmployeeService } from '../../../employees/services/current-empl
     TextareaModule,
     ConfirmDialogModule,
     CustomerDetailsComponent,
+    DividerModule
   ],
   providers: [ConfirmationService],
   templateUrl: './maintenance.component.html',
