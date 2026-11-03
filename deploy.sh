@@ -25,7 +25,44 @@ git reset --hard --quiet origin/main
 NEW=$(git rev-parse HEAD)
 echo "Commit: ${OLD:0:7} -> ${NEW:0:7}"
 
+node_ok() {
+  command -v node >/dev/null 2>&1 || return 1
+  local major minor patch
+  IFS=. read -r major minor patch <<< "$(node -p 'process.versions.node')"
+  if [ "$major" -ge 26 ]; then return 0; fi
+  if [ "$major" -eq 24 ]; then [ "$minor" -gt 15 ] || { [ "$minor" -eq 15 ] && [ "$patch" -ge 0 ]; }; return; fi
+  if [ "$major" -eq 22 ]; then [ "$minor" -gt 22 ] || { [ "$minor" -eq 22 ] && [ "$patch" -ge 3 ]; }; return; fi
+  return 1
+}
+
+ensure_node() {
+  export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+  if [ -s "$NVM_DIR/nvm.sh" ]; then
+    set +u
+    . "$NVM_DIR/nvm.sh"
+    set -u
+  fi
+  if node_ok; then return 0; fi
+  if command -v nvm >/dev/null 2>&1; then
+    echo ">>> Node $(node -v 2>/dev/null || echo ausente) incompativel com o Angular CLI; instalando Node 24 via nvm"
+    set +u
+    nvm install 24 >/dev/null
+    nvm use 24 >/dev/null
+    set -u
+  fi
+  if ! node_ok; then
+    echo "ERRO: o Angular CLI exige Node 22.22.3+, 24.15.0+ ou 26+. Versao encontrada: $(node -v 2>/dev/null || echo nenhuma)."
+    echo "Instale um Node compativel na VPS (nvm ou NodeSource) e rode o deploy de novo."
+    exit 1
+  fi
+  echo ">>> Usando Node $(node -v)"
+}
+
 changed() { [ "$FORCE" = "--force" ] || ! git diff --quiet "$OLD" "$NEW" -- "$1"; }
+
+if changed equipment-maintenance-control-frontend; then
+  ensure_node
+fi
 
 if changed equipment-maintenance-control-backend; then
   echo ">>> Backend: reconstruindo imagem e recriando o container"
