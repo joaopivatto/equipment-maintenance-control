@@ -270,7 +270,14 @@ export class ReportsComponent implements OnInit {
       },
       scales: {
         x: {
-          ticks: { color: colors.textMuted },
+          ticks: {
+            color: (context) => {
+              const category = this.dashboard()?.categoryRevenue[context.index];
+              return category?.active === false
+                ? colors.inactiveCategory
+                : colors.textMuted;
+            }
+          },
           grid: { display: false },
           border: { display: false },
         },
@@ -313,6 +320,7 @@ export class ReportsComponent implements OnInit {
       primarySoft: 'rgba(20, 184, 166, 0.16)',
       textMuted: '#64748b',
       border: 'rgba(148, 163, 184, 0.24)',
+      inactiveCategory: '#ef4444',
     };
   }
 

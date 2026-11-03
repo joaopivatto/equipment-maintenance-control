@@ -12,6 +12,7 @@ export interface CategoryRevenue {
   categoryName: string;
   totalRevenue: number;
   paidRequestsCount: number;
+  active: boolean;
 }
 
 export interface StatusSummary {

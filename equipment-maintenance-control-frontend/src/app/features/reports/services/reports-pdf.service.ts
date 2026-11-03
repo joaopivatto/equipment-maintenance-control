@@ -136,6 +136,14 @@ export class ReportsPdfService {
     document.setTextColor(90);
     document.text('Receita acumulada em todo o histórico da empresa', PDF_MARGIN, 26);
 
+    document.setFontSize(9);
+    document.setTextColor(239, 68, 68);
+    document.text(
+      '* Categorias em vermelho estão inativas.',
+      PDF_MARGIN,
+      33,
+    );
+
     const categoryRevenueRows = categoryRevenue.length
       ? categoryRevenue.map((item) => [
           item.categoryName,
@@ -145,7 +153,7 @@ export class ReportsPdfService {
       : [['Nenhuma receita por categoria encontrada', '', '']];
 
     autoTable(document, {
-      startY: 34,
+      startY: 40,
       head: [['Categoria', 'Chamados pagos', 'Receita']],
       body: categoryRevenueRows,
       theme: 'striped',
@@ -156,6 +164,15 @@ export class ReportsPdfService {
       margin: {
         left: PDF_MARGIN,
         right: PDF_MARGIN,
+      },
+      didParseCell: (data) => {
+        if (data.section === 'body' && data.column.index === 0) {
+          const category = categoryRevenue[data.row.index];
+
+          if (category?.active === false) {
+            data.cell.styles.textColor = [239, 68, 68];
+          }
+        }
       },
     });
   }

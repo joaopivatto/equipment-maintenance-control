@@ -113,19 +113,19 @@ export class ReportsService {
   ): CategoryRevenue[] {
     const revenueByCategory = new Map<number, CategoryRevenue>();
 
-    for (const category of categories) {
-      revenueByCategory.set(category.id, {
-        categoryId: category.id,
-        categoryName: category.name,
-        totalRevenue: 0,
-        paidRequestsCount: 0,
-      });
-    }
+    // for (const category of categories) {
+    //   revenueByCategory.set(category.id, {
+    //     categoryId: category.id,
+    //     categoryName: category.name,
+    //     totalRevenue: 0,
+    //     paidRequestsCount: 0,
+    //   });
+    // }
 
     const paidRequests = requests.filter(
       (request) =>
         REVENUE_STATUSES.has(request.status) &&
-        !!request.paidAt &&
+        request.paidAt &&
         request.equipmentCategoryId !== undefined,
     );
 
@@ -133,9 +133,10 @@ export class ReportsService {
       const categoryId = request.equipmentCategoryId!;
       const current = revenueByCategory.get(categoryId) ?? {
         categoryId,
-        categoryName: request.equipmentCategoryName ?? `Categoria ${categoryId}`,
+        categoryName: request.equipmentCategoryName ?? 'Categoria desconhecida',
         totalRevenue: 0,
         paidRequestsCount: 0,
+        active: categories.find((category) => category.id === categoryId)?.active ?? false,
       };
 
       current.totalRevenue += request.budget?.value ?? 0;
