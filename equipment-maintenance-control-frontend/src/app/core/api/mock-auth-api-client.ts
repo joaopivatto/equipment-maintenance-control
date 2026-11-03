@@ -46,7 +46,6 @@ export class MockAuthApiClient extends AuthApiClient {
       id: this.nextId++,
       name: request.name,
       email: request.email,
-      // Senha gerada e enviada por e-mail; nunca volta na resposta da API.
       password: this.generatePassword(),
       profileType: ProfileType.CUSTOMER,
       cpf: request.cpf,

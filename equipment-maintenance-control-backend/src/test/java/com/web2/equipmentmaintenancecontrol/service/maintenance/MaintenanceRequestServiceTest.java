@@ -257,7 +257,7 @@ class MaintenanceRequestServiceTest {
   class GiveBudget {
 
     @Test
-    @DisplayName("registra o orçamento e atribui o funcionário responsável")
+    @DisplayName("registra o orçamento e NÃO atribui o funcionário responsável")
     void givesBudget() {
       when(repository.findById(1)).thenReturn(Optional.of(Fixtures.openRequest(1, customer)));
       when(employeeService.findEntityById(10)).thenReturn(employee);
@@ -269,7 +269,7 @@ class MaintenanceRequestServiceTest {
       assertThat(details.status()).isEqualTo(MaintenanceRequestStatus.ORCADA);
       assertThat(details.budget().value()).isEqualByComparingTo(new BigDecimal("450.00"));
       assertThat(details.budget().employee().name()).isEqualTo("Ana");
-      assertThat(details.assignedEmployee().id()).isEqualTo(10);
+      assertThat(details.assignedEmployee()).isNull();
       assertThat(details.budget().createdAt()).isNotBlank();
     }
 

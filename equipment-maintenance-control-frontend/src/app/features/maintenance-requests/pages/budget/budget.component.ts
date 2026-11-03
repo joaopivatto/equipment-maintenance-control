@@ -50,7 +50,6 @@ export class BudgetComponent implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private currencyPipe = inject(CurrencyPipe);
 
-  // Disponibiliza a enum de status para uso no template
   readonly RequestStatus = RequestStatus;
 
   request: MaintenanceRequest | undefined;
@@ -76,8 +75,6 @@ export class BudgetComponent implements OnInit {
         return;
       }
 
-      // A tela atende dois momentos do fluxo: o funcionário efetuando o orçamento
-      // (ABERTA) e o cliente decidindo sobre o orçamento já feito (ORÇADA).
       if (
         this.request.status !== RequestStatus.OPEN &&
         this.request.status !== RequestStatus.QUOTED

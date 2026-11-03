@@ -69,17 +69,6 @@ export class EmployeeHomeComponent implements OnInit {
     return `${description.slice(0, 29)}…`;
   }
 
-  /**
-   * Converte a data da solicitação para Date.
-   *
-   * As solicitações antigas estão no formato:
-   * YYYY-MM-DD HH:mm
-   *
-   * Enquanto algumas datas são geradas com:
-   * YYYY-MM-DDTHH:mm:ss.sssZ
-   *
-   * O método trata os dois formatos.
-   */
   private parseRequestDate(value: string): Date {
     if (value.includes('T')) {
       return new Date(value);
