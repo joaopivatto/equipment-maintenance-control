@@ -15,6 +15,7 @@ import {
 } from '../../models/maintenance-request.model';
 import { HistoryEntry } from '../../models/history-entry.model';
 import { NotificationService } from '../../../../core/notifications/notification.service';
+import { SessionService } from '../../../../core/auth/session.service';
 
 @Component({
   selector: 'app-request-details',
@@ -31,8 +32,10 @@ export class RequestDetailsComponent implements OnInit {
   private location = inject(Location);
   private notificationService = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
+  private sessionService = inject(SessionService);
 
   readonly RequestStatus = RequestStatus;
+  readonly isCustomer = this.sessionService.isCustomer;
 
   readonly request = signal<MaintenanceRequest | undefined>(undefined);
   readonly timelineEvents = computed(() => {
@@ -58,8 +61,6 @@ export class RequestDetailsComponent implements OnInit {
     this.request.set(request);
   }
 
-  // A linha do tempo do RF008 deve sempre exibir ao menos a criação da solicitação,
-  // mesmo quando o histórico ainda não possui eventos registrados
   private buildTimeline(request: MaintenanceRequest): HistoryEntry[] {
     if (request.history.length > 0) {
       return [...request.history].sort(
@@ -80,7 +81,7 @@ export class RequestDetailsComponent implements OnInit {
 
   hasActions(): boolean {
     const request = this.request();
-    if (!request) {
+    if (!request || !this.isCustomer()) {
       return false;
     }
 
@@ -90,8 +91,7 @@ export class RequestDetailsComponent implements OnInit {
       request.status === RequestStatus.REPAIRED
     );
   }
-
-  // RF005 - Mostrar orçamento
+  
   reviewBudget(): void {
     const request = this.request();
     if (!request) {
@@ -101,7 +101,6 @@ export class RequestDetailsComponent implements OnInit {
     this.router.navigate(['/requests', request.id, 'budget']);
   }
 
-  // RF009 - Resgatar serviço: REJEITADA -> APROVADA
   recoverService(): void {
     const request = this.request();
     if (!request) {
@@ -135,7 +134,6 @@ export class RequestDetailsComponent implements OnInit {
     });
   }
 
-  // RF010 - Pagar serviço: ARRUMADA -> PAGA
   payForService(): void {
     const request = this.request();
     if (request) {
