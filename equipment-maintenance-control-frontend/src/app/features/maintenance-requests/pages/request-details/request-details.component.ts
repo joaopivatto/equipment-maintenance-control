@@ -80,21 +80,29 @@ export class RequestDetailsComponent implements OnInit {
   }
 
   hasActions(): boolean {
-    const request = this.request();
-    if (!request || !this.isCustomer()) {
-      return false;
-    }
-
-    return (
-      request.status === RequestStatus.QUOTED ||
-      request.status === RequestStatus.REJECTED ||
-      request.status === RequestStatus.REPAIRED
-    );
+    return this.canReviewBudget() || this.canRecoverService() || this.canPayForService();
   }
-  
+
+  canReviewBudget(): boolean {
+    return this.isCustomerActionAvailable(RequestStatus.QUOTED);
+  }
+
+  // RF009 - Resgatar serviço é uma ação exclusiva do cliente
+  canRecoverService(): boolean {
+    return this.isCustomerActionAvailable(RequestStatus.REJECTED);
+  }
+
+  canPayForService(): boolean {
+    return this.isCustomerActionAvailable(RequestStatus.REPAIRED);
+  }
+
+  private isCustomerActionAvailable(status: RequestStatus): boolean {
+    return this.isCustomer() && this.request()?.status === status;
+  }
+
   reviewBudget(): void {
     const request = this.request();
-    if (!request) {
+    if (!request || !this.canReviewBudget()) {
       return;
     }
 
@@ -103,7 +111,7 @@ export class RequestDetailsComponent implements OnInit {
 
   recoverService(): void {
     const request = this.request();
-    if (!request) {
+    if (!request || !this.canRecoverService()) {
       return;
     }
 
@@ -136,8 +144,10 @@ export class RequestDetailsComponent implements OnInit {
 
   payForService(): void {
     const request = this.request();
-    if (request) {
-      this.router.navigate(['/requests', request.id, 'payment']);
+    if (!request || !this.canPayForService()) {
+      return;
     }
+
+    this.router.navigate(['/requests', request.id, 'payment']);
   }
 }
