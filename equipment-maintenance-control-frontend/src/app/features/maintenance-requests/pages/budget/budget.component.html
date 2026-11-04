@@ -47,7 +47,7 @@
     </div>
 
     <!-- RF012 - Funcionário efetua o orçamento -->
-    <ng-container *ngIf="maintenanceRequest.status === RequestStatus.OPEN">
+    <ng-container *ngIf="maintenanceRequest.status === RequestStatus.OPEN && isEmployee()">
       <div class="field">
         <label for="budgetValue">Valor do orçamento</label>
         <p-inputnumber
@@ -74,7 +74,7 @@
     </ng-container>
 
     <!-- RF005/RF006/RF007 - Cliente aprova ou rejeita o orçamento -->
-    <ng-container *ngIf="maintenanceRequest.status === RequestStatus.QUOTED">
+    <ng-container *ngIf="maintenanceRequest.status === RequestStatus.QUOTED && isCustomer()">
       <div class="budget-value">
         <span class="budget-value__label">Valor do orçamento</span>
         <span class="budget-value__amount">

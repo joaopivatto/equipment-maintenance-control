@@ -20,6 +20,7 @@ import {
 } from '../../models/maintenance-request.model';
 import { CustomerDetailsComponent } from '../../components/customer-details/customer-details.component';
 import { NotificationService } from '../../../../core/notifications/notification.service';
+import { SessionService } from '../../../../core/auth/session.service';
 
 @Component({
   selector: 'app-budget',
@@ -33,7 +34,7 @@ import { NotificationService } from '../../../../core/notifications/notification
     InputNumberModule,
     ConfirmDialogModule,
     CustomerDetailsComponent,
-    DividerModule
+    DividerModule,
   ],
   providers: [ConfirmationService, CurrencyPipe],
   templateUrl: './budget.component.html',
@@ -49,8 +50,11 @@ export class BudgetComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
   private currencyPipe = inject(CurrencyPipe);
+  private sessionService = inject(SessionService);
 
   readonly RequestStatus = RequestStatus;
+  readonly isCustomer = this.sessionService.isCustomer;
+  readonly isEmployee = this.sessionService.isEmployee;
 
   request: MaintenanceRequest | undefined;
 
