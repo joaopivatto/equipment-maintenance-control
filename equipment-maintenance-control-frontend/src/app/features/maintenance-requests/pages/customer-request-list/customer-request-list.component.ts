@@ -71,6 +71,7 @@ export class CustomerRequestListComponent implements OnInit {
 
   readonly RequestStatus = RequestStatus;
   readonly isEmployee = this.sessionService.isEmployee;
+  readonly isCustomer = this.sessionService.isCustomer;
 
   // RF013 - filtros
   readonly filterOptions = FILTER_OPTIONS;
@@ -220,6 +221,10 @@ export class CustomerRequestListComponent implements OnInit {
   // --- Ações do cliente ---
 
   reviewBudget(id: number): void {
+    if (!this.isCustomer()) {
+      return;
+    }
+
     this.router.navigate(['/requests', id, 'budget']);
   }
 
@@ -229,6 +234,10 @@ export class CustomerRequestListComponent implements OnInit {
 
   // RF009 - Resgatar serviço: REJEITADA -> APROVADA
   recoverService(id: number): void {
+    if (!this.isCustomer()) {
+      return;
+    }
+
     this.confirmationService.confirm({
       message: 'Deseja resgatar este serviço? O estado voltará para "Aprovada".',
       header: 'Resgatar serviço',
@@ -263,6 +272,10 @@ export class CustomerRequestListComponent implements OnInit {
 
   // RF010 - Pagar serviço: ARRUMADA -> PAGA
   payForService(id: number): void {
+    if (!this.isCustomer()) {
+      return;
+    }
+
     this.router.navigate(['/requests', id, 'payment']);
   }
 
@@ -270,21 +283,37 @@ export class CustomerRequestListComponent implements OnInit {
 
   // RF012 - Efetuar orçamento
   performBudget(id: number): void {
+    if (!this.isEmployee()) {
+      return;
+    }
+
     this.router.navigate(['/requests', id, 'budget']);
   }
 
   // RF014 - Efetuar manutenção
   performMaintenance(id: number): void {
+    if (!this.isEmployee()) {
+      return;
+    }
+
     this.router.navigate(['/requests', id, 'maintenance']);
   }
 
   // RF015 - Redirecionar manutenção
   redirectService(id: number): void {
+    if (!this.isEmployee()) {
+      return;
+    }
+
     this.router.navigate(['/requests', id, 'redirect']);
   }
 
   // RF016 - Finalizar solicitação: PAGA -> FINALIZADA
   finalizeService(id: number): void {
+    if (!this.isEmployee()) {
+      return;
+    }
+
     const employee = this.currentEmployee();
 
     if (!employee) {

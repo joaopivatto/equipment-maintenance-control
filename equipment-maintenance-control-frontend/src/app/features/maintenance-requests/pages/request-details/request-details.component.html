@@ -13,21 +13,21 @@
 
       @if (hasActions()) {
       <div class="details-actions">
-        @if (maintenanceRequest.status === RequestStatus.QUOTED) {
+        @if (canReviewBudget()) {
         <button type="button" pButton (click)="reviewBudget()">
           <i class="pi pi-dollar"></i>
           Ver orçamento
         </button>
         }
 
-        @if (maintenanceRequest.status === RequestStatus.REJECTED) {
+        @if (canRecoverService()) {
         <button type="button" pButton severity="warn" (click)="recoverService()">
           <i class="pi pi-refresh"></i>
           Resgatar serviço
         </button>
         }
 
-        @if (maintenanceRequest.status === RequestStatus.REPAIRED) {
+        @if (canPayForService()) {
         <button type="button" pButton severity="success" (click)="payForService()">
           <i class="pi pi-credit-card"></i>
           Pagar

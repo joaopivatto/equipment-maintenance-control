@@ -138,7 +138,7 @@
                 Finalizar
               </button>
               }
-              } @else {
+              } @else if (isCustomer()) {
 
               @if (request.status === RequestStatus.QUOTED) {
               <button type="button" pButton [text]="true" (click)="reviewBudget(request.id)">

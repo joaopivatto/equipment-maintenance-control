@@ -98,6 +98,10 @@ export class BudgetComponent implements OnInit {
 
   // RF012 - Efetuar orçamento: ABERTA -> ORÇADA
   submitBudget(): void {
+    if (!this.isEmployee()) {
+      return;
+    }
+
     if (!this.request || !this.budgetValue || this.budgetValue <= 0) {
       this.notificationService.warning('Aviso', 'Informe um valor válido de orçamento.');
       return;
@@ -126,7 +130,7 @@ export class BudgetComponent implements OnInit {
 
   // RF006 - Aprovar serviço
   approve(): void {
-    if (!this.request) {
+    if (!this.request || !this.isCustomer()) {
       return;
     }
 
@@ -166,6 +170,10 @@ export class BudgetComponent implements OnInit {
 
   // RF007 - Rejeitar serviço (abre o campo de motivo)
   openRejectReason(): void {
+    if (!this.isCustomer()) {
+      return;
+    }
+
     this.showRejectReason.set(true);
   }
 
@@ -175,6 +183,10 @@ export class BudgetComponent implements OnInit {
   }
 
   confirmReject(): void {
+    if (!this.isCustomer()) {
+      return;
+    }
+
     if (!this.request || !this.rejectionReason.trim()) {
       this.notificationService.warning('Aviso', 'Informe o motivo da rejeição.');
       return;
