@@ -33,7 +33,17 @@
 
       <div class="field">
         <label for="reportEndDate">Data final</label>
-        <p-datepicker inputId="reportEndDate" [(ngModel)]="endDate" dateFormat="dd/mm/yy" [showIcon]="true" [iconDisplay]="'input'" [showClear]="true" (ngModelChange)="loadReports()" />
+        <p-datepicker
+        inputId="reportEndDate"
+        [(ngModel)]="endDate"
+        dateFormat="dd/mm/yy"
+        placeholder="dd/mm/aaaa"
+        pInputMask="99/99/9999"
+        [keepCharPositions]="true"
+        [showIcon]="true"
+        [iconDisplay]="'input'"
+        [showClear]="true"
+        (ngModelChange)="loadReports()" />
       </div>
       }
 
