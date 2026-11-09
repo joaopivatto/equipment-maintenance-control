@@ -178,6 +178,41 @@ class MaintenanceRequestMapperTest {
     }
 
     @Test
+    @DisplayName("mantém a ordem das transições gravadas na mesma data/hora")
+    void keepsOrderOfEntriesWithTheSameDateTime() {
+      MaintenanceRequest request = Fixtures.openRequest(1, customer);
+      request.giveBudget(Fixtures.budget(60, employee), AT);
+      request.approve(AT, customer.getId());
+      request.performMaintenance(Fixtures.maintenance(70, employee), AT);
+
+      assertThat(mapper.toDetails(request).history())
+          .extracting(HistoryEntryDetails::status)
+          .containsExactly(
+              MaintenanceRequestStatus.ABERTA,
+              MaintenanceRequestStatus.ORCADA,
+              MaintenanceRequestStatus.APROVADA,
+              MaintenanceRequestStatus.ARRUMADA);
+    }
+
+    @Test
+    @DisplayName("casa redirecionamentos encadeados gravados na mesma data/hora")
+    void pairsChainedRedirectsWithTheSameDateTime() {
+      Employee third = Fixtures.employee(12, "Caio");
+      MaintenanceRequest request = Fixtures.approvedRequest(1, customer, employee);
+      request.redirectTo(new Redirect(employee, otherEmployee), AT.plusHours(3));
+      request.redirectTo(new Redirect(otherEmployee, third), AT.plusHours(3));
+
+      List<HistoryEntryDetails> redirects =
+          mapper.toDetails(request).history().stream()
+              .filter(entry -> entry.status() == MaintenanceRequestStatus.REDIRECIONADA)
+              .toList();
+
+      assertThat(redirects).hasSize(2);
+      assertThat(redirects.getFirst().toEmployee().name()).isEqualTo("Bia");
+      assertThat(redirects.getLast().toEmployee().name()).isEqualTo("Caio");
+    }
+
+    @Test
     @DisplayName("devolve histórico vazio para solicitação nula")
     void handlesNullRequest() {
       assertThat(new MaintenanceRequestHistoryMapper(new EmployeeMapper()).toDetails(null))

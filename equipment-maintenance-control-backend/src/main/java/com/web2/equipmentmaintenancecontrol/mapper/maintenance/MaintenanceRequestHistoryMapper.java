@@ -37,7 +37,7 @@ public class MaintenanceRequestHistoryMapper extends BaseMapper {
 
     Map<MaintenanceRequestHistory, Redirect> redirectsByEntry = resolveRedirects(request);
 
-    return request.getHistory().stream()
+    return orderedHistory(request).stream()
         .map(entry -> toDetails(entry, redirectsByEntry.get(entry)))
         .toList();
   }

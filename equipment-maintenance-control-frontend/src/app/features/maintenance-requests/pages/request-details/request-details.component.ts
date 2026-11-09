@@ -63,9 +63,7 @@ export class RequestDetailsComponent implements OnInit {
 
   private buildTimeline(request: MaintenanceRequest): HistoryEntry[] {
     if (request.history.length > 0) {
-      return [...request.history].sort(
-        (a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime(),
-      );
+      return request.history;
     }
 
     return [{ status: RequestStatus.OPEN, dateTime: request.createdAt }];

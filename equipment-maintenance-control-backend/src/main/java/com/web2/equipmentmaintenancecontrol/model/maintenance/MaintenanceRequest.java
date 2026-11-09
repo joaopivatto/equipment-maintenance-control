@@ -64,7 +64,7 @@ public class MaintenanceRequest {
   private Maintenance maintenance;
 
   @OneToMany(mappedBy = "maintenanceRequest", cascade = CascadeType.ALL)
-  @OrderBy("updatedAt DESC")
+  @OrderBy("updatedAt ASC, id ASC")
   private List<MaintenanceRequestHistory> history;
 
   @OneToMany(mappedBy = "maintenanceRequest", cascade = CascadeType.ALL)

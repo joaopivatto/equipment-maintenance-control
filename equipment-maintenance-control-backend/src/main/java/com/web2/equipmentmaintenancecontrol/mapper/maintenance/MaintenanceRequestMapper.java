@@ -103,7 +103,7 @@ public class MaintenanceRequestMapper extends BaseMapper {
     }
     return entity.getHistory().stream()
         .filter(entry -> entry.getStatus() == status)
-        .findFirst()
+        .reduce((first, second) -> second)
         .orElse(null);
   }
 }
