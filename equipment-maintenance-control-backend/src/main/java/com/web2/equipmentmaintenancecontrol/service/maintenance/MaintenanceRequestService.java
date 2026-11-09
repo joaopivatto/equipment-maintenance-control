@@ -29,6 +29,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Regras de aplicação das solicitações de manutenção. Cada operação de mudança de estado carrega a
+ * entidade, delega a validação da transição para {@link MaintenanceRequest} e persiste o resultado.
+ */
 @Service
 public class MaintenanceRequestService extends BaseService {
 
@@ -51,6 +55,7 @@ public class MaintenanceRequestService extends BaseService {
     this.employeeService = employeeService;
   }
 
+  /** Abre uma nova solicitação para o cliente, cadastrando o equipamento informado. */
   @Transactional
   public MaintenanceRequestDetails create(CreateMaintenanceRequest request) {
 
@@ -70,27 +75,32 @@ public class MaintenanceRequestService extends BaseService {
     return mapper.toDetails(repository.save(entity));
   }
 
+  /** Retorna os detalhes de uma solicitação pelo id. */
   @Transactional(readOnly = true)
   public MaintenanceRequestDetails findById(Integer id) {
     return mapper.toDetails(findEntityById(id));
   }
 
+  /** Lista as solicitações do cliente em ordem de criação, validando se o cliente existe. */
   @Transactional(readOnly = true)
   public List<MaintenanceRequestDetails> findByCustomerId(Integer customerId) {
     customerService.findById(customerId);
     return mapper.toDetails(repository.findByCustomerIdOrderByCreatedAtAsc(customerId));
   }
 
+  /** Lista apenas as solicitações com status ABERTA, aguardando orçamento. */
   @Transactional(readOnly = true)
   public List<MaintenanceRequestDetails> findOpenRequests() {
     return mapper.toDetails(repository.findByStatus(MaintenanceRequestStatus.ABERTA));
   }
 
+  /** Lista todas as solicitações, independentemente do status. */
   @Transactional(readOnly = true)
   public List<MaintenanceRequestDetails> findAll() {
     return mapper.toDetails(repository.findAll());
   }
 
+  /** Registra o orçamento feito pelo funcionário (ABERTA -> ORCADA). */
   @Transactional
   public MaintenanceRequestDetails giveBudget(Integer id, CreateBudget request) {
     MaintenanceRequest entity = findEntityById(id);
@@ -103,6 +113,7 @@ public class MaintenanceRequestService extends BaseService {
     return mapper.toDetails(repository.save(entity));
   }
 
+  /** Cliente aprova o orçamento (ORCADA ou REJEITADA -> APROVADA). */
   @Transactional
   public MaintenanceRequestDetails approve(Integer id, ApproveMaintenanceRequest request) {
     MaintenanceRequest entity = findEntityById(id);
@@ -112,6 +123,7 @@ public class MaintenanceRequestService extends BaseService {
     return mapper.toDetails(repository.save(entity));
   }
 
+  /** Cliente rejeita o orçamento informando o motivo (ORCADA -> REJEITADA). */
   @Transactional
   public MaintenanceRequestDetails reject(Integer id, RejectMaintenanceRequest request) {
     MaintenanceRequest entity = findEntityById(id);
@@ -121,6 +133,7 @@ public class MaintenanceRequestService extends BaseService {
     return mapper.toDetails(repository.save(entity));
   }
 
+  /** Registra a manutenção realizada e as orientações ao cliente (-> ARRUMADA). */
   @Transactional
   public MaintenanceRequestDetails performMaintenance(Integer id, CreateMaintenance request) {
     MaintenanceRequest entity = findEntityById(id);
@@ -137,6 +150,7 @@ public class MaintenanceRequestService extends BaseService {
     return mapper.toDetails(repository.save(entity));
   }
 
+  /** Redireciona a solicitação de um funcionário para outro (-> REDIRECIONADA). */
   @Transactional
   public MaintenanceRequestDetails redirect(Integer id, RedirectMaintenanceRequest request) {
     MaintenanceRequest entity = findEntityById(id);
@@ -149,6 +163,7 @@ public class MaintenanceRequestService extends BaseService {
     return mapper.toDetails(repository.save(entity));
   }
 
+  /** Registra o pagamento do serviço pelo cliente (ARRUMADA -> PAGA). */
   @Transactional
   public MaintenanceRequestDetails pay(Integer id) {
     MaintenanceRequest entity = findEntityById(id);
@@ -158,6 +173,7 @@ public class MaintenanceRequestService extends BaseService {
     return mapper.toDetails(repository.save(entity));
   }
 
+  /** Funcionário finaliza a solicitação após o pagamento (PAGA -> FINALIZADA). */
   @Transactional
   public MaintenanceRequestDetails finish(Integer id, FinishMaintenanceRequest request) {
     MaintenanceRequest entity = findEntityById(id);
@@ -168,6 +184,7 @@ public class MaintenanceRequestService extends BaseService {
     return mapper.toDetails(repository.save(entity));
   }
 
+  /** Busca a entidade ou lança MAINTENANCE_REQUEST_NOT_FOUND. */
   private MaintenanceRequest findEntityById(Integer id) {
     return repository
         .findById(id)
@@ -178,6 +195,7 @@ public class MaintenanceRequestService extends BaseService {
                     "Solicitação de manutenção não encontrada com ID: " + id));
   }
 
+  /** Busca o funcionário pelo id, delegando ao EmployeeService. */
   private Employee findEmployeeById(Integer id) {
     return employeeService.findEntityById(id);
   }

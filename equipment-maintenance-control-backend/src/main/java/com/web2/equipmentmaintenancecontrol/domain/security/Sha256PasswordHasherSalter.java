@@ -9,8 +9,13 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import org.springframework.stereotype.Component;
 
+/**
+ * Implementação de hash de senha usando SHA-256 com salt aleatório de 16 bytes. Hash e salt são
+ * armazenados em Base64.
+ */
 @Component
 public class Sha256PasswordHasherSalter implements PasswordHasherSalter {
+  /** Gera um novo salt e calcula o hash da senha informada. */
   public HashedSaltedPassword hashAndSalt(String rawPassword) {
     byte[] saltBytes = generateSalt();
     byte[] hashBytes = sha256(rawPassword, saltBytes);
@@ -21,6 +26,10 @@ public class Sha256PasswordHasherSalter implements PasswordHasherSalter {
     return new HashedSaltedPassword(hash, salt);
   }
 
+  /**
+   * Recalcula o hash da senha com o salt armazenado e compara em tempo constante para evitar
+   * ataques de temporização.
+   */
   public boolean matches(String rawPassword, HashedSaltedPassword hashedSaltedPassword) {
     byte[] saltBytes = Base64.getDecoder().decode(hashedSaltedPassword.salt());
     byte[] expectedHash = Base64.getDecoder().decode(hashedSaltedPassword.hash());
@@ -29,6 +38,7 @@ public class Sha256PasswordHasherSalter implements PasswordHasherSalter {
     return MessageDigest.isEqual(expectedHash, actualHash);
   }
 
+  /** Aplica SHA-256 sobre o salt seguido da senha em UTF-8. */
   private byte[] sha256(String password, byte[] salt) {
     try {
       MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -39,6 +49,7 @@ public class Sha256PasswordHasherSalter implements PasswordHasherSalter {
     }
   }
 
+  /** Gera um salt criptograficamente seguro. */
   private byte[] generateSalt() {
     byte[] salt = new byte[16];
     new SecureRandom().nextBytes(salt);
