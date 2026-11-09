@@ -63,7 +63,6 @@ public class MaintenanceRequest {
   @Nullable
   private Maintenance maintenance;
 
-  // O id desempata transições gravadas no mesmo segundo, que a coluna DATETIME não distingue
   @OneToMany(mappedBy = "maintenanceRequest", cascade = CascadeType.ALL)
   @OrderBy("updatedAt ASC, id ASC")
   private List<MaintenanceRequestHistory> history;
