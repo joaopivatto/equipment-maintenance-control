@@ -37,7 +37,7 @@ public class MaintenanceRequestHistoryMapper extends BaseMapper {
 
     Map<MaintenanceRequestHistory, Redirect> redirectsByEntry = resolveRedirects(request);
 
-    return request.getHistory().stream()
+    return orderedHistory(request).stream()
         .map(entry -> toDetails(entry, redirectsByEntry.get(entry)))
         .toList();
   }
@@ -81,6 +81,10 @@ public class MaintenanceRequestHistoryMapper extends BaseMapper {
     return redirectsByEntry;
   }
 
+  /**
+   * Devolve o histórico em ordem cronológica. A ordenação é estável, então entradas com a mesma
+   * data/hora mantêm a ordem em que foram gravadas.
+   */
   private List<MaintenanceRequestHistory> orderedHistory(MaintenanceRequest request) {
     List<MaintenanceRequestHistory> entries = new ArrayList<>();
     for (MaintenanceRequestHistory entry : request.getHistory()) {

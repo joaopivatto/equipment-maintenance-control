@@ -61,11 +61,11 @@ export class RequestDetailsComponent implements OnInit {
     this.request.set(request);
   }
 
+  // O backend já entrega o histórico em ordem cronológica; reordenar aqui perderia a sequência
+  // das transições gravadas no mesmo minuto, que a data formatada não distingue.
   private buildTimeline(request: MaintenanceRequest): HistoryEntry[] {
     if (request.history.length > 0) {
-      return [...request.history].sort(
-        (a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime(),
-      );
+      return request.history;
     }
 
     return [{ status: RequestStatus.OPEN, dateTime: request.createdAt }];
