@@ -3,6 +3,7 @@ package com.web2.equipmentmaintenancecontrol.model.maintenance;
 import java.util.Map;
 import java.util.Set;
 
+/** Estados possíveis de uma solicitação de manutenção, na ordem do fluxo principal. */
 public enum MaintenanceRequestStatus {
   ABERTA,
   ORCADA,
@@ -13,6 +14,7 @@ public enum MaintenanceRequestStatus {
   PAGA,
   FINALIZADA;
 
+  /** Mapa de transições válidas: para cada estado, os estados que podem vir em seguida. */
   private static final Map<MaintenanceRequestStatus, Set<MaintenanceRequestStatus>>
       ALLOWED_TRANSITIONS =
           Map.of(
@@ -29,6 +31,7 @@ public enum MaintenanceRequestStatus {
     return ALLOWED_TRANSITIONS.getOrDefault(this, Set.of());
   }
 
+  /** Indica se é permitido mudar do estado atual para o estado de destino. */
   public boolean canTransitionTo(MaintenanceRequestStatus target) {
     return target != null && allowedTransitions().contains(target);
   }

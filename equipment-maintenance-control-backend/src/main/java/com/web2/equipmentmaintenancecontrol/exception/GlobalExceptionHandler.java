@@ -15,9 +15,14 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+/**
+ * Tratamento centralizado de exceções da API. Todas as respostas de erro seguem o formato padrão
+ * {@link ErrorResponse}, com timestamp, status, código, mensagem e caminho da requisição.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+  /** Erros de negócio conhecidos: usa o status e o código definidos no {@link ErrorCode}. */
   @ExceptionHandler(AppException.class)
   public ResponseEntity<ErrorResponse> handleAppException(
       AppException exception, HttpServletRequest request) {
@@ -31,6 +36,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getRequestURI()));
   }
 
+  /** Erros inesperados: retorna 500 com mensagem genérica, sem expor detalhes internos. */
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> handleUnexpected(
       Exception exception, HttpServletRequest request) {
@@ -44,6 +50,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getRequestURI()));
   }
 
+  /** Falhas de Bean Validation: concatena os erros de cada campo em uma única mensagem. */
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
       MethodArgumentNotValidException exception,
@@ -64,6 +71,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 resolvePath(request)));
   }
 
+  /** Padroniza as demais exceções tratadas pelo Spring MVC no formato {@link ErrorResponse}. */
   @Override
   protected ResponseEntity<Object> createResponseEntity(
       Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
@@ -75,10 +83,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         .body(buildBody(statusCode.value(), code, message, resolvePath(request)));
   }
 
+  /** Monta o corpo de erro padrão com o instante atual. */
   private ErrorResponse buildBody(int status, String code, String message, String path) {
     return new ErrorResponse(Instant.now(), status, code, message, path);
   }
 
+  /** Obtém a URI da requisição a partir do {@link WebRequest}. */
   private String resolvePath(WebRequest request) {
     if (request instanceof ServletWebRequest servletWebRequest) {
       return servletWebRequest.getRequest().getRequestURI();
