@@ -111,7 +111,7 @@
               </button>
               @if (isEmployee()) {
               @if (request.status === RequestStatus.OPEN) {
-              <button type="button" pButton [text]="true" (click)="reviewBudget(request.id)">
+              <button type="button" pButton [text]="true" (click)="performBudget(request.id)">
                 <i class="pi pi-dollar"></i>
                 Orçar
               </button>
