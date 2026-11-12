@@ -6,10 +6,10 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
-import { EmployeeApiClient } from '../../api/employee-api-client';
+import { EmployeeApiClient } from '../../api';
 import { DatePickerModule } from 'primeng/datepicker';
-import { DateService } from '../../../../shared/services/date.service';
-import { NotificationService } from '../../../../core/notifications/notification.service';
+import { DateService } from '../../../../shared/services';
+import { NotificationService } from '../../../../core/notifications';
 import { InputMaskModule } from 'primeng/inputmask';
 import { KeyFilterModule } from 'primeng/keyfilter';
 
@@ -24,7 +24,7 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     MessageModule,
     DatePickerModule,
     InputMaskModule,
-    KeyFilterModule
+    KeyFilterModule,
   ],
   selector: 'app-employee-form',
   styleUrl: './employee-form.component.scss',

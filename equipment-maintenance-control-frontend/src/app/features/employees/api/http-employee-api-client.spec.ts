@@ -2,8 +2,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { MessageService } from 'primeng/api';
-import { NotificationService } from '../../../core/notifications/notification.service';
-import { Employee } from '../models/employee.model';
+import { NotificationService } from '../../../core/notifications';
+import { Employee } from '../models';
 import { HttpEmployeeApiClient } from './http-employee-api-client';
 
 const MARIA = { id: 1, name: 'Maria', email: 'maria@empresa.com', birthDate: '1990-05-10' };

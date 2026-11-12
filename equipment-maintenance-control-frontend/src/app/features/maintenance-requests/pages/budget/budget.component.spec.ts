@@ -1,10 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import { MockMaintenanceRequestApiClient } from '../../api/mock-maintenance-request-api-client';
-import { AuthApiClient } from '../../../../core/api/auth-api-client';
-import { MockAuthApiClient } from '../../../../core/api/mock-auth-api-client';
+import { MaintenanceRequestApiClient, MockMaintenanceRequestApiClient } from '../../api';
+import { AuthApiClient, MockAuthApiClient } from '../../../../core/api';
 import { BudgetComponent } from './budget.component';
 
 describe('BudgetComponent', () => {

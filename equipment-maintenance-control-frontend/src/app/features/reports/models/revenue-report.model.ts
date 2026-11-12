@@ -1,5 +1,5 @@
 import { RevenueReportItem } from './revenue-report-item.model';
-import { RequestStatus } from '../../maintenance-requests/models/maintenance-request.model';
+import { RequestStatus } from '../../maintenance-requests/models';
 
 export interface DailyRevenue {
   date: string;

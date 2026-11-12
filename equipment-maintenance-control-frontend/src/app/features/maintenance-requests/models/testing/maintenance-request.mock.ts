@@ -1,6 +1,5 @@
 import { BaseMockFactory } from '../../../../shared/testing';
-import { HistoryEntry } from '../history-entry.model';
-import { MaintenanceRequest, RequestStatus } from '../maintenance-request.model';
+import { HistoryEntry, MaintenanceRequest, RequestStatus } from '..';
 import { BudgetMockFactory } from './budget.mock';
 
 export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRequest> {
@@ -55,7 +54,7 @@ export class MaintenanceRequestMockFactory extends BaseMockFactory<MaintenanceRe
     'João Davis',
     'Saulo Miller',
     'Razer Doe',
-    'Maria da Costa'
+    'Maria da Costa',
   ];
 
   protected build(index: number): MaintenanceRequest {

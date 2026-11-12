@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { EquipmentCategoryApiClient } from '../../../equipment-categories/api/equipment-category-api-client';
-import { MockEquipmentCategoryApiClient } from '../../../equipment-categories/api/mock-equipment-category-api-client';
-import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import { MockMaintenanceRequestApiClient } from '../../api/mock-maintenance-request-api-client';
-import { AuthApiClient } from '../../../../core/api/auth-api-client';
-import { MockAuthApiClient } from '../../../../core/api/mock-auth-api-client';
+import {
+  EquipmentCategoryApiClient,
+  MockEquipmentCategoryApiClient,
+} from '../../../equipment-categories/api';
+import { MaintenanceRequestApiClient, MockMaintenanceRequestApiClient } from '../../api';
+import { AuthApiClient, MockAuthApiClient } from '../../../../core/api';
 import { NewRequestComponent } from './new-request.component';
 
 describe('NewRequestComponent', () => {

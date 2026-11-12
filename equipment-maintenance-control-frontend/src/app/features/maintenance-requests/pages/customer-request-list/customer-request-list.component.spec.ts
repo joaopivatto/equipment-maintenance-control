@@ -3,17 +3,14 @@ import { By } from '@angular/platform-browser';
 import { Router, provideRouter } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Observable, of } from 'rxjs';
-import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import { MockMaintenanceRequestApiClient } from '../../api/mock-maintenance-request-api-client';
-import { EmployeeApiClient } from '../../../employees/api/employee-api-client';
-import { MockEmployeeApiClient } from '../../../employees/api/mock-employee-api-client';
-import { AuthApiClient } from '../../../../core/api/auth-api-client';
-import { MockAuthApiClient } from '../../../../core/api/mock-auth-api-client';
+import { MaintenanceRequestApiClient, MockMaintenanceRequestApiClient } from '../../api';
+import { EmployeeApiClient, MockEmployeeApiClient } from '../../../employees/api';
+import { AuthApiClient, MockAuthApiClient } from '../../../../core/api';
 
-import { SessionService } from '../../../../core/auth/session.service';
+import { SessionService } from '../../../../core/auth';
 import { ProfileType } from '../../../../shared';
-import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
-import { MaintenanceRequestMockFactory } from '../../models/testing/maintenance-request.mock';
+import { MaintenanceRequest, RequestStatus } from '../../models';
+import { MaintenanceRequestMockFactory } from '../../models/testing';
 
 import { CustomerRequestListComponent } from './customer-request-list.component';
 

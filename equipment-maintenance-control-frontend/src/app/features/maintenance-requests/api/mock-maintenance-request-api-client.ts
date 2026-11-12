@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { MaintenanceRequest, RequestStatus } from '../models/maintenance-request.model';
-import { MaintenanceRequestMockFactory } from '../models/testing/maintenance-request.mock';
+import { MaintenanceRequest, RequestStatus } from '../models';
+import { MaintenanceRequestMockFactory } from '../models/testing';
 import { MaintenanceRequestApiClient } from './maintenance-request-api-client';
 
 @Injectable()

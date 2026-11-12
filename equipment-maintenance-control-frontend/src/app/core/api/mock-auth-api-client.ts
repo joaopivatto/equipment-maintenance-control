@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Address, ProfileType } from '../../shared';
 import { AddressMockFactory } from '../../shared/testing';
-import { SessionUser } from '../auth/models/session-user.model';
-import { SignUpRequest } from '../auth/models/sign-up-request.model';
-import { MockSessionUserFactory } from '../auth/models/testing/session-user.mock';
+import { SessionUser, SignUpRequest } from '../auth/models';
+import { MockSessionUserFactory } from '../auth/models/testing';
 import { AuthApiClient } from './auth-api-client';
 
 interface MockAccount extends SessionUser {

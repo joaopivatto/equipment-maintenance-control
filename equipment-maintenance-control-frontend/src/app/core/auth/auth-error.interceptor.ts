@@ -2,8 +2,8 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { EMPTY, catchError, throwError } from 'rxjs';
-import { API_BASE_URL } from '../api/api.config';
-import { NotificationService } from '../notifications/notification.service';
+import { API_BASE_URL } from '../api';
+import { NotificationService } from '../notifications';
 import { SessionService } from './session.service';
 
 const PUBLIC_URLS = [`${API_BASE_URL}/auth/login`, `${API_BASE_URL}/auth/signup`];

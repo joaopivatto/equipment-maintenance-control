@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
-import { NotificationService } from '../notifications/notification.service';
+import { NotificationService } from '../notifications';
 import { authErrorInterceptor } from './auth-error.interceptor';
 import { SessionService } from './session.service';
 

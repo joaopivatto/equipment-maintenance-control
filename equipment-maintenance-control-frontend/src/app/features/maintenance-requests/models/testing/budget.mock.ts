@@ -1,5 +1,5 @@
 import { BaseMockFactory } from '../../../../shared/testing';
-import { Budget } from '../budget.model';
+import { Budget } from '..';
 
 export class BudgetMockFactory extends BaseMockFactory<Budget> {
   protected readonly length = 6;

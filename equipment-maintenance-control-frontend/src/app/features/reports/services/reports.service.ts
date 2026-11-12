@@ -1,7 +1,7 @@
 import { inject, Service } from '@angular/core';
 import { forkJoin, map, Observable } from 'rxjs';
-import { EquipmentCategoryApiClient } from '../../equipment-categories/api/equipment-category-api-client';
-import { MaintenanceRequestApiClient } from '../../maintenance-requests/api/maintenance-request-api-client';
+import { EquipmentCategoryApiClient } from '../../equipment-categories/api';
+import { MaintenanceRequestApiClient } from '../../maintenance-requests/api';
 import {
   CategoryRevenue,
   DailyRevenue,
@@ -9,12 +9,9 @@ import {
   RevenueReport,
   StatusSummary,
 } from '../models';
-import {
-  MaintenanceRequest,
-  RequestStatus,
-} from '../../maintenance-requests/models/maintenance-request.model';
-import { DateService } from '../../../shared/services/date.service';
-import { EquipmentCategory } from '../../equipment-categories/models/equipment-category.model';
+import { MaintenanceRequest, RequestStatus } from '../../maintenance-requests/models';
+import { DateService } from '../../../shared/services';
+import { EquipmentCategory } from '../../equipment-categories/models';
 
 const REVENUE_STATUSES = new Set([RequestStatus.PAID, RequestStatus.FINALIZED]);
 const APPROVED_STATUSES = new Set([

@@ -1,5 +1,5 @@
 import { toIsoDateTime, toMaintenanceRequest, toRequestStatus } from './maintenance-request.mapper';
-import { RequestStatus } from '../../models/maintenance-request.model';
+import { RequestStatus } from '../../models';
 
 describe('maintenance-request.mapper', () => {
   it('converte datas dd/MM/yyyy HH:mm para ISO local', () => {

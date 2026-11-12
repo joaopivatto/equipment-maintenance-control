@@ -12,15 +12,11 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { DividerModule } from 'primeng/divider';
 
-import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import {
-  MaintenanceRequest,
-  RequestStatus,
-  STATUS_CLASSES,
-} from '../../models/maintenance-request.model';
-import { CustomerDetailsComponent } from '../../components/customer-details/customer-details.component';
-import { NotificationService } from '../../../../core/notifications/notification.service';
-import { SessionService } from '../../../../core/auth/session.service';
+import { MaintenanceRequestApiClient } from '../../api';
+import { MaintenanceRequest, RequestStatus, STATUS_CLASSES } from '../../models';
+import { CustomerDetailsComponent } from '../../components/customer-details';
+import { NotificationService } from '../../../../core/notifications';
+import { SessionService } from '../../../../core/auth';
 
 @Component({
   selector: 'app-budget',

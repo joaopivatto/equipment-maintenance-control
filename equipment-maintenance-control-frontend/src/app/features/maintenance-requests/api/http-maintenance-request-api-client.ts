@@ -1,13 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { EMPTY, Observable, catchError, map, of } from 'rxjs';
-import { API_BASE_URL } from '../../../core/api/api.config';
-import { notifyAndStop, toErrorMessage } from '../../../core/api/api-error';
-import { SessionService } from '../../../core/auth/session.service';
-import { NotificationService } from '../../../core/notifications/notification.service';
-import { MaintenanceRequest } from '../models/maintenance-request.model';
-import { ApiMaintenanceRequestDto } from './dto/api-maintenance-request.dto';
-import { toMaintenanceRequest } from './mappers/maintenance-request.mapper';
+import { API_BASE_URL, notifyAndStop, toErrorMessage } from '../../../core/api';
+import { SessionService } from '../../../core/auth';
+import { NotificationService } from '../../../core/notifications';
+import { MaintenanceRequest } from '../models';
+import { ApiMaintenanceRequestDto } from './dto';
+import { toMaintenanceRequest } from './mappers';
 import { MaintenanceRequestApiClient } from './maintenance-request-api-client';
 
 @Injectable()

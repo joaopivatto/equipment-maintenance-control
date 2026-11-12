@@ -9,15 +9,11 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { DividerModule } from 'primeng/divider';
 
-import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import {
-  MaintenanceRequest,
-  RequestStatus,
-  STATUS_CLASSES,
-} from '../../models/maintenance-request.model';
-import { CustomerDetailsComponent } from '../../components/customer-details/customer-details.component';
-import { NotificationService } from '../../../../core/notifications/notification.service';
-import { CurrentEmployeeService } from '../../../employees/services/current-employee.service';
+import { MaintenanceRequestApiClient } from '../../api';
+import { MaintenanceRequest, RequestStatus, STATUS_CLASSES } from '../../models';
+import { CustomerDetailsComponent } from '../../components/customer-details';
+import { NotificationService } from '../../../../core/notifications';
+import { CurrentEmployeeService } from '../../../employees/services';
 
 @Component({
   selector: 'app-maintenance',
@@ -30,7 +26,7 @@ import { CurrentEmployeeService } from '../../../employees/services/current-empl
     TextareaModule,
     ConfirmDialogModule,
     CustomerDetailsComponent,
-    DividerModule
+    DividerModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './maintenance.component.html',

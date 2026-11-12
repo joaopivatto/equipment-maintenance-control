@@ -1,13 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
-import { API_BASE_URL } from '../../../core/api/api.config';
-import { notifyAndStop, toErrorMessage } from '../../../core/api/api-error';
-import { NotificationService } from '../../../core/notifications/notification.service';
-import { EquipmentCategory } from '../models/equipment-category.model';
+import { API_BASE_URL, notifyAndStop, toErrorMessage } from '../../../core/api';
+import { NotificationService } from '../../../core/notifications';
+import { EquipmentCategory } from '../models';
 import { EquipmentCategoryApiClient } from './equipment-category-api-client';
-import { ApiEquipmentTypeDto } from './dto/api-equipment-type.dto';
-import { toEquipmentCategory } from './mappers/equipment-category.mapper';
+import { ApiEquipmentTypeDto } from './dto';
+import { toEquipmentCategory } from './mappers';
 
 @Injectable()
 export class HttpEquipmentCategoryApiClient extends EquipmentCategoryApiClient {

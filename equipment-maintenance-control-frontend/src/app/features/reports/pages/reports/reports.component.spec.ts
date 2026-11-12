@@ -3,7 +3,7 @@ import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
 
 import { ReportsDashboard } from '../../models';
-import { ReportsService } from '../../services/reports.service';
+import { ReportsService } from '../../services';
 import { ReportsComponent } from './reports.component';
 
 describe('ReportsComponent', () => {

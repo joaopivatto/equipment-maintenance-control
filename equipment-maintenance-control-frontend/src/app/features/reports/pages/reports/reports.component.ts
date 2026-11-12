@@ -11,11 +11,10 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { InputMaskModule } from 'primeng/inputmask';
 
-import { NotificationService } from '../../../../core/notifications/notification.service';
+import { NotificationService } from '../../../../core/notifications';
 import { ReportsDashboard } from '../../models';
-import { STATUS_COLORS } from '../../../maintenance-requests/models/maintenance-request.model';
-import { ReportsService } from '../../services/reports.service';
-import { ReportsPdfService } from '../../services/reports-pdf.service';
+import { STATUS_COLORS } from '../../../maintenance-requests/models';
+import { ReportsService, ReportsPdfService } from '../../services';
 
 type PeriodPreset = 'last-month' | 'last-three-months' | 'last-six-months' | 'last-year' | 'custom';
 
@@ -32,7 +31,7 @@ type PeriodPreset = 'last-month' | 'last-three-months' | 'last-six-months' | 'la
     CurrencyPipe,
     DatePipe,
     DecimalPipe,
-    InputMaskModule
+    InputMaskModule,
   ],
   selector: 'app-reports',
   styleUrl: './reports.component.scss',
@@ -273,10 +272,8 @@ export class ReportsComponent implements OnInit {
           ticks: {
             color: (context) => {
               const category = this.dashboard()?.categoryRevenue[context.index];
-              return category?.active === false
-                ? colors.inactiveCategory
-                : colors.textMuted;
-            }
+              return category?.active === false ? colors.inactiveCategory : colors.textMuted;
+            },
           },
           grid: { display: false },
           border: { display: false },

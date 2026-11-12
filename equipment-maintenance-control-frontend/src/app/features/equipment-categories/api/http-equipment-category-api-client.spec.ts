@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { MessageService } from 'primeng/api';
-import { NotificationService } from '../../../core/notifications/notification.service';
+import { NotificationService } from '../../../core/notifications';
 import { HttpEquipmentCategoryApiClient } from './http-equipment-category-api-client';
 
 describe('HttpEquipmentCategoryApiClient', () => {

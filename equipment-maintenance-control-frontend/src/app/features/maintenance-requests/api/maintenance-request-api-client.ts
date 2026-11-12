@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { MaintenanceRequest } from '../models/maintenance-request.model';
+import { MaintenanceRequest } from '../models';
 
 export abstract class MaintenanceRequestApiClient {
   abstract listAll(): Observable<MaintenanceRequest[]>;

@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs';
 import { Address } from '../../shared';
-import { SessionUser } from '../auth/models/session-user.model';
-import { SignUpRequest } from '../auth/models/sign-up-request.model';
+import { SessionUser, SignUpRequest } from '../auth/models';
 
 export abstract class AuthApiClient {
   abstract login(email: string, password: string): Observable<SessionUser | null>;

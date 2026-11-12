@@ -2,10 +2,10 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { MessageService } from 'primeng/api';
-import { SessionService } from '../../../core/auth/session.service';
-import { NotificationService } from '../../../core/notifications/notification.service';
-import { MaintenanceRequest, RequestStatus } from '../models/maintenance-request.model';
-import { ApiMaintenanceRequestDto } from './dto/api-maintenance-request.dto';
+import { SessionService } from '../../../core/auth';
+import { NotificationService } from '../../../core/notifications';
+import { MaintenanceRequest, RequestStatus } from '../models';
+import { ApiMaintenanceRequestDto } from './dto';
 import { HttpMaintenanceRequestApiClient } from './http-maintenance-request-api-client';
 
 const API_REQUEST: ApiMaintenanceRequestDto = {

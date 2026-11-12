@@ -1,7 +1,7 @@
 import { Component, signal, inject, computed } from '@angular/core';
 import { SlicePipe } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
-import { SessionService } from '../../auth/session.service';
+import { SessionService } from '../../auth';
 import { SidebarModule } from 'primeng/sidebar';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';

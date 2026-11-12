@@ -1,4 +1,4 @@
-import { RequestStatus } from '../../maintenance-requests/models/maintenance-request.model';
+import { RequestStatus } from '../../maintenance-requests/models';
 
 export interface RevenueReportItem {
   maintenanceRequestId: number;

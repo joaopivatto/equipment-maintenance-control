@@ -1,6 +1,6 @@
 import { ProfileType } from '../../../../shared';
 import { BaseMockFactory } from '../../../../shared/testing';
-import { SessionUser } from '../session-user.model';
+import { SessionUser } from '..';
 
 export class MockSessionUserFactory extends BaseMockFactory<SessionUser & { password: string }> {
   protected readonly length = 2;

@@ -2,14 +2,13 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { EMPTY, Observable, catchError, map, of } from 'rxjs';
 import { Address } from '../../shared';
-import { SessionUser } from '../auth/models/session-user.model';
-import { SignUpRequest } from '../auth/models/sign-up-request.model';
-import { NotificationService } from '../notifications/notification.service';
+import { SessionUser, SignUpRequest } from '../auth/models';
+import { NotificationService } from '../notifications';
 import { API_BASE_URL } from './api.config';
 import { toErrorMessage } from './api-error';
 import { AuthApiClient } from './auth-api-client';
 import { ApiLoginResponseDto, ViaCepResponseDto } from './dto';
-import { toAddress, toSessionUser } from './mappers/auth.mapper';
+import { toAddress, toSessionUser } from './mappers';
 
 const onlyDigits = (value: string): string => value.replace(/\D/g, '');
 

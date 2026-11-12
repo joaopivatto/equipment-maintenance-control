@@ -6,8 +6,8 @@ import { CardModule } from 'primeng/card';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 
-import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
+import { MaintenanceRequestApiClient } from '../../api';
+import { MaintenanceRequest, RequestStatus } from '../../models';
 
 @Component({
   selector: 'app-employee-home',

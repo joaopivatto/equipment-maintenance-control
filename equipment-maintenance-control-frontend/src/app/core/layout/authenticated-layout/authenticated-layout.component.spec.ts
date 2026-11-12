@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { AuthApiClient } from '../../api/auth-api-client';
-import { MockAuthApiClient } from '../../api/mock-auth-api-client';
+import { AuthApiClient, MockAuthApiClient } from '../../api';
 import { AuthenticatedLayoutComponent } from './authenticated-layout.component';
 
 describe('AuthenticatedLayoutComponent', () => {

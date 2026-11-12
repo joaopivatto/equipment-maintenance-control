@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { EquipmentCategoryApiClient } from '../../api/equipment-category-api-client';
-import { MockEquipmentCategoryApiClient } from '../../api/mock-equipment-category-api-client';
+import { EquipmentCategoryApiClient, MockEquipmentCategoryApiClient } from '../../api';
 import { CategoryListComponent } from './category-list.component';
 
 describe('CategoryListComponent', () => {
