@@ -12,15 +12,11 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputMaskModule } from 'primeng/inputmask';
 import { ConfirmationService } from 'primeng/api';
 
-import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import {
-  MaintenanceRequest,
-  RequestStatus,
-  STATUS_CLASSES,
-} from '../../models/maintenance-request.model';
-import { NotificationService } from '../../../../core/notifications/notification.service';
-import { SessionService } from '../../../../core/auth/session.service';
-import { CurrentEmployeeService } from '../../../employees/services/current-employee.service';
+import { MaintenanceRequestApiClient } from '../../api';
+import { MaintenanceRequest, RequestStatus, STATUS_CLASSES } from '../../models';
+import { NotificationService } from '../../../../core/notifications';
+import { SessionService } from '../../../../core/auth';
+import { CurrentEmployeeService } from '../../../employees/services';
 
 type FilterMode = 'today' | 'period' | 'all';
 

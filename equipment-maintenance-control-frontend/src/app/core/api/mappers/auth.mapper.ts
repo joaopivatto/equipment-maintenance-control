@@ -1,5 +1,5 @@
 import { Address, ProfileType } from '../../../shared';
-import { SessionUser } from '../../auth/models/session-user.model';
+import { SessionUser } from '../../auth/models';
 import { ApiLoginResponseDto, ViaCepResponseDto } from '../dto';
 
 export function toAddress(dto: ViaCepResponseDto): Address {

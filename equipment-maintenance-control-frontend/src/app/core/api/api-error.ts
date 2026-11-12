@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
-import { NotificationService } from '../notifications/notification.service';
+import { NotificationService } from '../notifications';
 
 interface ApiErrorBody {
   code?: string;

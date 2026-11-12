@@ -1,12 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 
-import { EquipmentCategoryApiClient } from '../../equipment-categories/api/equipment-category-api-client';
-import { MaintenanceRequestApiClient } from '../../maintenance-requests/api/maintenance-request-api-client';
-import {
-  MaintenanceRequest,
-  RequestStatus,
-} from '../../maintenance-requests/models/maintenance-request.model';
+import { EquipmentCategoryApiClient } from '../../equipment-categories/api';
+import { MaintenanceRequestApiClient } from '../../maintenance-requests/api';
+import { MaintenanceRequest, RequestStatus } from '../../maintenance-requests/models';
 import { ReportsService } from './reports.service';
 
 describe('ReportsService', () => {
@@ -113,8 +110,8 @@ describe('ReportsService', () => {
       .loadDashboard(null, null)
       .subscribe((dashboard) => {
         expect(dashboard.categoryRevenue).toEqual([
-          { categoryId: 1, categoryName: 'Notebook', totalRevenue: 500, paidRequestsCount: 2 },
-          { categoryId: 9, categoryName: 'Monitor', totalRevenue: 100, paidRequestsCount: 1 },
+          { categoryId: 1, categoryName: 'Notebook', totalRevenue: 500, paidRequestsCount: 2, active: true },
+          { categoryId: 9, categoryName: 'Monitor', totalRevenue: 100, paidRequestsCount: 1, active: false },
         ]);
       });
   });

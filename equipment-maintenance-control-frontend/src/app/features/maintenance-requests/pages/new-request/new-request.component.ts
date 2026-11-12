@@ -8,11 +8,11 @@ import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
-import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import { NotificationService } from '../../../../core/notifications/notification.service';
-import { SessionService } from '../../../../core/auth/session.service';
-import { EquipmentCategoryApiClient } from '../../../equipment-categories/api/equipment-category-api-client';
-import { EquipmentCategory } from '../../../equipment-categories/models/equipment-category.model';
+import { MaintenanceRequestApiClient } from '../../api';
+import { NotificationService } from '../../../../core/notifications';
+import { SessionService } from '../../../../core/auth';
+import { EquipmentCategoryApiClient } from '../../../equipment-categories/api';
+import { EquipmentCategory } from '../../../equipment-categories/models';
 
 @Component({
   imports: [

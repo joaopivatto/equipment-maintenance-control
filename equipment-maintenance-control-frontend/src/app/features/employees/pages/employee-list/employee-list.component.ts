@@ -4,13 +4,13 @@ import { RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
-import { EmployeeApiClient } from '../../api/employee-api-client';
-import { Employee } from '../../models/employee.model';
+import { EmployeeApiClient } from '../../api';
+import { Employee } from '../../models';
 import { SkeletonModule } from 'primeng/skeleton';
-import { NotificationService } from '../../../../core/notifications/notification.service';
+import { NotificationService } from '../../../../core/notifications';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
-import { CurrentEmployeeService } from '../../services/current-employee.service';
+import { CurrentEmployeeService } from '../../services';
 
 @Component({
   imports: [
@@ -34,10 +34,7 @@ export class EmployeeListComponent implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private currentEmployeeService = inject(CurrentEmployeeService);
 
-  protected readonly skeletonRows: Employee[] = Array.from(
-    { length: 5 },
-    () => ({}) as Employee
-  );
+  protected readonly skeletonRows: Employee[] = Array.from({ length: 5 }, () => ({}) as Employee);
 
   isLoading = signal(true);
 
@@ -66,17 +63,14 @@ export class EmployeeListComponent implements OnInit {
     const loggedEmployee = this.currentEmployee();
 
     if (!loggedEmployee) {
-      this.notificationService.error(
-        'Erro',
-        'Não foi possível identificar o funcionário logado.'
-      );
+      this.notificationService.error('Erro', 'Não foi possível identificar o funcionário logado.');
       return;
     }
 
     if (employee.id === loggedEmployee.id) {
       this.notificationService.warning(
         'Atenção',
-        'Você não pode remover o próprio usuário da sessão.'
+        'Você não pode remover o próprio usuário da sessão.',
       );
       return;
     }
@@ -95,16 +89,14 @@ export class EmployeeListComponent implements OnInit {
         outlined: true,
       },
       accept: () => {
-        this.employeeApiClient
-          .deactivate(employee.id, loggedEmployee.id)
-          .subscribe(({ error }) => {
-            if (error) {
-              this.notificationService.warning('Atenção', error);
-              return;
-            }
+        this.employeeApiClient.deactivate(employee.id, loggedEmployee.id).subscribe(({ error }) => {
+          if (error) {
+            this.notificationService.warning('Atenção', error);
+            return;
+          }
 
-            this.reload();
-          });
+          this.reload();
+        });
       },
     });
   }

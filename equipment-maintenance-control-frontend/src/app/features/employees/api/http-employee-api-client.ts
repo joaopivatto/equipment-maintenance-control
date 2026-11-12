@@ -1,13 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
-import { API_BASE_URL } from '../../../core/api/api.config';
-import { notifyAndStop, toErrorMessage } from '../../../core/api/api-error';
-import { NotificationService } from '../../../core/notifications/notification.service';
-import { Employee } from '../models/employee.model';
+import { API_BASE_URL, notifyAndStop, toErrorMessage } from '../../../core/api';
+import { NotificationService } from '../../../core/notifications';
+import { Employee } from '../models';
 import { EmployeeApiClient } from './employee-api-client';
-import { ApiEmployeeDto } from './dto/api-employee.dto';
-import { toEmployee } from './mappers/employee.mapper';
+import { ApiEmployeeDto } from './dto';
+import { toEmployee } from './mappers';
 
 @Injectable()
 export class HttpEmployeeApiClient extends EmployeeApiClient {

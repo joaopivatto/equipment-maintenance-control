@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { EquipmentCategory } from '../models/equipment-category.model';
-import { EquipmentCategoryMockFactory } from '../models/testing/equipment-category.mock';
+import { EquipmentCategory } from '../models';
+import { EquipmentCategoryMockFactory } from '../models/testing';
 import { EquipmentCategoryApiClient } from './equipment-category-api-client';
 
 @Injectable()

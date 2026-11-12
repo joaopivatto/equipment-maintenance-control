@@ -8,9 +8,9 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
-import { NotificationService } from '../../../../core/notifications/notification.service';
-import { SignUpService } from '../../services/sign-up.service';
-import { AuthApiClient } from '../../../../core/api/auth-api-client';
+import { NotificationService } from '../../../../core/notifications';
+import { SignUpService } from '../../services';
+import { AuthApiClient } from '../../../../core/api';
 
 const UF_OPTIONS = [
   { label: 'Acre', value: 'AC' },

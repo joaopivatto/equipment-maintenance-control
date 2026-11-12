@@ -7,8 +7,8 @@ import { TableModule } from 'primeng/table';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
-import { EquipmentCategoryApiClient } from '../../api/equipment-category-api-client';
-import { EquipmentCategory } from '../../models/equipment-category.model';
+import { EquipmentCategoryApiClient } from '../../api';
+import { EquipmentCategory } from '../../models';
 
 @Component({
   imports: [

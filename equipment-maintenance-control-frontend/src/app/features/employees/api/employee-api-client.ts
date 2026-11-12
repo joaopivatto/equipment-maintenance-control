@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Employee } from '../models/employee.model';
+import { Employee } from '../models';
 
 export abstract class EmployeeApiClient {
   abstract listAll(): Observable<Employee[]>;

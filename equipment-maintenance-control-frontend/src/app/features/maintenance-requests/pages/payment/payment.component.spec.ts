@@ -2,9 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
-import { NotificationService } from '../../../../core/notifications/notification.service';
-import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
+import { NotificationService } from '../../../../core/notifications';
+import { MaintenanceRequestApiClient } from '../../api';
+import { MaintenanceRequest, RequestStatus } from '../../models';
 import { PaymentComponent } from './payment.component';
 
 describe('PaymentComponent', () => {

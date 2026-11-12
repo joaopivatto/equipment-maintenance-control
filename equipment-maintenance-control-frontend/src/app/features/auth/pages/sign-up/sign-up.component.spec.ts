@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { AuthApiClient } from '../../../../core/api/auth-api-client';
-import { MockAuthApiClient } from '../../../../core/api/mock-auth-api-client';
+import { AuthApiClient, MockAuthApiClient } from '../../../../core/api';
 import { SignUpComponent } from './sign-up.component';
 
 describe('SignUpComponent', () => {

@@ -6,9 +6,9 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
-import { EquipmentCategoryApiClient } from '../../api/equipment-category-api-client';
-import { EquipmentCategory } from '../../models/equipment-category.model';
-import { NotificationService } from '../../../../core/notifications/notification.service';
+import { EquipmentCategoryApiClient } from '../../api';
+import { EquipmentCategory } from '../../models';
+import { NotificationService } from '../../../../core/notifications';
 
 @Component({
   selector: 'app-category-form',

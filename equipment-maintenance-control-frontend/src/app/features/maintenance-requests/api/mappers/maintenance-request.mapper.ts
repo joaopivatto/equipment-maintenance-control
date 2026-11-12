@@ -1,17 +1,12 @@
-import { ApiEmployeeDto } from '../../../employees/api/dto/api-employee.dto';
-import { Budget } from '../../models/budget.model';
-import { HistoryEntry } from '../../models/history-entry.model';
+import { ApiEmployeeDto } from '../../../employees/api/dto';
 import {
+  Budget,
+  HistoryEntry,
   CustomerInfo,
   MaintenanceRequest,
   RequestStatus,
-} from '../../models/maintenance-request.model';
-import {
-  ApiBudgetDto,
-  ApiCustomerDto,
-  ApiHistoryEntryDto,
-  ApiMaintenanceRequestDto,
-} from '../dto/api-maintenance-request.dto';
+} from '../../models';
+import { ApiBudgetDto, ApiCustomerDto, ApiHistoryEntryDto, ApiMaintenanceRequestDto } from '../dto';
 
 const STATUS_BY_API_VALUE: Record<string, RequestStatus> = {
   ABERTA: RequestStatus.OPEN,

@@ -8,17 +8,18 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { MessageService } from 'primeng/api';
 
-import { HttpAuthApiClient } from './core/api/http-auth-api-client';
-import { EquipmentCategoryApiClient } from './features/equipment-categories/api/equipment-category-api-client';
-import { HttpEquipmentCategoryApiClient } from './features/equipment-categories/api/http-equipment-category-api-client';
-import { MaintenanceRequestApiClient } from './features/maintenance-requests/api/maintenance-request-api-client';
-import { HttpMaintenanceRequestApiClient } from './features/maintenance-requests/api/http-maintenance-request-api-client';
-import { EmployeeApiClient } from './features/employees/api/employee-api-client';
-import { HttpEmployeeApiClient } from './features/employees/api/http-employee-api-client';
-import { AuthApiClient } from './core/api/auth-api-client';
+import { HttpAuthApiClient, AuthApiClient } from './core/api';
+import {
+  EquipmentCategoryApiClient,
+  HttpEquipmentCategoryApiClient,
+} from './features/equipment-categories/api';
+import {
+  MaintenanceRequestApiClient,
+  HttpMaintenanceRequestApiClient,
+} from './features/maintenance-requests/api';
+import { EmployeeApiClient, HttpEmployeeApiClient } from './features/employees/api';
 import { routes } from './app.routes';
-import { authInterceptor } from './core/auth/auth.interceptor';
-import { authErrorInterceptor } from './core/auth/auth-error.interceptor';
+import { authInterceptor, authErrorInterceptor } from './core/auth';
 
 registerLocaleData(localePt);
 

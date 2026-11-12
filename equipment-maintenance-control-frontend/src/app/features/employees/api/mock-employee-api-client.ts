@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { DateService } from '../../../shared/services/date.service';
+import { DateService } from '../../../shared/services';
 import { EmployeeMockFactory } from '../../../shared/testing';
-import { Employee } from '../models/employee.model';
+import { Employee } from '../models';
 import { EmployeeApiClient } from './employee-api-client';
 
 @Injectable()

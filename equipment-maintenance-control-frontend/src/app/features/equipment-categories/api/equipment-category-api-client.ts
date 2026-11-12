@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { EquipmentCategory } from '../models/equipment-category.model';
+import { EquipmentCategory } from '../models';
 
 export abstract class EquipmentCategoryApiClient {
   abstract listAll(): Observable<EquipmentCategory[]>;

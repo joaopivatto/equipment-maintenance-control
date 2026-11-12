@@ -1,62 +1,46 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/auth/guards/auth.guard';
-import { employeeGuard } from './core/auth/guards/profile.guard';
-import { guestGuard } from './core/auth/guards/guest.guard';
+import { authGuard, employeeGuard, guestGuard } from './core/auth/guards';
 
 export const routes: Routes = [
   {
     path: '',
     canActivate: [guestGuard],
-    loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
+    loadChildren: () => import('./features/auth').then((m) => m.AUTH_ROUTES),
   },
   {
     path: 'requests',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./core/layout/authenticated-layout/authenticated-layout.component').then(
-        (m) => m.AuthenticatedLayoutComponent,
-      ),
-    loadChildren: () => import('./features/maintenance-requests/maintenance-requests.routes').then(
-          (m) => m.MAINTENANCE_REQUESTS_ROUTES,
-        ),
+      import('./core/layout/authenticated-layout').then((m) => m.AuthenticatedLayoutComponent),
+    loadChildren: () =>
+      import('./features/maintenance-requests').then((m) => m.MAINTENANCE_REQUESTS_ROUTES),
   },
   {
     path: 'categories',
     canActivate: [employeeGuard],
     loadComponent: () =>
-      import('./core/layout/authenticated-layout/authenticated-layout.component').then(
-        (m) => m.AuthenticatedLayoutComponent,
-      ),
+      import('./core/layout/authenticated-layout').then((m) => m.AuthenticatedLayoutComponent),
     loadChildren: () =>
-      import('./features/equipment-categories/equipment-categories.routes').then(
-        (m) => m.EQUIPMENT_CATEGORIES_ROUTES,
-      ),
+      import('./features/equipment-categories').then((m) => m.EQUIPMENT_CATEGORIES_ROUTES),
   },
   {
     path: 'employees',
     canActivate: [employeeGuard],
     loadComponent: () =>
-      import('./core/layout/authenticated-layout/authenticated-layout.component').then(
-        (m) => m.AuthenticatedLayoutComponent,
-      ),
-    loadChildren: () =>
-      import('./features/employees/employees.routes').then((m) => m.EMPLOYEES_ROUTES),
+      import('./core/layout/authenticated-layout').then((m) => m.AuthenticatedLayoutComponent),
+    loadChildren: () => import('./features/employees').then((m) => m.EMPLOYEES_ROUTES),
   },
   {
     path: 'reports',
     canActivate: [employeeGuard],
     loadComponent: () =>
-      import('./core/layout/authenticated-layout/authenticated-layout.component').then(
-        (m) => m.AuthenticatedLayoutComponent,
-      ),
-    loadChildren: () =>
-      import('./features/reports/reports.routes').then((m) => m.REPORTS_ROUTES),
+      import('./core/layout/authenticated-layout').then((m) => m.AuthenticatedLayoutComponent),
+    loadChildren: () => import('./features/reports').then((m) => m.REPORTS_ROUTES),
   },
   // sempre deixar por último, para que seja a última rota a ser verificada
   {
     path: '**',
     title: 'Página não encontrada | Sistema de Gerenciamento',
-    loadComponent: () =>
-      import('./core/pages/not-found/not-found.component').then((m) => m.NotFoundComponent),
+    loadComponent: () => import('./core/pages/not-found').then((m) => m.NotFoundComponent),
   },
 ];

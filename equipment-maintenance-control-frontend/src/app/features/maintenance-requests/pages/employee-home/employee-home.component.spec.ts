@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import { MockMaintenanceRequestApiClient } from '../../api/mock-maintenance-request-api-client';
+import { MaintenanceRequestApiClient, MockMaintenanceRequestApiClient } from '../../api';
 import { EmployeeHomeComponent } from './employee-home.component';
 
 describe('EmployeeHomeComponent', () => {

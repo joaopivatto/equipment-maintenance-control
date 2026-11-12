@@ -1,5 +1,5 @@
 import { BaseMockFactory } from '../../../../shared/testing';
-import { EquipmentCategory } from '../equipment-category.model';
+import { EquipmentCategory } from '..';
 
 export class EquipmentCategoryMockFactory extends BaseMockFactory<EquipmentCategory> {
   protected readonly length = 5;

@@ -9,16 +9,12 @@ import { MessageModule } from 'primeng/message';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
-import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import {
-  MaintenanceRequest,
-  RequestStatus,
-  STATUS_CLASSES,
-} from '../../models/maintenance-request.model';
-import { NotificationService } from '../../../../core/notifications/notification.service';
-import { EmployeeApiClient } from '../../../employees/api/employee-api-client';
-import { CurrentEmployeeService } from '../../../employees/services/current-employee.service';
-import { Employee } from '../../../employees/models/employee.model';
+import { MaintenanceRequestApiClient } from '../../api';
+import { MaintenanceRequest, RequestStatus, STATUS_CLASSES } from '../../models';
+import { NotificationService } from '../../../../core/notifications';
+import { EmployeeApiClient } from '../../../employees/api';
+import { CurrentEmployeeService } from '../../../employees/services';
+import { Employee } from '../../../employees/models';
 
 @Component({
   selector: 'app-redirect',

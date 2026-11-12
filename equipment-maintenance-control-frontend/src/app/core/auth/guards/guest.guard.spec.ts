@@ -6,7 +6,7 @@ import {
   UrlTree,
   provideRouter,
 } from '@angular/router';
-import { SessionService } from '../session.service';
+import { SessionService } from '..';
 import { guestGuard } from './guest.guard';
 
 describe('guestGuard', () => {

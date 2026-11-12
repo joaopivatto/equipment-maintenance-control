@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { EmployeeApiClient } from '../../api/employee-api-client';
-import { MockEmployeeApiClient } from '../../api/mock-employee-api-client';
+import { EmployeeApiClient, MockEmployeeApiClient } from '../../api';
 import { EmployeeFormComponent } from './employee-form.component';
 
 describe('EmployeeFormComponent', () => {

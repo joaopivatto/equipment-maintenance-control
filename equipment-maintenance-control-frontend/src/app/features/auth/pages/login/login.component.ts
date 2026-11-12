@@ -7,8 +7,8 @@ import { InputOtpModule } from 'primeng/inputotp';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { ProfileType } from '../../../../shared';
-import { SessionService } from '../../../../core/auth/session.service';
-import { NotificationService } from '../../../../core/notifications/notification.service';
+import { SessionService } from '../../../../core/auth';
+import { NotificationService } from '../../../../core/notifications';
 
 @Component({
   imports: [

@@ -1,8 +1,8 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 import { ProfileType } from '../../shared';
-import { AuthApiClient } from '../api/auth-api-client';
-import { SessionUser } from './models/session-user.model';
+import { AuthApiClient } from '../api';
+import { SessionUser } from './models';
 
 const STORAGE_KEY = 'session-user';
 

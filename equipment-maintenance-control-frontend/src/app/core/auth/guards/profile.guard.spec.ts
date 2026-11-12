@@ -8,7 +8,7 @@ import {
   provideRouter,
 } from '@angular/router';
 import { ProfileType } from '../../../shared';
-import { SessionService } from '../session.service';
+import { SessionService } from '..';
 import { customerGuard, employeeGuard } from './profile.guard';
 
 describe('profileGuard', () => {

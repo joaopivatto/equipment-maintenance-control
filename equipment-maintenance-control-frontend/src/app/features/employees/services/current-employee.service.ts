@@ -1,7 +1,7 @@
 import { Injectable, effect, inject, signal } from '@angular/core';
-import { SessionService } from '../../../core/auth/session.service';
-import { EmployeeApiClient } from '../api/employee-api-client';
-import { Employee } from '../models/employee.model';
+import { SessionService } from '../../../core/auth';
+import { EmployeeApiClient } from '../api';
+import { Employee } from '../models';
 
 @Injectable({
   providedIn: 'root',

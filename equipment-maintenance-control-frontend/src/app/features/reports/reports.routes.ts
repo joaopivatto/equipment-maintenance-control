@@ -6,7 +6,6 @@ export const REPORTS_ROUTES: Routes = [
     path: '',
     title: 'Relatórios | Sistema de Gerenciamento',
     providers: [provideCharts(withDefaultRegisterables())],
-    loadComponent: () =>
-      import('./pages/reports/reports.component').then((m) => m.ReportsComponent),
+    loadComponent: () => import('./pages/reports').then((m) => m.ReportsComponent),
   },
 ];

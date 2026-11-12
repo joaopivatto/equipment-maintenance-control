@@ -1,6 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 
-import { CustomerInfo } from '../../models/maintenance-request.model';
+import { CustomerInfo } from '../../models';
 
 @Component({
   selector: 'app-customer-details',

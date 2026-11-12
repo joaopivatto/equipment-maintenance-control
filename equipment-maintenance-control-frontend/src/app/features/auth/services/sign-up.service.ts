@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Address } from '../../../shared';
-import { AuthApiClient } from '../../../core/api/auth-api-client';
+import { AuthApiClient } from '../../../core/api';
 
 @Injectable({
   providedIn: 'root',

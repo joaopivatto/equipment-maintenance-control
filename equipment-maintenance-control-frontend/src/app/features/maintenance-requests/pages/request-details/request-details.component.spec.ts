@@ -1,12 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import { MockMaintenanceRequestApiClient } from '../../api/mock-maintenance-request-api-client';
-import { AuthApiClient } from '../../../../core/api/auth-api-client';
-import { MockAuthApiClient } from '../../../../core/api/mock-auth-api-client';
+import { MaintenanceRequestApiClient, MockMaintenanceRequestApiClient } from '../../api';
+import { AuthApiClient, MockAuthApiClient } from '../../../../core/api';
 import { ProfileType } from '../../../../shared';
-import { MaintenanceRequest, RequestStatus } from '../../models/maintenance-request.model';
+import { MaintenanceRequest, RequestStatus } from '../../models';
 import { RequestDetailsComponent } from './request-details.component';
 
 function storeSession(profileType: ProfileType): void {
@@ -57,9 +55,9 @@ describe('RequestDetailsComponent', () => {
   }
 
   function actionLabels(): string[] {
-    return Array.from(
-      fixture.nativeElement.querySelectorAll('.details-actions button'),
-    ).map((button) => (button as HTMLElement).textContent?.trim() ?? '');
+    return Array.from(fixture.nativeElement.querySelectorAll('.details-actions button')).map(
+      (button) => (button as HTMLElement).textContent?.trim() ?? '',
+    );
   }
 
   afterEach(() => localStorage.removeItem('session-user'));

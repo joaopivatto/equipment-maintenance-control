@@ -1,6 +1,5 @@
 import { BaseMockFactory } from '../../../../shared/testing';
-import { HistoryEntry } from '../history-entry.model';
-import { RequestStatus } from '../maintenance-request.model';
+import { HistoryEntry, RequestStatus } from '..';
 
 export class HistoryEntryMockFactory extends BaseMockFactory<HistoryEntry> {
   protected readonly length = 6;

@@ -6,13 +6,9 @@ import { finalize } from 'rxjs';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 
-import { MaintenanceRequestApiClient } from '../../api/maintenance-request-api-client';
-import {
-  MaintenanceRequest,
-  RequestStatus,
-  STATUS_CLASSES,
-} from '../../models/maintenance-request.model';
-import { NotificationService } from '../../../../core/notifications/notification.service';
+import { MaintenanceRequestApiClient } from '../../api';
+import { MaintenanceRequest, RequestStatus, STATUS_CLASSES } from '../../models';
+import { NotificationService } from '../../../../core/notifications';
 
 @Component({
   selector: 'app-payment',

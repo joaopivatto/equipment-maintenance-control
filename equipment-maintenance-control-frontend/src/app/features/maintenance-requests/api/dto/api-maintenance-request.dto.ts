@@ -1,5 +1,5 @@
-import { ApiEmployeeDto } from '../../../employees/api/dto/api-employee.dto';
-import { ApiEquipmentTypeDto } from '../../../equipment-categories/api/dto/api-equipment-type.dto';
+import { ApiEmployeeDto } from '../../../employees/api/dto';
+import { ApiEquipmentTypeDto } from '../../../equipment-categories/api/dto';
 
 export interface ApiEquipmentDto {
   id: number;
